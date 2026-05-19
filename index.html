@@ -33,6 +33,7 @@
 
     html {
       scroll-behavior: smooth;
+      scroll-padding-top: 82px;
     }
 
     body {
@@ -43,6 +44,7 @@
       font-size: 15px;
       line-height: 1.58;
       letter-spacing: 0;
+      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -59,7 +61,125 @@
     .page {
       width: min(1180px, calc(100% - 40px));
       margin: 0 auto;
-      padding: 64px 0 88px;
+      padding: 48px 0 88px;
+    }
+
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 250, 246, 0.95);
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: min(1180px, calc(100% - 40px));
+      min-height: 58px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .nav-link,
+    .nav-menu summary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 6px 10px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-menu summary:hover {
+      border-color: var(--line);
+      background: var(--white);
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .nav-menu {
+      position: relative;
+    }
+
+    .nav-menu summary {
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .nav-menu summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .nav-menu summary::after {
+      content: "⌄";
+      margin-left: 6px;
+      font-size: 12px;
+    }
+
+    .nav-menu[open] summary {
+      border-color: var(--line-strong);
+      background: var(--white);
+      color: var(--blue);
+    }
+
+    .nav-menu[open] summary::after {
+      transform: rotate(180deg);
+    }
+
+    .nav-panel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(160px, 1fr));
+      gap: 4px;
+      width: min(420px, calc(100vw - 40px));
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper-soft);
+      box-shadow: var(--shadow);
+    }
+
+    .nav-panel a {
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .nav-panel a:hover {
+      background: var(--blue-soft);
+      text-decoration: none;
     }
 
     .hero {
@@ -94,6 +214,7 @@
       margin: 0;
       font-size: 64px;
       line-height: 1.08;
+      overflow-wrap: anywhere;
     }
 
     .tagline {
@@ -103,6 +224,15 @@
       font-family: var(--serif);
       font-size: 22px;
       line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .mobile-break {
+      display: none;
+    }
+
+    .desktop-space {
+      display: inline;
     }
 
     .hero-actions {
@@ -241,9 +371,6 @@
     }
 
     .toolbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
       display: grid;
       grid-template-columns: minmax(220px, 1fr) auto;
       gap: 14px;
@@ -460,6 +587,19 @@
         font-size: 48px;
       }
 
+      .nav-inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 10px 0;
+      }
+
+      .nav-actions {
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
       .toolbar,
       .section-head {
         grid-template-columns: 1fr;
@@ -482,11 +622,30 @@
       }
 
       h1 {
-        font-size: 38px;
+        font-size: 36px;
       }
 
       .tagline {
         font-size: 18px;
+      }
+
+      .mobile-break {
+        display: block;
+      }
+
+      .desktop-space {
+        display: none;
+      }
+
+      .hero-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .button {
+        width: 100%;
+        padding-right: 10px;
+        padding-left: 10px;
       }
 
       .stat-grid,
@@ -495,18 +654,53 @@
         grid-template-columns: 1fr;
       }
 
-      .toolbar {
-        position: static;
+      html {
+        scroll-padding-top: 112px;
+      }
+
+      .nav-inner {
+        width: min(100% - 24px, 1180px);
+      }
+
+      .nav-panel {
+        left: 0;
+        right: auto;
+        grid-template-columns: 1fr;
+        width: calc(100vw - 24px);
       }
     }
   </style>
 </head>
 <body>
-  <main class="page">
+  <nav class="site-nav" aria-label="Yao GEO Skills 导航">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#top">Yao GEO Skills</a>
+      <div class="nav-actions">
+        <a class="nav-link" href="#catalog" data-show-all>全部 Skill</a>
+        <details class="nav-menu">
+          <summary>分类菜单</summary>
+          <div class="nav-panel">
+            <a href="#geo-strategy">战略诊断</a>
+            <a href="#geo-page-technical">页面技术</a>
+            <a href="#geo-content-production">内容生产</a>
+            <a href="#geo-knowledge-assets">知识资产</a>
+            <a href="#geo-measurement">监测归因</a>
+            <a href="#geo-operations">GEOFlow 运营</a>
+            <a href="#geo-research">研究拓词</a>
+          </div>
+        </details>
+        <a class="nav-link" href="README.md">README</a>
+        <a class="nav-link" href="docs/github-release-prep.md">发布清单</a>
+        <a class="nav-link" href="registry/skills.json">Registry</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="page" id="top">
     <header class="hero">
       <div>
         <p class="eyebrow">Yao GEO Skills · GitHub Catalog · 2026-05-19</p>
-        <h1>一套面向 GEO 工作流的 Skill 导航</h1>
+        <h1>一套面向 GEO<span class="desktop-space"> </span><br class="mobile-break">工作流的 Skill 导航</h1>
         <p class="tagline">从战略诊断、页面结构、内容生产、知识资产到效果监测，把重复的 GEO 交付动作沉淀成可复用、可验证、可开源的 skill 包。</p>
         <div class="hero-actions">
           <a class="button primary" href="#catalog">浏览 Skill</a>
@@ -553,7 +747,7 @@
         <p class="section-num">01 · Catalog</p>
         <div>
           <h2 class="section-title">Skill 总览</h2>
-      <p class="section-lede">按工作类型筛选，也可以搜索 skill 名、用途、输出或平台关键词。draft 和 incubating 条目需要在使用前先确认成熟度。</p>
+          <p class="section-lede">默认展示全部 17 个 skill。你可以按工作类型筛选，也可以搜索 skill 名、用途、输出或平台关键词。draft 和 incubating 条目需要在使用前先确认成熟度。</p>
         </div>
       </div>
 
@@ -571,7 +765,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-strategy">
+      <div class="category" id="geo-strategy" data-category="geo-strategy">
         <h3>战略诊断 <span>geo-strategy · 2</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-strategy" data-maturity="beta" data-search="yao-geo-panorama-audit panorama audit strategy diagnosis deepseek doubao qianwen kimi yuanbao 机会地图 全景诊断 竞品差距">
@@ -592,7 +786,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-page-technical">
+      <div class="category" id="geo-page-technical" data-category="geo-page-technical">
         <h3>页面技术 <span>geo-page-technical · 2</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-page-technical" data-maturity="beta" data-search="yao-geo-page-audit page audit technical seo ai extractability 页面诊断 可抓取 结构规范">
@@ -613,7 +807,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-content-production">
+      <div class="category" id="geo-content-production" data-category="geo-content-production">
         <h3>内容生产 <span>geo-content-production · 5</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-content-production" data-maturity="beta" data-search="yao-geo-title-optimizer title optimizer 标题 候选库 scorecard 合规">
@@ -658,7 +852,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-knowledge-assets">
+      <div class="category" id="geo-knowledge-assets" data-category="geo-knowledge-assets">
         <h3>知识资产 <span>geo-knowledge-assets · 2</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-knowledge-assets" data-maturity="beta" data-search="yao-geo-brand-graph brand graph entity relation json ld rdf mermaid 品牌图谱 实体 关系">
@@ -679,7 +873,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-measurement">
+      <div class="category" id="geo-measurement" data-category="geo-measurement">
         <h3>监测归因 <span>geo-measurement · 2</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-measurement" data-maturity="beta" data-search="yao-geo-tracking attribution tracking plan backend html word 归因 追踪 转化">
@@ -700,7 +894,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-operations">
+      <div class="category" id="geo-operations" data-category="geo-operations">
         <h3>GEOFlow 运营 <span>geo-operations · 3</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-operations" data-maturity="stable" data-search="yao-geoflow-cli geoflow cli laravel api task article publish 操作 发布 任务">
@@ -729,7 +923,7 @@
         </div>
       </div>
 
-      <div class="category" data-category="geo-research">
+      <div class="category" id="geo-research" data-category="geo-research">
         <h3>研究拓词 <span>geo-research · 1</span></h3>
         <div class="cards">
           <article class="card" data-family="geo-research" data-maturity="draft" data-search="yao-geo-intent-miner intent miner prompts questions seed words 拓词 意图 问题集 追问">
@@ -753,6 +947,7 @@
     const filters = Array.from(document.querySelectorAll(".filter"));
     const cards = Array.from(document.querySelectorAll(".card"));
     const categories = Array.from(document.querySelectorAll(".category"));
+    const navMenu = document.querySelector(".nav-menu");
     let activeFilter = "all";
 
     function normalize(value) {
@@ -775,15 +970,46 @@
       });
     }
 
+    function setActiveFilter(filterName) {
+      activeFilter = filterName;
+      filters.forEach((item) => item.setAttribute("aria-pressed", String(item.dataset.filter === filterName)));
+      applyFilters();
+    }
+
     filters.forEach((button) => {
       button.addEventListener("click", () => {
-        activeFilter = button.dataset.filter;
-        filters.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-        applyFilters();
+        setActiveFilter(button.dataset.filter);
       });
     });
 
     searchInput.addEventListener("input", applyFilters);
+
+    document.querySelectorAll("[data-show-all]").forEach((link) => {
+      link.addEventListener("click", () => {
+        searchInput.value = "";
+        setActiveFilter("all");
+      });
+    });
+
+    document.querySelectorAll(".nav-panel a").forEach((link) => {
+      link.addEventListener("click", () => {
+        link.closest("details").removeAttribute("open");
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (navMenu.open && !navMenu.contains(event.target)) {
+        navMenu.removeAttribute("open");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        navMenu.removeAttribute("open");
+      }
+    });
+
+    applyFilters();
   </script>
 </body>
 </html>
