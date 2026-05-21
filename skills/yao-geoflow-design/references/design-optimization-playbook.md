@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Design Optimization Playbook
 
 Use this reference when the request is to improve an existing GEOFlow theme rather than replace it wholesale.

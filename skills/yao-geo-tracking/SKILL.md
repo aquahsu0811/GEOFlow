@@ -3,6 +3,14 @@ name: yao-geo-tracking
 description: Build a company-specific GEO backend tracking plan from a company name plus optional supporting information, using authoritative retrieval anchored on the official website, business-feature recognition, and market-aware GEO monitoring methods, then deliver a direct-vs-indirect attribution design, data model, roadmap, and optional openable HTML and Word reports. Use when asked to 设计 GEO 后端效果归因框架、GEO 效果跟踪体系、AI 搜索效果监测方案、GEO 转化追踪方案、GEO attribution plan、GEO tracking plan、GEO 后端分析 HTML 或 Word 交付件. Do not use for generic GEO education, content planning, pure brand research, or CRM/BI implementation work without GEO attribution design.
 ---
 
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geo-tracking
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Yao GEO Tracking
 
 ## When To Use

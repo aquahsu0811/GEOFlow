@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Theme Edit Workflow
 
 Use this workflow when the request is to adjust a theme that already exists in a GEOFlow workspace.

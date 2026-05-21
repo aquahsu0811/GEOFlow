@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-template
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # yao-geoflow-template examples
 
 This skill maps a reference site onto a live GEOFlow frontend contract, so full examples usually depend on a real GEOFlow workspace and a reference URL.

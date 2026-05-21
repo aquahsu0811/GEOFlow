@@ -3,6 +3,14 @@ name: yao-geoflow-design
 description: Discover, preview, clone, and edit GEOFlow Laravel Blade themes by selecting an existing template or mapping a reference site, then applying safe frontend changes without changing business logic or data contracts. Use for theme discovery, target-theme editing, cloning, optimization, and theme iteration. Not for raw HTML copying, backend refactors, or direct live activation.
 ---
 
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Yao GEOFlow Design
 
 Use this skill to discover, preview, clone, or improve a GEOFlow frontend without breaking its Laravel Blade rendering contract.

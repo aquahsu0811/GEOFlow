@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Yao GEOFlow Design
 
 `yao-geoflow-design` is a local skill for discovering GEOFlow Laravel Blade themes, selecting a target theme, creating preview-first edit sessions, and then optimizing or refining the chosen frontend through safe theme packages.

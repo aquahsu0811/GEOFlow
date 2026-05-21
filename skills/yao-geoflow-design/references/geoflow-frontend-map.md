@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # GEOFlow Frontend Module And Variable Map
 
 This document is the current GEOFlow frontend contract for `yao-geoflow-design`. It is based on the Laravel rewrite, not the older root-level PHP frontend.

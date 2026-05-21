@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Theme Edit and Package Contract
 
 The output of a GEOFlow design run should be a preview-first session or package rather than a direct production overwrite.

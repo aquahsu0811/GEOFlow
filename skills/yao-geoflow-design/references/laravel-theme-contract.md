@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-design
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Laravel Theme Contract
 
 This contract supersedes the legacy PHP-entrypoint assumptions for the current GEOFlow rewrite.

@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+# Copyright © 2026 姚金刚. All rights reserved.
+# Project: yao-geo-tracking
+# Created by: 姚金刚
+# Date: 2026-05-16
+# X: https://x.com/yaojingang
+
 """Render GEO tracking plan reports to HTML and DOCX."""
 
 from __future__ import annotations

@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geo-knowledge-base-builder
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # HubSpot GEO 品牌知识库
 
 > 版本：2026.05.hubspot-demo.v3｜生成日期：2026-05-21｜来源核验日期：2026-05-21｜复核机制：季度复核，高时效事实月度复核

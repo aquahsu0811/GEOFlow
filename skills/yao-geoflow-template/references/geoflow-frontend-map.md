@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-template
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # GEOFlow 前台模块与变量地图
 
 本文档是 `yao-geoflow-template` 的核心参考。目标不是解释业务，而是定义：当前 GEOFlow 前台页面由哪些稳定模块组成、依赖哪些变量和函数、哪些位置可以替换样式、哪些契约必须保留。

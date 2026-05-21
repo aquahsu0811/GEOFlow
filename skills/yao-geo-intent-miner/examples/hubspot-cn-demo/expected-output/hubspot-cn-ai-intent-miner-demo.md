@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geo-intent-miner
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # HubSpot 中文简体 AI 搜索意图与问题集挖掘报告
 
 以 DeepSeek、豆包、千问、Kimi、元宝为国内 AI 平台测试场景，系统验证意图拓词、追问链路、查询重写、内容资产映射和四格式输出。

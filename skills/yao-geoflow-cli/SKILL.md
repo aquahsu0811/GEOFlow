@@ -3,6 +3,14 @@ name: yao-geoflow-cli
 description: Operate an existing GEOFlow system through the local geoflow CLI or Laravel API v1 fallback to inspect catalog data, create or update tasks, enqueue generation jobs, upload article drafts, review content, and publish articles. Use when the user wants scriptable GEOFlow operations instead of the web admin, especially for task automation, article upload, bulk publish flows, or skill-driven local control. Do not use for backend implementation, schema changes, or direct database edits.
 ---
 
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-cli
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Yao GEOFlow CLI
 
 Use this skill when the system already has the GEOFlow API available and the job is to operate that system from local commands. Prefer `bin/geoflow` when present; use Laravel API v1 fallback when the current rewrite has not shipped a CLI wrapper yet.

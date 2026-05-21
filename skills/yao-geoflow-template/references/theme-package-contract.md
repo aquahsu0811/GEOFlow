@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-template
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Theme Package Contract
 
 The output of a GEOFlow template-clone run should be a preview-first package rather than a direct production overwrite.

@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-cli
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Laravel API v1 and Docker Fallback
 
 Use this reference when the target GEOFlow workspace is the Laravel rewrite and no `bin/geoflow` wrapper is available yet.

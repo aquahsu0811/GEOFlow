@@ -1,3 +1,11 @@
+<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geoflow-template
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->
+
 # Template Boundary
 
 This skill is for GEOFlow frontend template cloning and packaging, not for replacing GEOFlow's rendering contract with arbitrary copied pages.
