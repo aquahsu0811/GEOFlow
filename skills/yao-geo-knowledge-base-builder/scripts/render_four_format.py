@@ -36,6 +36,16 @@ PAGE_HEIGHT_TWIPS = 16838
 PAGE_MARGIN_TWIPS = 1134
 BODY_WIDTH_TWIPS = PAGE_WIDTH_TWIPS - PAGE_MARGIN_TWIPS * 2
 ZWSP = "\u200b"
+REQUIRED_SECTION_GROUPS = {
+    "structured summary": ["结构化摘要"],
+    "systematic knowledge-base body": ["系统化品牌知识库"],
+    "real data access boundary": ["真实数据获取", "数据获取能力与限制", "真实数据获取与限制"],
+    "complete entity inventory": ["完整实体清单"],
+    "analysis completeness self-check": ["分析完整性自检", "方法论参考与分析完整性自检"],
+    "fact-card library": ["品牌事实卡片库"],
+    "prompt input pack": ["Prompt 输入包", "Prompt输入包"],
+    "source index": ["来源索引"],
+}
 
 
 @dataclass
@@ -138,6 +148,46 @@ def is_fact_card_table(headers: list[str]) -> bool:
     return bool({"事实id", "主体"} <= normalized or {"fact id", "subject"} <= normalized)
 
 
+def is_entity_inventory_table(headers: list[str]) -> bool:
+    normalized = {normalize_header(h) for h in headers}
+    return bool(
+        {"实体id", "实体类型", "标准名称"} <= normalized
+        or {"entity id", "entity type", "canonical name"} <= normalized
+    )
+
+
+def entity_inventory_to_compact_table(headers: list[str], rows: list[list[str]]) -> tuple[list[str], list[list[str]]]:
+    positions = header_positions(headers)
+
+    def get(row: list[str], *keys: str) -> str:
+        for key in keys:
+            idx = positions.get(normalize_header(key))
+            if idx is not None and idx < len(row):
+                return row[idx]
+        return ""
+
+    converted = []
+    for row in rows:
+        entity_id = get(row, "实体ID", "entity id", "id")
+        entity_type = get(row, "实体类型", "entity type", "type")
+        canonical_name = get(row, "标准名称", "canonical name", "name")
+        aliases = get(row, "别名", "aliases", "alias")
+        relationship = get(row, "关系", "relationship")
+        source = get(row, "来源", "source")
+        confidence = get(row, "可信等级", "confidence")
+        usage_note = get(row, "使用说明", "usage note", "note")
+        converted.append(
+            [
+                f"{entity_id}\n{entity_type}".strip(),
+                f"{canonical_name}\n别名：{aliases}".strip(),
+                relationship,
+                " / ".join(part for part in [source, confidence] if part),
+                usage_note,
+            ]
+        )
+    return ["实体", "标准名称与别名", "关系", "来源/可信", "使用说明"], converted
+
+
 def fact_card_to_compact_table(headers: list[str], rows: list[list[str]]) -> tuple[list[str], list[list[str]]]:
     positions = header_positions(headers)
 
@@ -216,6 +266,10 @@ def render_inline_html(text: object) -> str:
     return escaped.replace("\n", "<br>")
 
 
+def anchor_id(index: int) -> str:
+    return f"section-{index:02d}"
+
+
 def table_widths(headers: list[str]) -> list[int]:
     col_count = len(headers)
     if col_count == 2:
@@ -236,10 +290,17 @@ def table_widths(headers: list[str]) -> list[int]:
 
 def render_html(blocks: list[Block], title: str, out_path: Path) -> None:
     body_parts: list[str] = []
+    toc_items: list[tuple[int, str, str]] = []
+    heading_index = 0
     for block in blocks:
         if block.kind == "heading":
             level = min(block.level or 1, 4)
-            body_parts.append(f"<h{level}>{render_inline_html(block.value)}</h{level}>")
+            heading_index += 1
+            current_anchor = anchor_id(heading_index)
+            heading_text = str(block.value)
+            if 1 < level <= 3:
+                toc_items.append((level, current_anchor, heading_text))
+            body_parts.append(f'<h{level} id="{current_anchor}">{render_inline_html(heading_text)}</h{level}>')
         elif block.kind == "quote":
             lines = str(block.value).splitlines()
             body_parts.append("<blockquote>" + "<br>".join(render_inline_html(line) for line in lines) + "</blockquote>")
@@ -253,6 +314,8 @@ def render_html(blocks: list[Block], title: str, out_path: Path) -> None:
             rows = block.value["rows"]  # type: ignore[index]
             if is_source_index(headers):
                 headers, rows = source_index_to_evidence_table(headers, rows)
+            elif len(headers) > 5 and is_entity_inventory_table(headers):
+                headers, rows = entity_inventory_to_compact_table(headers, rows)
             elif len(headers) > 5 and is_fact_card_table(headers):
                 headers, rows = fact_card_to_compact_table(headers, rows)
             cols_class = f"cols-{len(headers)}"
@@ -265,58 +328,144 @@ def render_html(blocks: list[Block], title: str, out_path: Path) -> None:
                 f'<table class="{cols_class}"><thead><tr>{head}</tr></thead><tbody>{"".join(row_html)}</tbody></table>'
             )
 
+    toc_html = "".join(
+        f'<a class="toc-link toc-level-{level}" href="#{anchor}">{render_inline_html(text)}</a>'
+        for level, anchor, text in toc_items
+    )
+
     css = """
 @page {
   size: A4;
-  margin: 18mm 16mm;
+  margin: 20mm 22mm 22mm 22mm;
   background: #ffffff;
+  @bottom-center {
+    content: counter(page) "  ·  " string(doc-title);
+    font-family: "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", Arial, sans-serif;
+    font-size: 8.5pt;
+    color: #87867f;
+  }
+}
+@page:first {
+  @bottom-center { content: ""; }
 }
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: #ffffff; color: #1f2933; }
-body {
-  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", "PingFang SC", Georgia, serif;
-  font-size: 10.6pt;
-  line-height: 1.62;
+:root {
+  --paper: #ffffff;
+  --ivory: #faf9f5;
+  --brand: #1B365D;
+  --near-black: #141413;
+  --dark-warm: #3d3d3a;
+  --charcoal: #4d4c48;
+  --olive: #5e5d59;
+  --stone: #87867f;
+  --border: #e8e6dc;
+  --border-soft: #e5e3d8;
+  --tag-bg: #EEF2F7;
 }
-.page { max-width: 920px; margin: 0 auto; padding: 30px 32px 42px; }
-h1, h2, h3, h4 {
-  color: #12395b;
+html, body { margin: 0; padding: 0; background: var(--paper); color: var(--near-black); }
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Source Han Sans SC", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  font-size: 10pt;
+  line-height: 1.55;
+}
+.shell {
+  display: grid;
+  grid-template-columns: 264px minmax(0, 900px);
+  gap: 32px;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 0 28px;
+  align-items: start;
+}
+.toc {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow: auto;
+  padding: 28px 18px 28px 0;
+  border-right: 0.5pt solid var(--border);
+  background: var(--paper);
+}
+.toc-title {
+  color: var(--brand);
   font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
-  font-weight: 700;
+  font-size: 12pt;
+  font-weight: 500;
+  margin: 0 0 14px;
+  border-left: 2.5pt solid var(--brand);
+  padding-left: 8px;
+}
+.toc-link {
+  display: block;
+  color: var(--charcoal);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding: 5px 8px 5px 10px;
+  margin: 0 0 2px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  border-radius: 2px;
+}
+.toc-link:hover { color: var(--brand); border-left-color: var(--brand); background: var(--tag-bg); }
+.toc-level-3 { padding-left: 22px; font-size: 9pt; color: var(--olive); }
+.page { min-width: 0; max-width: 900px; margin: 0 auto; padding: 32px 0 46px; }
+h1, h2, h3, h4 {
+  font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", Georgia, serif;
+  font-weight: 500;
   line-height: 1.25;
   margin: 0 0 10px;
   page-break-after: avoid;
+  break-after: avoid;
 }
-h1 { font-size: 24pt; margin-top: 0; padding-bottom: 10px; border-bottom: 1px solid #d7dee8; }
-h2 { font-size: 16pt; margin-top: 24px; padding-top: 2px; }
-h3 { font-size: 12.5pt; margin-top: 18px; }
-h4 { font-size: 11pt; margin-top: 14px; }
-p { margin: 0 0 10px; overflow-wrap: anywhere; word-break: break-word; }
+h1 {
+  string-set: doc-title content(text);
+  font-size: 23pt;
+  margin-top: 0;
+  margin-bottom: 18pt;
+  padding-left: 9pt;
+  border-left: 2.5pt solid var(--brand);
+  color: var(--near-black);
+  letter-spacing: 0;
+}
+h2 {
+  font-size: 15.5pt;
+  margin-top: 28pt;
+  margin-bottom: 9pt;
+  padding-left: 8pt;
+  border-left: 2.5pt solid var(--brand);
+  color: var(--near-black);
+}
+h3 { font-size: 12.5pt; margin-top: 18pt; margin-bottom: 6pt; color: var(--dark-warm); }
+h4 { font-size: 11pt; margin-top: 14pt; margin-bottom: 5pt; color: var(--dark-warm); }
+p { margin: 0 0 10pt; overflow-wrap: anywhere; word-break: break-word; color: var(--near-black); }
 blockquote {
-  margin: 12px 0 18px;
-  padding: 10px 14px;
-  border-left: 3px solid #12395b;
-  background: #f7f9fc;
-  color: #3b4652;
+  margin: 12pt 0 18pt;
+  padding: 7pt 12pt 7pt 14pt;
+  border-left: 2pt solid var(--brand);
+  background: var(--ivory);
+  color: var(--olive);
   overflow-wrap: anywhere;
+  break-inside: avoid;
 }
 ul { margin: 0 0 14px 1.15em; padding: 0; }
 li { margin: 0 0 6px; overflow-wrap: anywhere; }
+li::marker { color: var(--brand); }
 table {
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  margin: 10px 0 18px;
+  margin: 10pt 0 18pt;
   page-break-inside: auto;
-  font-size: 9.6pt;
-  line-height: 1.46;
+  font-size: 9.1pt;
+  line-height: 1.42;
+  color: var(--charcoal);
 }
 thead { display: table-header-group; }
-tr { page-break-inside: avoid; }
+tr { page-break-inside: avoid; break-inside: avoid; }
 th, td {
-  border: 0.7pt solid #d8e0ea;
-  padding: 6px 7px;
+  border: 0.5pt solid var(--border);
+  padding: 6pt 7pt;
   vertical-align: top;
   text-align: left;
   white-space: normal;
@@ -324,11 +473,31 @@ th, td {
   word-break: break-word;
   hyphens: auto;
 }
-th { background: #f1f5f9; color: #12395b; font-weight: 700; }
-.cols-5 { font-size: 8.9pt; }
-.cols-4 { font-size: 9.2pt; }
-.cols-2 { font-size: 9.8pt; }
+th {
+  background: var(--tag-bg);
+  color: var(--brand);
+  font-weight: 600;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Source Han Sans SC", "PingFang SC", Arial, sans-serif;
+}
+tbody tr:nth-child(even) td { background: #faf9f5; }
+.cols-5 { font-size: 8.65pt; line-height: 1.38; }
+.cols-4 { font-size: 8.95pt; }
+.cols-2 { font-size: 9.3pt; }
+@media (max-width: 980px) {
+  .shell { display: block; padding: 0 18px; }
+  .toc {
+    z-index: 10;
+    border-right: 0;
+    border-bottom: 0.5pt solid var(--border);
+    padding: 10px 0;
+    max-height: 34vh;
+  }
+  .toc-title { margin: 0 0 6px; }
+  .page { padding-top: 18px; }
+}
 @media print {
+  .toc { display: none; }
+  .shell { display: block; max-width: none; padding: 0; }
   .page { max-width: none; padding: 0; }
 }
 """
@@ -341,9 +510,15 @@ th { background: #f1f5f9; color: #12395b; font-weight: 700; }
   <style>{css}</style>
 </head>
 <body>
-  <main class="page">
-    {''.join(body_parts)}
-  </main>
+  <div class="shell">
+    <nav class="toc" aria-label="报告目录">
+      <div class="toc-title">报告目录</div>
+      {toc_html}
+    </nav>
+    <main class="page">
+      {''.join(body_parts)}
+    </main>
+  </div>
 </body>
 </html>
 """
@@ -354,7 +529,7 @@ def w_text(text: object) -> str:
     return escape(soft_wrap_text(text))
 
 
-def run_xml(text: object, bold: bool = False, color: str = "1F2933", size: int = 21) -> str:
+def run_xml(text: object, bold: bool = False, color: str = "141413", size: int = 21) -> str:
     bold_xml = "<w:b/>" if bold else ""
     return (
         "<w:r><w:rPr>"
@@ -366,7 +541,7 @@ def run_xml(text: object, bold: bool = False, color: str = "1F2933", size: int =
 
 def paragraph_xml(text: object, style: str = "Body", bullet: bool = False) -> str:
     size = {"Title": 32, "Heading1": 27, "Heading2": 24, "Heading3": 22, "Quote": 20}.get(style, 21)
-    color = "12395B" if style in {"Title", "Heading1", "Heading2", "Heading3"} else "1F2933"
+    color = "1B365D" if style in {"Title", "Heading1", "Heading2", "Heading3"} else "141413"
     bold = style in {"Title", "Heading1", "Heading2", "Heading3"}
     before = {"Title": 0, "Heading1": 260, "Heading2": 210, "Heading3": 160, "Quote": 70}.get(style, 0)
     after = {"Title": 180, "Heading1": 110, "Heading2": 90, "Heading3": 70, "Quote": 100}.get(style, 80)
@@ -388,9 +563,9 @@ def paragraph_xml(text: object, style: str = "Body", bullet: bool = False) -> st
 
 
 def cell_xml(text: object, width: int, header: bool = False) -> str:
-    shading = '<w:shd w:fill="F1F5F9"/>' if header else ""
+    shading = '<w:shd w:fill="EEF2F7"/>' if header else ""
     size = 19 if header else 18
-    color = "12395B" if header else "1F2933"
+    color = "1B365D" if header else "141413"
     lines = str(text).split("\n")
     paragraphs = []
     for line in lines:
@@ -412,18 +587,20 @@ def cell_xml(text: object, width: int, header: bool = False) -> str:
 def table_xml(headers: list[str], rows: list[list[str]]) -> str:
     if is_source_index(headers):
         headers, rows = source_index_to_evidence_table(headers, rows)
+    elif len(headers) > 5 and is_entity_inventory_table(headers):
+        headers, rows = entity_inventory_to_compact_table(headers, rows)
     elif len(headers) > 5 and is_fact_card_table(headers):
         headers, rows = fact_card_to_compact_table(headers, rows)
     widths = table_widths(headers)
     grid = "".join(f'<w:gridCol w:w="{width}"/>' for width in widths)
     borders = (
         "<w:tblBorders>"
-        '<w:top w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
-        '<w:left w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
-        '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
-        '<w:right w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
-        '<w:insideH w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
-        '<w:insideV w:val="single" w:sz="4" w:space="0" w:color="D8E0EA"/>'
+        '<w:top w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
+        '<w:left w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
+        '<w:bottom w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
+        '<w:right w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
+        '<w:insideH w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
+        '<w:insideV w:val="single" w:sz="4" w:space="0" w:color="E8E6DC"/>'
         "</w:tblBorders>"
     )
     cell_mar = (
@@ -547,7 +724,17 @@ def render_pdf_previews(pdf_path: Path, preview_dir: Path) -> list[Path]:
         old.unlink()
     prefix = preview_dir / "page"
     subprocess.run(["pdftoppm", "-png", "-r", "120", str(pdf_path), str(prefix)], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    return sorted(preview_dir.glob("page-*.png"))
+    normalized_paths = []
+    for raw_path in sorted(preview_dir.glob("page-*.png")):
+        match = re.match(r"page-(\d+)\.png$", raw_path.name)
+        if not match:
+            normalized_paths.append(raw_path)
+            continue
+        normalized_path = preview_dir / f"page-{int(match.group(1))}.png"
+        if raw_path != normalized_path:
+            raw_path.rename(normalized_path)
+        normalized_paths.append(normalized_path)
+    return sorted(normalized_paths, key=lambda path: int(re.search(r"page-(\d+)\.png$", path.name).group(1)))
 
 
 def image_right_edge_clear(image_paths: Iterable[Path]) -> tuple[bool | None, str]:
@@ -600,6 +787,19 @@ def inspect_docx(docx_path: Path) -> dict:
     }
 
 
+def inspect_markdown_structure(markdown_path: Path) -> dict:
+    text = markdown_path.read_text("utf-8") if markdown_path.exists() else ""
+    headings = re.findall(r"^#{1,4}\s+(.+)$", text, flags=re.MULTILINE)
+    section_results = {}
+    for group, candidates in REQUIRED_SECTION_GROUPS.items():
+        section_results[group] = any(any(candidate in heading for candidate in candidates) for heading in headings)
+    return {
+        "headings": headings,
+        "section_results": section_results,
+        "all_required_sections_present": all(section_results.values()),
+    }
+
+
 def build_quality_report(paths: dict[str, Path], preview_paths: list[Path], pdf_renderer: str) -> dict:
     checks = []
 
@@ -609,6 +809,32 @@ def build_quality_report(paths: dict[str, Path], preview_paths: list[Path], pdf_
     html_text = paths["html"].read_text("utf-8") if paths["html"].exists() else ""
     checks.append({"name": "html has no absolute local paths", "passed": "/Users/" not in html_text, "detail": "No local path leakage."})
     checks.append({"name": "html tables force wrapping", "passed": "overflow-wrap: anywhere" in html_text and "table-layout: fixed" in html_text, "detail": "CSS includes fixed table layout and long-token wrapping."})
+    checks.append({"name": "html has sticky menu", "passed": 'class="toc"' in html_text and "position: sticky" in html_text, "detail": "HTML report includes a sticky navigation menu for screen reading."})
+    checks.append({"name": "html follows kami editorial tokens", "passed": "--brand: #1B365D" in html_text and "--ivory: #faf9f5" in html_text and "line-height: 1.55" in html_text, "detail": "HTML uses the kami-style ink-blue, warm neutral, and compact editorial rhythm while preserving white report background."})
+    checks.append({"name": "html print mode hides sticky menu", "passed": "@media print" in html_text and ".toc { display: none; }" in html_text, "detail": "PDF/print output excludes the screen-only sticky menu."})
+
+    markdown_info = inspect_markdown_structure(paths["markdown"]) if paths["markdown"].exists() else {}
+    checks.append(
+        {
+            "name": "markdown contains required systematic KB sections",
+            "passed": bool(markdown_info.get("all_required_sections_present")),
+            "detail": markdown_info.get("section_results", {}),
+        }
+    )
+    checks.append(
+        {
+            "name": "markdown contains complete entity inventory",
+            "passed": bool(markdown_info.get("section_results", {}).get("complete entity inventory")),
+            "detail": "Complete entity inventory section is mandatory.",
+        }
+    )
+    checks.append(
+        {
+            "name": "markdown explains real data access boundary",
+            "passed": bool(markdown_info.get("section_results", {}).get("real data access boundary")),
+            "detail": "Reports must explain which data was actually accessible, which mode was used, and which claims remain inaccessible or pending.",
+        }
+    )
 
     docx_info = inspect_docx(paths["docx"]) if paths["docx"].exists() else {}
     checks.extend(

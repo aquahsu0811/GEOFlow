@@ -3,11 +3,646 @@
   "slug": "hubspot-domestic-ai",
   "brand_name": "HubSpot",
   "scope": "以 HubSpot 官方资料、投资者关系披露和官方客户案例为来源，测试品牌实体图谱在 DeepSeek、豆包、千问、Kimi、腾讯元宝等国内 AI 平台问答场景中的消歧、证据和结构化输出能力。",
-  "report_date": "2026-05-19",
+  "report_date": "2026-05-21",
   "executive_summary": [
     "HubSpot 的核心规范实体应从早期“入站营销软件”升级为“AI-powered / agentic customer platform”，并保留 Marketing Hub、Sales Hub、Service Hub、Content Hub、Data Hub、Commerce Hub、Smart CRM、Breeze 等产品和技术别名。",
     "国内 AI 平台容易把 HubSpot 简化为营销自动化工具，或把 Content Hub/Data Hub 与旧产品名混淆；测试场景应覆盖品牌定义、产品线、人物地点、客户案例和 AI 能力五类问题。",
     "关系图谱必须区分官方事实、投资者关系披露、官方客户案例、媒体描述和推断，避免把 Q1 2026 客户数、案例效果和 AI Agent 能力写成无日期、无来源的泛化断言。"
+  ],
+  "authority_references": [
+    {
+      "reference": "RDF 1.1 Concepts",
+      "authority": "W3C Recommendation",
+      "use_case": "把品牌事实统一表达为 subject-predicate-object，并保留方向。",
+      "report_rule": "关系清单和三元组样例必须能互相映射；复杂关系要拆成多条可审计关系。",
+      "url": "https://www.w3.org/TR/rdf-concepts/"
+    },
+    {
+      "reference": "JSON-LD 1.1",
+      "authority": "W3C Recommendation",
+      "use_case": "将可验证品牌实体事实序列化为网页可嵌入的 Linked Data。",
+      "report_rule": "JSON-LD 建议只承载页面正文已写明的品牌、产品、人物和组织事实。",
+      "url": "https://www.w3.org/TR/json-ld11/"
+    },
+    {
+      "reference": "PROV-O",
+      "authority": "W3C Recommendation",
+      "use_case": "记录来源、生成过程、证据和事实主张之间的可追溯关系。",
+      "report_rule": "每条核心关系必须绑定来源 ID、来源类型、日期、核验状态和使用方式。",
+      "url": "https://www.w3.org/TR/prov-o/"
+    },
+    {
+      "reference": "SHACL",
+      "authority": "W3C Recommendation",
+      "use_case": "用 shapes 思路约束图谱字段完整性和质量门。",
+      "report_rule": "质量报告必须检查实体类型覆盖、证据 ID、输出文件、Word 表宽和 HTML 防溢出。",
+      "url": "https://www.w3.org/TR/shacl/"
+    },
+    {
+      "reference": "SKOS",
+      "authority": "W3C Recommendation",
+      "use_case": "管理品牌简称、英文名、旧名、产品别名、行业词和易混词。",
+      "report_rule": "消歧表必须把规范实体、别名、易混项、处理决策和依据分开。",
+      "url": "https://www.w3.org/2004/02/skos/specs"
+    },
+    {
+      "reference": "Schema.org Organization / SoftwareApplication",
+      "authority": "Schema.org vocabulary",
+      "use_case": "选择 Organization、Person、Offer、SoftwareApplication 等结构化数据对象。",
+      "report_rule": "Schema 对象必须和页面正文以及来源账本一致，不能替代缺失正文。",
+      "url": "https://schema.org/Organization"
+    },
+    {
+      "reference": "Google Search structured data guidelines",
+      "authority": "Google Search Central",
+      "use_case": "约束结构化数据和网页可见内容的一致性。",
+      "report_rule": "页面没展示的事实不进入 JSON-LD；页面展示但无证据的事实列为待确认。",
+      "url": "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+    },
+    {
+      "reference": "Knowledge Graphs",
+      "authority": "ACM Computing Surveys / arXiv",
+      "use_case": "用 schema、identity、context、quality assessment 组织知识图谱方法。",
+      "report_rule": "报告必须覆盖身份消歧、上下文、质量评估、发布和维护闭环。",
+      "url": "https://arxiv.org/abs/2003.02320"
+    },
+    {
+      "reference": "Entity Linking with a Knowledge Base",
+      "authority": "IEEE TKDE",
+      "use_case": "用 mention、candidate、canonical entity 的流程处理简称和歧义。",
+      "report_rule": "对 HubSpot、HubSpot CRM、Customer Platform、Content Hub、Data Hub 等易混名称必须给出消歧规则。",
+      "url": "https://doi.org/10.1109/TKDE.2014.2327028"
+    }
+  ],
+  "analysis_dimensions": [
+    {
+      "dimension": "品牌定义",
+      "check_question": "HubSpot 当前应被定义为什么，而不是停留在哪个旧标签？",
+      "current_conclusion": "以 2026 Q1 投资者关系披露和官网产品页为准，应定义为 agentic / AI-powered customer platform。",
+      "risk": "国内平台可能仍回答为入站营销软件或单一营销自动化工具。",
+      "next_action": "中文百科页首段固定写明客户平台、Smart CRM、六个 Hub 和 Breeze。"
+    },
+    {
+      "dimension": "产品体系",
+      "check_question": "主要产品线、CRM、AI 能力和服务收入类别是否被拆开？",
+      "current_conclusion": "Marketing Hub、Sales Hub、Service Hub、Content Hub、Data Hub、Commerce Hub、Smart CRM、Breeze 已独立建点。",
+      "risk": "Data Hub 与 Smart CRM、Content Hub 与 CMS Hub 易混。",
+      "next_action": "FAQ 增加产品边界、旧名和别名的专门消歧。"
+    },
+    {
+      "dimension": "人物地点",
+      "check_question": "CEO、联合创始人、总部和办公地点是否有来源日期？",
+      "current_conclusion": "Yamini Rangan、Brian Halligan、Dharmesh Shah、Cambridge 总部已有来源账本。",
+      "risk": "Brian Halligan 容易被过期资料误写成现任 CEO。",
+      "next_action": "人物关系在页面中加“截至披露日期”的时间限定。"
+    },
+    {
+      "dimension": "客户案例",
+      "check_question": "案例指标是否只引用官方公开结果？",
+      "current_conclusion": "DoorDash 和 Kelly Services 案例均来自 HubSpot 官方客户案例页。",
+      "risk": "AI 回答可能把案例指标外推为普遍承诺。",
+      "next_action": "在案例页和知识库中标注“个案结果，不代表所有客户”。"
+    },
+    {
+      "dimension": "关系证据",
+      "check_question": "每条拥有、提供、引用、服务、来源和时间关系是否有证据 ID？",
+      "current_conclusion": "核心关系均绑定 S2、S4、S6、S7、S10 等来源。",
+      "risk": "新增关系若无来源会降低监测纠偏可审计性。",
+      "next_action": "新增关系默认进入待确认，补证后再进三元组。"
+    },
+    {
+      "dimension": "时间版本",
+      "check_question": "客户数、AI Agent、产品命名是否有时间戳？",
+      "current_conclusion": "Q1 2026 客户数和 AI Agent 信息已绑定 2026-05-07 披露。",
+      "risk": "后续季度更新后旧数字可能被继续引用。",
+      "next_action": "监测计划中加入季度财报刷新和产品页刷新。"
+    },
+    {
+      "dimension": "Schema 一致性",
+      "check_question": "JSON-LD 是否只写页面正文能支撑的事实？",
+      "current_conclusion": "Organization、Person、Offer、SoftwareApplication 可进入建议，但案例效果和客户数需页面正文同步展示后再写。",
+      "risk": "结构化数据比正文更“丰富”会造成搜索质量风险。",
+      "next_action": "发布前用页面正文逐项核对 JSON-LD 字段。"
+    },
+    {
+      "dimension": "国内 AI 平台适配",
+      "check_question": "DeepSeek、豆包、千问、Kimi、腾讯元宝的检索生成问题是否覆盖关键歧义？",
+      "current_conclusion": "已覆盖品牌定义、产品线、人物地点、客户案例和 AI Agent 五类意图。",
+      "risk": "只测品牌定义会漏掉旧名、案例和人物误配。",
+      "next_action": "正式监测时补充同义问法、竞品比较和行业场景问法。"
+    },
+    {
+      "dimension": "隐私授权",
+      "check_question": "客户、合作伙伴、人物和效果数字是否可公开？",
+      "current_conclusion": "当前客户和人物均来自公开官方页面，隐私状态为公开。",
+      "risk": "内部客户名单或未授权合作伙伴若进入图谱会带来合规风险。",
+      "next_action": "新增客户或合作伙伴前要求授权状态字段。"
+    },
+    {
+      "dimension": "内容补强闭环",
+      "check_question": "图谱发现的问题是否反向进入官网、FAQ、公众号和知识库？",
+      "current_conclusion": "已形成百科页、FAQ、测试集和证据页补强建议。",
+      "risk": "只生成图谱，不改内容资产，国内 AI 平台仍可能抓取旧事实。",
+      "next_action": "按 P1/P2 排期更新页面，并在监测中复测。"
+    }
+  ],
+  "source_coverage_matrix": [
+    {
+      "source_type": "官网与公司故事",
+      "covered_objects": [
+        "品牌历史",
+        "创始人",
+        "品牌叙事"
+      ],
+      "current_evidence": [
+        "S1"
+      ],
+      "gap": "需要同步英文官网 canonical URL，避免地区站链接带来地区语境偏差。",
+      "confidence": "官方事实"
+    },
+    {
+      "source_type": "官网产品页与服务目录",
+      "covered_objects": [
+        "产品线",
+        "Smart CRM",
+        "Breeze",
+        "HubSpot Customer Platform"
+      ],
+      "current_evidence": [
+        "S2",
+        "S10"
+      ],
+      "gap": "产品命名更新频繁，需要每次报告前复核 Content Hub、Data Hub、Commerce Hub 的描述。",
+      "confidence": "官方事实"
+    },
+    {
+      "source_type": "投资者关系披露",
+      "covered_objects": [
+        "客户数",
+        "财务时间点",
+        "AI Agent",
+        "CEO 引述"
+      ],
+      "current_evidence": [
+        "S4",
+        "S5",
+        "S9"
+      ],
+      "gap": "财务数字和业务亮点必须保留季度和披露日期，不做长期事实泛化。",
+      "confidence": "官方事实"
+    },
+    {
+      "source_type": "SEC / 年报",
+      "covered_objects": [
+        "客户规模历史",
+        "国家覆盖",
+        "风险因素",
+        "收入结构"
+      ],
+      "current_evidence": [
+        "S3"
+      ],
+      "gap": "正式项目可补 10-Q/10-K 风险因素和业务描述，增强第三方审计口径。",
+      "confidence": "第三方证据"
+    },
+    {
+      "source_type": "官方客户案例",
+      "covered_objects": [
+        "DoorDash",
+        "Kelly Services",
+        "案例场景",
+        "案例指标"
+      ],
+      "current_evidence": [
+        "S6",
+        "S7"
+      ],
+      "gap": "案例效果只能绑定具体客户和页面，不能当作平台总体承诺。",
+      "confidence": "官方事实"
+    },
+    {
+      "source_type": "地点与办公信息",
+      "covered_objects": [
+        "总部",
+        "办公城市"
+      ],
+      "current_evidence": [
+        "S8",
+        "S11"
+      ],
+      "gap": "地区联系页可能因语言站点不同而变更，应优先补英文公司联系页。",
+      "confidence": "官方事实"
+    }
+  ],
+  "entity_coverage_matrix": [
+    {
+      "entity_type": "品牌",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "HubSpot"
+      ],
+      "risk": "品牌名与 Customer Platform 容易混作同一实体。",
+      "reinforcement": "品牌实体只代表组织和品牌，不承载产品平台属性。"
+    },
+    {
+      "entity_type": "产品",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "HubSpot Customer Platform",
+        "Smart CRM",
+        "Marketing Hub",
+        "Data Hub"
+      ],
+      "risk": "旧名和新名混用。",
+      "reinforcement": "产品页和 FAQ 同步列出现行名称、旧名和别名。"
+    },
+    {
+      "entity_type": "服务",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "Professional services and other revenue"
+      ],
+      "risk": "服务收入类别容易被误写成实施服务产品。",
+      "reinforcement": "在知识库中标注其来源为投资者关系收入分类。"
+    },
+    {
+      "entity_type": "功能",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "Customer Agent",
+        "Prospecting Agent",
+        "Data Agent"
+      ],
+      "risk": "AI Agent 能力被写成已量化承诺。",
+      "reinforcement": "只写公开披露的能力名称和归属，不写未证实效果。"
+    },
+    {
+      "entity_type": "技术",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "Breeze"
+      ],
+      "risk": "Breeze Assistant、Breeze Agents 和 Breeze 泛称边界不清。",
+      "reinforcement": "把 Breeze 作为技术集合，Agent 作为功能节点。"
+    },
+    {
+      "entity_type": "行业",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "CRM 与客户平台软件"
+      ],
+      "risk": "行业词过泛会弱化客户平台定位。",
+      "reinforcement": "用 CRM、customer platform、marketing automation 三层行业词。"
+    },
+    {
+      "entity_type": "用户",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "成长型企业团队"
+      ],
+      "risk": "用户对象可能被泛化为所有企业。",
+      "reinforcement": "页面使用 scaling businesses / 成长型企业团队。"
+    },
+    {
+      "entity_type": "场景",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "营销自动化与客户旅程统一"
+      ],
+      "risk": "场景只覆盖营销，忽视销售、服务和数据。",
+      "reinforcement": "补充销售拓客、客户服务、数据治理和商务收款场景。"
+    },
+    {
+      "entity_type": "客户",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "DoorDash",
+        "Kelly Services"
+      ],
+      "risk": "客户名称和指标需要授权可公开。",
+      "reinforcement": "只使用官方案例公开内容，未授权客户不入图。"
+    },
+    {
+      "entity_type": "案例",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "DoorDash 邮件活动生产提效案例",
+        "Kelly Services 站点流量增长案例"
+      ],
+      "risk": "案例指标缺少上下文。",
+      "reinforcement": "案例节点写明使用产品、结果、来源和适用边界。"
+    },
+    {
+      "entity_type": "证据",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "S1-S11"
+      ],
+      "risk": "来源日期不刷新会造成旧事实。",
+      "reinforcement": "每次生成前复核官网产品页和最新投资者关系披露。"
+    },
+    {
+      "entity_type": "地点",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "Cambridge, Massachusetts"
+      ],
+      "risk": "地址来源为地区站点时需要复核。",
+      "reinforcement": "补充英文联系页或 SEC 文件地址。"
+    },
+    {
+      "entity_type": "时间",
+      "coverage_status": "已覆盖",
+      "representative_entities": [
+        "2006 年",
+        "2026 年第一季度",
+        "2026-05-07"
+      ],
+      "risk": "AI 回答常漏掉时间限定。",
+      "reinforcement": "对客户数、AI Agent、CEO 事实都写日期。"
+    }
+  ],
+  "relation_audit_matrix": [
+    {
+      "relation_type": "拥有",
+      "direction_rule": "品牌 -> 拥有 -> 产品平台",
+      "evidence_requirement": "官网产品页或投资者关系披露。",
+      "current_coverage": "HubSpot -> HubSpot Customer Platform，证据 S2/S4。",
+      "quality_action": "避免把 Customer Platform 反向写成公司实体。"
+    },
+    {
+      "relation_type": "提供",
+      "direction_rule": "产品平台 -> 提供 -> Hub / 功能 / Agent",
+      "evidence_requirement": "产品页、服务目录或发布公告。",
+      "current_coverage": "Customer Platform -> Marketing Hub / Sales Hub / Service Hub / Content Hub / Data Hub / Commerce Hub / Customer Agent。",
+      "quality_action": "每个 Hub 单独保留别名和边界。"
+    },
+    {
+      "relation_type": "引用",
+      "direction_rule": "产品平台 -> 引用 -> 技术集合；技术集合 -> 引用 -> 具体功能",
+      "evidence_requirement": "产品页或业绩披露中明确命名。",
+      "current_coverage": "Customer Platform -> Breeze，Breeze -> Customer Agent / Prospecting Agent / Data Agent。",
+      "quality_action": "Breeze 相关效果不进入关系边，除非有公开指标。"
+    },
+    {
+      "relation_type": "服务",
+      "direction_rule": "品牌 / 人物 / 案例 -> 服务 -> 目标对象",
+      "evidence_requirement": "官方任命、案例页或公开披露。",
+      "current_coverage": "Yamini Rangan -> HubSpot，案例 -> DoorDash / Kelly Services。",
+      "quality_action": "人物关系保留职位和日期，客户关系保留案例上下文。"
+    },
+    {
+      "relation_type": "适用",
+      "direction_rule": "产品 / 场景 -> 适用 -> 用户 / 行业",
+      "evidence_requirement": "官网定位或案例语境。",
+      "current_coverage": "Customer Platform -> 成长型企业团队，Marketing Hub -> 营销自动化场景。",
+      "quality_action": "不要扩展到未被来源明确覆盖的行业。"
+    },
+    {
+      "relation_type": "获得",
+      "direction_rule": "客户案例 -> 获得 -> 公开指标",
+      "evidence_requirement": "官方案例页面明确列出的结果。",
+      "current_coverage": "DoorDash 3 天/80%，Kelly Services +32%/+26%/+60%。",
+      "quality_action": "指标作为案例事实，不作为 HubSpot 普遍承诺。"
+    },
+    {
+      "relation_type": "来源",
+      "direction_rule": "事实主张 -> 来源 -> 证据 ID",
+      "evidence_requirement": "来源账本必须有定位符和核验状态。",
+      "current_coverage": "所有核心实体和关系均绑定 S1-S11。",
+      "quality_action": "新增关系没有证据时进入 open_issues。"
+    },
+    {
+      "relation_type": "时间",
+      "direction_rule": "事实主张 -> 时间 -> 日期 / 财报季度 / 成立年份",
+      "evidence_requirement": "披露日期、页面访问日期或官方年份。",
+      "current_coverage": "2006、2026-03-31、2026-05-07 已建时间语境。",
+      "quality_action": "客户数、职位、产品发布均保留时间字段。"
+    },
+    {
+      "relation_type": "对比",
+      "direction_rule": "品牌 -> 对比 -> 竞品或通用类别",
+      "evidence_requirement": "只允许在测试场景和内容建议中出现，需外部竞品证据后再进入正式图谱。",
+      "current_coverage": "DeepSeek 测试问题涉及 Salesforce 比较，但未进入核心关系。",
+      "quality_action": "竞品比较关系暂列测试场景，不写进 JSON-LD。"
+    },
+    {
+      "relation_type": "替代",
+      "direction_rule": "旧名 / 简称 -> 替代或指向 -> 规范实体",
+      "evidence_requirement": "产品页、服务目录或消歧依据。",
+      "current_coverage": "CMS Hub -> Content Hub，Operations Hub -> Data Hub 作为别名处理。",
+      "quality_action": "旧名只进入消歧表和别名，不把旧名当作并列新产品。"
+    }
+  ],
+  "schema_alignment": [
+    {
+      "schema_type": "Organization",
+      "page_fact": "HubSpot / HubSpot, Inc. 是品牌和组织主体。",
+      "json_ld_eligible": "是",
+      "constraint": "需要页面正文展示品牌名、官网 URL、创始人或公司事实。",
+      "source_ids": [
+        "S1",
+        "S4"
+      ]
+    },
+    {
+      "schema_type": "Person",
+      "page_fact": "Brian Halligan、Dharmesh Shah 为联合创始人；Yamini Rangan 为 CEO。",
+      "json_ld_eligible": "是",
+      "constraint": "人物职位必须带来源日期；避免把联合创始人误写为现任 CEO。",
+      "source_ids": [
+        "S1",
+        "S4",
+        "S5",
+        "S9"
+      ]
+    },
+    {
+      "schema_type": "SoftwareApplication",
+      "page_fact": "HubSpot Customer Platform、Smart CRM 和各 Hub 是软件产品/平台能力。",
+      "json_ld_eligible": "是",
+      "constraint": "featureList 只写页面可见产品名，不写未经页面承载的效果承诺。",
+      "source_ids": [
+        "S2",
+        "S10"
+      ]
+    },
+    {
+      "schema_type": "Offer",
+      "page_fact": "HubSpot 提供 Free and premium plans 以及各 Hub 产品。",
+      "json_ld_eligible": "谨慎",
+      "constraint": "若页面没有具体价格、计划或购买入口，仅作为 itemOffered 建议，不写具体价格。",
+      "source_ids": [
+        "S2"
+      ]
+    },
+    {
+      "schema_type": "PostalAddress",
+      "page_fact": "HubSpot 总部地址为 2 Canal Park, Cambridge, MA 02141。",
+      "json_ld_eligible": "待补证",
+      "constraint": "当前来源为地区联系页，正式上线前建议补英文联系页或 SEC 文件。",
+      "source_ids": [
+        "S8"
+      ]
+    },
+    {
+      "schema_type": "Review / AggregateRating",
+      "page_fact": "当前报告没有采集可用于结构化评分的公开评价。",
+      "json_ld_eligible": "否",
+      "constraint": "不从客户案例指标推导评分，不编造评价数量。",
+      "source_ids": []
+    }
+  ],
+  "content_alignment_plan": [
+    {
+      "asset": "中文品牌百科页",
+      "entity_relations": "HubSpot -> 拥有 -> HubSpot Customer Platform；Customer Platform -> 提供 -> Smart CRM / Hubs / Breeze。",
+      "current_state": "需要从旧“入站营销软件”描述升级为客户平台描述。",
+      "production_requirement": "首屏正文明确品牌定义、产品平台、Hub 列表、AI 能力和来源日期。",
+      "acceptance": "百科页首段可回答“HubSpot 是什么、产品包括什么、证据来自哪里”。"
+    },
+    {
+      "asset": "产品总览页",
+      "entity_relations": "Customer Platform -> 提供 -> Marketing Hub / Sales Hub / Service Hub / Content Hub / Data Hub / Commerce Hub。",
+      "current_state": "产品线可枚举，但中文解释需统一。",
+      "production_requirement": "每个 Hub 一句话定义、别名、旧名、适用场景和官方来源。",
+      "acceptance": "国内 AI 平台问“有哪些产品”时能完整命中六个 Hub。"
+    },
+    {
+      "asset": "FAQ",
+      "entity_relations": "别名 / 旧名 -> 指向 -> 规范实体。",
+      "current_state": "HubSpot CRM、Customer Platform、Content Hub、Data Hub、Breeze 的边界需要问答化。",
+      "production_requirement": "新增至少 8 条消歧 FAQ，覆盖简称、旧名、竞品比较和 AI Agent。",
+      "acceptance": "测试问题不再把 Content Hub 写成 CMS Hub 或把 Data Hub 写成 Smart CRM。"
+    },
+    {
+      "asset": "客户案例页",
+      "entity_relations": "案例 -> 服务 -> 客户；案例 -> 获得 -> 公开指标；案例 -> 使用 -> 产品。",
+      "current_state": "DoorDash 和 Kelly Services 可作为公开案例样本。",
+      "production_requirement": "指标只放在对应案例内，并加来源和适用边界。",
+      "acceptance": "AI 回答可引用指标但不会外推为所有客户结果。"
+    },
+    {
+      "asset": "证据与来源页",
+      "entity_relations": "事实主张 -> 来源 -> 证据 ID。",
+      "current_state": "来源账本已具备 S1-S11。",
+      "production_requirement": "把来源 ID、标题、链接、日期、事实主张和使用方式公开成可维护清单。",
+      "acceptance": "每条核心关系都能从页面跳回证据。"
+    },
+    {
+      "asset": "国内 AI 平台测试集",
+      "entity_relations": "测试问题 -> 期望命中 -> 核心实体。",
+      "current_state": "已覆盖五个平台的五类意图。",
+      "production_requirement": "扩展同义问法、竞品问法、行业场景问法和错误纠偏样例。",
+      "acceptance": "每轮采样输出命中率、错指率、过期事实率和证据引用率。"
+    }
+  ],
+  "monitoring_plan": [
+    {
+      "monitor_object": "品牌定义",
+      "platform_or_channel": "DeepSeek / 腾讯元宝",
+      "sample_trigger": "“HubSpot 是什么？和 CRM 有什么关系？”",
+      "metric": "客户平台定位命中率、旧定义占比",
+      "cadence": "每月，财报后加测",
+      "correction_action": "更新百科页首段、FAQ 和结构化数据。"
+    },
+    {
+      "monitor_object": "产品线枚举",
+      "platform_or_channel": "豆包 / Kimi",
+      "sample_trigger": "“HubSpot 有哪些主要产品？Data Hub 是什么？”",
+      "metric": "六个 Hub 命中率、旧名误用率",
+      "cadence": "每月",
+      "correction_action": "补产品总览页、旧名重定向和消歧 FAQ。"
+    },
+    {
+      "monitor_object": "人物地点",
+      "platform_or_channel": "千问 / DeepSeek",
+      "sample_trigger": "“HubSpot CEO、联合创始人、总部、客户规模？”",
+      "metric": "人物错指率、时间戳缺失率",
+      "cadence": "季度财报后",
+      "correction_action": "更新人物实体页和来源账本。"
+    },
+    {
+      "monitor_object": "客户案例",
+      "platform_or_channel": "Kimi / 豆包",
+      "sample_trigger": "“用 DoorDash 和 Kelly Services 案例说明 HubSpot 场景。”",
+      "metric": "案例指标准确率、指标外推率",
+      "cadence": "每月",
+      "correction_action": "为案例页增加产品、指标、来源和适用边界。"
+    },
+    {
+      "monitor_object": "AI Agent 能力",
+      "platform_or_channel": "腾讯元宝 / DeepSeek",
+      "sample_trigger": "“HubSpot 2026 年 AI Agent 有哪些公开信息？”",
+      "metric": "Breeze / Customer Agent / Prospecting Agent / Data Agent 命中率",
+      "cadence": "重大产品发布后 7 天内",
+      "correction_action": "刷新产品页和 Q1/Q2 披露引用。"
+    },
+    {
+      "monitor_object": "证据引用",
+      "platform_or_channel": "全平台",
+      "sample_trigger": "要求回答“请给出公开依据”。",
+      "metric": "官方来源引用率、过期来源率、无来源断言率",
+      "cadence": "每月",
+      "correction_action": "补证据页、添加页面内引用和更新 JSON-LD。"
+    }
+  ],
+  "analysis_completeness_checklist": [
+    {
+      "item": "权威参考已纳入",
+      "status": "通过",
+      "evidence_note": "已覆盖 RDF、JSON-LD、PROV-O、SHACL、SKOS、Schema.org、Google 结构化数据、知识图谱综述和实体链接研究。"
+    },
+    {
+      "item": "核心实体类型已覆盖",
+      "status": "通过",
+      "evidence_note": "品牌、产品、服务、功能、技术、行业、用户、场景、客户、案例、证据、地点、时间均有代表节点。"
+    },
+    {
+      "item": "关系边有方向",
+      "status": "通过",
+      "evidence_note": "关系审计矩阵和三元组均按 subject-predicate-object 输出。"
+    },
+    {
+      "item": "证据 ID 可追溯",
+      "status": "通过",
+      "evidence_note": "实体、关系和三元组均引用 S1-S11。"
+    },
+    {
+      "item": "真实来源 URL 连通核验",
+      "status": "通过",
+      "evidence_note": "S1-S11 已由 collect_source_validation.py 自动采样，11 个 URL 均返回 200；正式交付仍需人工语义核对事实主张。"
+    },
+    {
+      "item": "消歧覆盖易混项",
+      "status": "通过",
+      "evidence_note": "HubSpot / Customer Platform / HubSpot CRM / Content Hub / Data Hub / CEO 已列入消歧。"
+    },
+    {
+      "item": "客户和人物隐私检查",
+      "status": "通过",
+      "evidence_note": "当前使用公开官网、投资者关系和官方案例；未授权客户不进入图谱。"
+    },
+    {
+      "item": "Schema 与正文一致性",
+      "status": "通过",
+      "evidence_note": "JSON-LD 建议只包含品牌、人物、产品平台和 featureList，不写评分或未公开效果承诺。"
+    },
+    {
+      "item": "国内 AI 平台测试场景",
+      "status": "通过",
+      "evidence_note": "DeepSeek、豆包、千问、Kimi、腾讯元宝各有测试问题、风险和通过标准。"
+    },
+    {
+      "item": "页面和内容补强闭环",
+      "status": "通过",
+      "evidence_note": "已输出百科页、产品页、FAQ、案例页、证据页和测试集的对齐计划。"
+    },
+    {
+      "item": "四件套与排版质量",
+      "status": "通过",
+      "evidence_note": "由 renderer 生成 Word、PDF、HTML、Markdown，并由 quality-report 检查固定菜单、真实表格和防溢出。"
+    }
   ],
   "entities": [
     {
@@ -958,6 +1593,34 @@
       "evidence_gap": "每条测试问题需要绑定期望实体和通过标准。",
       "priority": "P1",
       "acceptance_criteria": "DeepSeek、豆包、千问、Kimi、腾讯元宝各至少 1 条问题。"
+    },
+    {
+      "target_asset": "中文产品总览页",
+      "relationship_gap": "Customer Platform 与六个 Hub、Smart CRM、Breeze 的层级关系需要可视化。",
+      "evidence_gap": "需要同步官网产品页和服务目录，解释 Data Hub、Content Hub 与旧名边界。",
+      "priority": "P1",
+      "acceptance_criteria": "页面以表格或图谱列出产品、别名、场景、来源和更新时间。"
+    },
+    {
+      "target_asset": "客户案例索引页",
+      "relationship_gap": "DoorDash、Kelly Services 案例需要绑定客户、行业、使用产品、结果和来源。",
+      "evidence_gap": "案例指标必须只来自官方案例页，并保留个案适用边界。",
+      "priority": "P2",
+      "acceptance_criteria": "每个案例都能回答“谁、用什么、解决什么、结果是什么、证据在哪里”。"
+    },
+    {
+      "target_asset": "结构化数据实施清单",
+      "relationship_gap": "Organization、Person、SoftwareApplication、Offer、PostalAddress 的使用边界需要上线前复核。",
+      "evidence_gap": "PostalAddress 建议补英文官方联系页或 SEC 文件；Review/AggregateRating 暂不使用。",
+      "priority": "P1",
+      "acceptance_criteria": "JSON-LD 字段逐项对应页面正文和来源 ID，没有页面不可见事实。"
+    },
+    {
+      "target_asset": "来源证据页",
+      "relationship_gap": "图谱关系需要可点击回溯到来源账本，便于国内 AI 平台纠偏。",
+      "evidence_gap": "S1-S11 需要公开标题、链接、日期、事实主张和用途。",
+      "priority": "P1",
+      "acceptance_criteria": "核心关系、三元组和页面段落都能引用至少一个来源 ID。"
     }
   ],
   "open_issues": [
@@ -1056,6 +1719,162 @@
         "S4",
         "S5"
       ]
+    }
+  ],
+  "source_validation": [
+    {
+      "source_id": "S1",
+      "evidence_title": "About HubSpot | HubSpot’s Story",
+      "url": "https://www.hubspot.com/our-story",
+      "checked_at": "2026-05-21T08:49:55+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "About HubSpot | HubSpot’s Story",
+      "content_type": "text/html",
+      "last_modified": "Tue, 19 May 2026 20:44:54 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S2",
+      "evidence_title": "Get Started With HubSpot Software",
+      "url": "https://www.hubspot.com/products/get-started",
+      "checked_at": "2026-05-21T08:49:57+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Get Started With HubSpot's Software",
+      "content_type": "text/html",
+      "last_modified": "",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S3",
+      "evidence_title": "HubSpot 2025 Form 10-K",
+      "url": "https://www.sec.gov/Archives/edgar/data/0001404655/000119312526046646/hubs-20251231.htm",
+      "checked_at": "2026-05-21T08:49:59+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "10-K",
+      "content_type": "text/html",
+      "last_modified": "Wed, 11 Feb 2026 21:26:47 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S4",
+      "evidence_title": "HubSpot Reports Strong Q1 2026 Results",
+      "url": "https://ir.hubspot.com/news-releases/news-release-details/hubspot-reports-strong-q1-2026-results",
+      "checked_at": "2026-05-21T08:50:01+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "HubSpot Reports Strong Q1 2026 Results | HubSpot",
+      "content_type": "text/html",
+      "last_modified": "Thu, 21 May 2026 00:49:27 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S5",
+      "evidence_title": "Management | HubSpot",
+      "url": "https://ir.hubspot.com/governance/management/",
+      "checked_at": "2026-05-21T08:50:03+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Management | HubSpot",
+      "content_type": "text/html",
+      "last_modified": "Thu, 21 May 2026 00:11:06 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S6",
+      "evidence_title": "DoorDash Shortens Time to Produce Email Campaigns by 3 Days With HubSpot",
+      "url": "https://www.hubspot.com/case-studies/doordash",
+      "checked_at": "2026-05-21T08:50:05+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "DoorDash Shortens Time to Produce Email Campaigns by 3 Days With HubSpot",
+      "content_type": "text/html",
+      "last_modified": "Wed, 20 May 2026 21:39:39 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S7",
+      "evidence_title": "Kelly Services Boosts Site Traffic 32%",
+      "url": "https://www.hubspot.com/case-studies/kelly-services",
+      "checked_at": "2026-05-21T08:50:07+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Kelly Services Boosts Site Traffic 32% by Unifying Marketing with HubSpot's Platform",
+      "content_type": "text/html",
+      "last_modified": "Wed, 20 May 2026 21:45:43 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S8",
+      "evidence_title": "Contact HubSpot",
+      "url": "https://br.hubspot.com/company/contact",
+      "checked_at": "2026-05-21T08:50:08+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Entre em contato conosco | HubSpot",
+      "content_type": "text/html",
+      "last_modified": "Tue, 19 May 2026 20:35:48 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S9",
+      "evidence_title": "Brian Halligan | Board Member",
+      "url": "https://ir.hubspot.com/management/brian-halligan",
+      "checked_at": "2026-05-21T08:50:10+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Brian Halligan | Board Member | HubSpot",
+      "content_type": "text/html",
+      "last_modified": "Thu, 21 May 2026 00:50:11 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S10",
+      "evidence_title": "HubSpot Product & Services Catalog",
+      "url": "https://legal.hubspot.com/services/hubspot-services-descriptions",
+      "checked_at": "2026-05-21T08:50:12+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "HubSpot Product & Services Catalog",
+      "content_type": "text/html",
+      "last_modified": "",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
+    },
+    {
+      "source_id": "S11",
+      "evidence_title": "Hybrid Work | HubSpot",
+      "url": "https://www.hubspot.com/hybrid",
+      "checked_at": "2026-05-21T08:50:15+08:00",
+      "http_status": "200",
+      "reachable": true,
+      "page_title": "Flex Work",
+      "content_type": "text/html",
+      "last_modified": "Tue, 19 May 2026 20:35:04 GMT",
+      "validation_status": "已连通",
+      "real_data_judgement": "可作为真实来源核验样本；仍需用来源账本中的事实主张做人工语义核对。",
+      "action": "保留来源 ID，并在正式交付前核对页面正文与事实主张。"
     }
   ]
 }

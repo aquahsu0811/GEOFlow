@@ -7,9 +7,11 @@
     "references/research-basis.md",
     "references/monitoring-method.md",
     "references/cn-platform-sampling.md",
+    "references/data-acquisition.md",
     "references/metrics-attribution.md",
     "references/correction-loop.md",
     "references/dashboard-data-model.md",
+    "references/report-completeness-model.md",
     "references/artifact-layout.md",
     "references/quality-gates.md",
     "evals/trigger_cases.json",
@@ -47,6 +49,18 @@
     "four_format_quality_review",
     "company_scenario_discovery",
     "official_fact_source_table",
-    "synthetic_or_live_sampling_disclaimer"
+    "synthetic_or_live_sampling_disclaimer",
+    "authoritative_source_ledger",
+    "six_layer_analysis_model",
+    "systematic_detailed_complete_report",
+    "sticky_html_toc_menu",
+    "governance_risk_controls",
+    "pandoc_default_css_suppressed",
+    "desktop_content_width_checked",
+    "real_data_acquisition_modes",
+    "evidence_level_gate",
+    "authorized_sampling_boundaries",
+    "kami_report_ui",
+    "white_background_kami_variant"
   ]
 }

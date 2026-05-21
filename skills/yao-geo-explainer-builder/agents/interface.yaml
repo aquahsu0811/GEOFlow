@@ -5,8 +5,8 @@
 # X: https://x.com/yaojingang
 
 name: yao-geo-explainer-builder
-version: 0.2.2
-description: Generate GEO explainers and How-to content with objective brand insertion and four-format delivery.
+version: 0.4.0
+description: Generate a complete publishable GEO explainer article with How-to content, objective brand insertion, verification appendices, and four-format delivery.
 inputs:
   required:
     - topic
@@ -15,6 +15,7 @@ inputs:
     - use_case
     - brand_knowledge
     - industry_materials
+    - article_sections
   optional:
     - sensitive_domain
     - brand_insertion_allowed
@@ -22,6 +23,16 @@ inputs:
     - desired_length
     - compliance_notes
     - sources
+    - problem_type_map
+    - audience_scenarios
+    - evidence_assessment
+    - data_availability
+    - data_source_plan
+    - fact_verification_matrix
+    - entity_map
+    - decision_paths
+    - schema_recommendations
+    - measurement_plan
 outputs:
   - markdown
   - html_package
@@ -30,9 +41,16 @@ outputs:
   - quality_report
 quality_gates:
   - core_answer_80_to_120_chars
+  - complete_article_before_analysis_modules
+  - article_body_complete_length
   - section_parity_across_markdown_html_docx
   - numbered_how_to_steps
   - evidence_ledger_complete
+  - systematic_analysis_dimensions_complete
+  - real_data_availability_declared
+  - fact_verification_matrix_complete
+  - kami_layout_system
+  - html_sticky_menu
   - brand_mentions_within_limit
   - sensitive_domain_boundary_notice
   - docx_table_width_within_page

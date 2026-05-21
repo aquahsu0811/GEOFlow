@@ -32,14 +32,53 @@
       "detail": "CSS includes fixed table layout and long-token wrapping."
     },
     {
+      "name": "html has sticky menu",
+      "passed": true,
+      "detail": "HTML report includes a sticky navigation menu for screen reading."
+    },
+    {
+      "name": "html follows kami editorial tokens",
+      "passed": true,
+      "detail": "HTML uses the kami-style ink-blue, warm neutral, and compact editorial rhythm while preserving white report background."
+    },
+    {
+      "name": "html print mode hides sticky menu",
+      "passed": true,
+      "detail": "PDF/print output excludes the screen-only sticky menu."
+    },
+    {
+      "name": "markdown contains required systematic KB sections",
+      "passed": true,
+      "detail": {
+        "structured summary": true,
+        "systematic knowledge-base body": true,
+        "real data access boundary": true,
+        "complete entity inventory": true,
+        "analysis completeness self-check": true,
+        "fact-card library": true,
+        "prompt input pack": true,
+        "source index": true
+      }
+    },
+    {
+      "name": "markdown contains complete entity inventory",
+      "passed": true,
+      "detail": "Complete entity inventory section is mandatory."
+    },
+    {
+      "name": "markdown explains real data access boundary",
+      "passed": true,
+      "detail": "Reports must explain which data was actually accessible, which mode was used, and which claims remain inaccessible or pending."
+    },
+    {
       "name": "docx contains fixed tables",
       "passed": true,
       "detail": {
-        "table_count": 13,
-        "fixed_table_count": 13,
-        "dxa_table_width_count": 13,
+        "table_count": 28,
+        "fixed_table_count": 28,
+        "dxa_table_width_count": 28,
         "nowrap_count": 0,
-        "longest_unbreakable_segment": 59,
+        "longest_unbreakable_segment": 72,
         "max_grid_width_twips": 9638,
         "all_grid_widths_within_body": true
       }
@@ -48,11 +87,11 @@
       "name": "docx table width uses A4 body dxa",
       "passed": true,
       "detail": {
-        "table_count": 13,
-        "fixed_table_count": 13,
-        "dxa_table_width_count": 13,
+        "table_count": 28,
+        "fixed_table_count": 28,
+        "dxa_table_width_count": 28,
         "nowrap_count": 0,
-        "longest_unbreakable_segment": 59,
+        "longest_unbreakable_segment": 72,
         "max_grid_width_twips": 9638,
         "all_grid_widths_within_body": true
       }
@@ -61,11 +100,11 @@
       "name": "docx grid widths stay inside page body",
       "passed": true,
       "detail": {
-        "table_count": 13,
-        "fixed_table_count": 13,
-        "dxa_table_width_count": 13,
+        "table_count": 28,
+        "fixed_table_count": 28,
+        "dxa_table_width_count": 28,
         "nowrap_count": 0,
-        "longest_unbreakable_segment": 59,
+        "longest_unbreakable_segment": 72,
         "max_grid_width_twips": 9638,
         "all_grid_widths_within_body": true
       }
@@ -74,11 +113,11 @@
       "name": "docx has no nowrap cells",
       "passed": true,
       "detail": {
-        "table_count": 13,
-        "fixed_table_count": 13,
-        "dxa_table_width_count": 13,
+        "table_count": 28,
+        "fixed_table_count": 28,
+        "dxa_table_width_count": 28,
         "nowrap_count": 0,
-        "longest_unbreakable_segment": 59,
+        "longest_unbreakable_segment": 72,
         "max_grid_width_twips": 9638,
         "all_grid_widths_within_body": true
       }
@@ -87,11 +126,11 @@
       "name": "docx long tokens are soft-wrapped",
       "passed": true,
       "detail": {
-        "table_count": 13,
-        "fixed_table_count": 13,
-        "dxa_table_width_count": 13,
+        "table_count": 28,
+        "fixed_table_count": 28,
+        "dxa_table_width_count": 28,
         "nowrap_count": 0,
-        "longest_unbreakable_segment": 59,
+        "longest_unbreakable_segment": 72,
         "max_grid_width_twips": 9638,
         "all_grid_widths_within_body": true
       }
@@ -100,14 +139,14 @@
       "name": "pdf readable",
       "passed": true,
       "detail": {
-        "pages": 7,
+        "pages": 24,
         "renderer": "weasyprint"
       }
     },
     {
       "name": "pdf preview rendered",
       "passed": true,
-      "detail": "7 preview page(s) generated."
+      "detail": "24 preview page(s) generated."
     },
     {
       "name": "pdf right-edge visual overflow scan",

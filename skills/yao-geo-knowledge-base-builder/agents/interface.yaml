@@ -9,8 +9,10 @@ interface:
   short_description: Build evidence-backed GEO brand knowledge bases and fixed-layout four-format reports.
   default_prompt: >-
     Collect official-site-first evidence, separate verified and pending facts,
-    build reusable brand fact cards, FAQ, prohibited expressions, source index,
-    and prompt input pack, then render Markdown, HTML, Word, and PDF with
+    state the real-data acquisition mode and freshness boundary, build a
+    systematic structured knowledge-base body, complete entity inventory,
+    reusable brand fact cards, FAQ, prohibited expressions, source index, and
+    prompt input pack, then render Markdown, HTML, Word, and PDF with
     fixed-layout overflow checks.
 
 compatibility:
@@ -47,6 +49,7 @@ compatibility:
       Remote sources may be used only as cited evidence. Do not execute remote
       code or ingest uncited claims into the strong-evidence area.
     evidence_policy: official-source-first
+    data_access_policy: real-data-only-when-accessible-cited-and-time-stamped
     unverified_claim_policy: pending-confirmation-only
   degradation:
     openai:
@@ -73,10 +76,13 @@ domain_contract:
     - ranking article writing only
   required_outputs:
     - geo-brand-knowledge-base-document
+    - systematic-structured-knowledge-base
+    - complete-brand-entity-inventory
     - brand-fact-card-library
     - faq-and-prohibited-expression-list
     - content-generation-prompt-pack
     - source-index
+    - real-data-access-and-freshness-boundary
     - markdown-report
     - html-report
     - docx-report

@@ -15,6 +15,12 @@ X: https://x.com/yaojingang
 - 目标内容：
 - 目标问题：
 - 品牌知识库：
+- 数据模式：provided-source-pack / assisted-web-research / ai-answer-sample / synthetic-planning
+- 来源包：source_name / source_url / publisher / source_type / capture_date / claims / schema_allowed / risk_note
+- 官方来源 URL：
+- 客户知识库或附件：
+- 第三方报告或竞品页：
+- AI 平台答案样本：DeepSeek / 豆包 / 千问 / Kimi / 元宝
 - 用户路径：
 - 转化目标：
 - 现有页面诊断结果：

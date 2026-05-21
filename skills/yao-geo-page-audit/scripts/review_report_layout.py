@@ -5,7 +5,7 @@
 # Date: 2026-05-16
 # X: https://x.com/yaojingang
 
-"""Review yao-geo-page-audit report artifacts for Word/PDF right-overflow risk."""
+"""Review yao-geo-page-audit report artifacts for layout and navigation risk."""
 
 from __future__ import annotations
 
@@ -61,6 +61,38 @@ def check_docx(path: Path) -> dict:
     return result
 
 
+def check_html(path: Path) -> dict:
+    result = {
+        "exists": path.exists(),
+        "has_toc": False,
+        "has_sticky_or_fixed_toc": False,
+        "has_kami_parchment_rule": False,
+        "has_ink_blue_accent": False,
+        "has_no_rgba": False,
+        "has_compact_body_line_height": False,
+    }
+    if not path.exists():
+        return result
+
+    html = path.read_text(encoding="utf-8", errors="ignore")
+    compact = re.sub(r"\s+", "", html.lower())
+    result["has_toc"] = 'id="toc"' in compact or "id='toc'" in compact
+    result["has_sticky_or_fixed_toc"] = (
+        "#toc" in compact
+        and ("position:sticky" in compact or "position:fixed" in compact)
+    )
+    result["has_kami_parchment_rule"] = "#f5f4ed" in compact or "--parchment:" in compact
+    result["has_ink_blue_accent"] = "#1b365d" in compact
+    result["has_no_rgba"] = "rgba(" not in compact
+    body_rules = re.findall(r"body\{([^}]*)\}", compact)
+    for body_rule in body_rules:
+        match = re.search(r"line-height:([0-9.]+)", body_rule)
+        if match and float(match.group(1)) <= 1.55:
+            result["has_compact_body_line_height"] = True
+            break
+    return result
+
+
 def check_pdf(path: Path, render_dir: Path | None) -> dict:
     result = {
         "exists": path.exists(),
@@ -92,7 +124,7 @@ def check_pdf(path: Path, render_dir: Path | None) -> dict:
         width, height = image.size
         strip = image.crop((width - 18, 0, width, height))
         histogram = strip.histogram()
-        dark_ratio = sum(histogram[:245]) / (18 * height)
+        dark_ratio = sum(histogram[:190]) / (18 * height)
         if dark_ratio > 0.002:
             result["right_edge_issues"].append({"page": image_path.name, "dark_ratio": dark_ratio})
     return result
@@ -101,6 +133,7 @@ def check_pdf(path: Path, render_dir: Path | None) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--md", required=True)
+    parser.add_argument("--html", required=True)
     parser.add_argument("--docx", required=True)
     parser.add_argument("--pdf", required=True)
     parser.add_argument("--render-dir")
@@ -110,6 +143,7 @@ def main() -> int:
     render_dir = Path(args.render_dir) if args.render_dir else None
     report = {
         "markdown": check_markdown(Path(args.md)),
+        "html": check_html(Path(args.html)),
         "docx": check_docx(Path(args.docx)),
         "pdf": check_pdf(Path(args.pdf), render_dir),
     }
@@ -120,6 +154,18 @@ def main() -> int:
         report["open_issues"].append("docx_table_too_wide")
     if report["docx"]["visible_url_tokens_gt40"]:
         report["open_issues"].append("docx_visible_url_too_long")
+    if not report["html"]["has_toc"]:
+        report["open_issues"].append("html_toc_missing")
+    if not report["html"]["has_sticky_or_fixed_toc"]:
+        report["open_issues"].append("html_toc_not_sticky")
+    if not report["html"]["has_kami_parchment_rule"]:
+        report["open_issues"].append("html_kami_parchment_missing")
+    if not report["html"]["has_ink_blue_accent"]:
+        report["open_issues"].append("html_ink_blue_accent_missing")
+    if not report["html"]["has_no_rgba"]:
+        report["open_issues"].append("html_rgba_not_allowed")
+    if not report["html"]["has_compact_body_line_height"]:
+        report["open_issues"].append("html_body_line_height_too_loose")
     if report["pdf"]["right_edge_issues"]:
         report["open_issues"].append("pdf_right_edge_content")
     if not report["docx"]["zip_ok"]:

@@ -20,10 +20,18 @@ NS_W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 W = f"{{{NS_W}}}"
 DOCX_TABLE_WIDTH = 10100
 DEFAULT_TABLE_WIDTHS = {
+    ("项目", "结论"): [2300, 7800],
+    ("模式", "可获取数据", "前置条件", "处理动作"): [1800, 3100, 2400, 2800],
     ("方案", "适合谁", "核心能力", "落地条件"): [1400, 2900, 2900, 2900],
     ("方案", "证据锚点", "主要权衡", "价格可见性"): [1400, 3500, 2700, 2500],
+    ("维度", "核心问题", "证据要求", "选型用法"): [1700, 3000, 2700, 2700],
+    ("维度", "HubSpot", "Salesforce / Zoho CRM", "自建 CRM/表格"): [1500, 2900, 3000, 2700],
+    ("来源 ID", "来源等级", "支撑事实", "置信边界"): [1100, 1900, 3900, 3200],
+    ("来源 ID", "访问方式", "HTTP 状态", "验证结果"): [1100, 1900, 1600, 5500],
+    ("风险", "触发原因", "缓解措施", "证据/责任"): [1800, 2700, 3700, 1900],
     ("平台", "答案形态", "强化重点", "风险控制"): [1100, 2300, 3200, 3500],
     ("场景", "优先建议", "理由", "下一步"): [2900, 1800, 3400, 2000],
+    ("阶段", "检查项", "责任角色", "通过标准"): [1300, 3700, 2200, 2900],
     ("来源 ID", "来源", "来源类型", "事实与用途"): [1100, 2500, 1900, 4600],
     ("检查项", "结果", "说明"): [1700, 1500, 6900],
 }
@@ -90,7 +98,7 @@ def normalize_docx_layout(docx_path: str | Path) -> None:
                 set_attr(border, "val", "single")
                 set_attr(border, "sz", "4")
                 set_attr(border, "space", "0")
-                set_attr(border, "color", "D7DDE5")
+                set_attr(border, "color", "E8E6DC")
             margins = child(tbl_pr, "tblCellMar")
             for name, width in [("top", 80), ("left", 90), ("bottom", 80), ("right", 90)]:
                 margin = child(margins, name)
@@ -104,11 +112,16 @@ def normalize_docx_layout(docx_path: str | Path) -> None:
                 grid.remove(col)
             for width in widths:
                 set_attr(ET.SubElement(grid, wx("gridCol")), "w", width)
-            for row in rows:
+            for row_index, row in enumerate(rows):
                 for idx, cell in enumerate(row.findall(wx("tc"))):
                     tc_pr = child(cell, "tcPr")
                     for no_wrap in list(tc_pr.findall(wx("noWrap"))):
                         tc_pr.remove(no_wrap)
+                    if row_index == 0:
+                        shd = child(tc_pr, "shd")
+                        set_attr(shd, "val", "clear")
+                        set_attr(shd, "color", "auto")
+                        set_attr(shd, "fill", "FAF9F5")
                     tc_w = child(tc_pr, "tcW")
                     set_attr(tc_w, "w", widths[min(idx, len(widths) - 1)])
                     set_attr(tc_w, "type", "dxa")
@@ -117,6 +130,10 @@ def normalize_docx_layout(docx_path: str | Path) -> None:
                 if r_pr is None:
                     r_pr = ET.Element(wx("rPr"))
                     run.insert(0, r_pr)
+                fonts = child(r_pr, "rFonts")
+                set_attr(fonts, "ascii", "Source Han Sans SC")
+                set_attr(fonts, "hAnsi", "Source Han Sans SC")
+                set_attr(fonts, "eastAsia", "Source Han Sans SC")
                 set_attr(child(r_pr, "sz"), "val", "18")
                 set_attr(child(r_pr, "szCs"), "val", "18")
         tree.write(document_path, encoding="utf-8", xml_declaration=True)

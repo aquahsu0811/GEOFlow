@@ -8,7 +8,7 @@ X: https://x.com/yaojingang
 
 # HubSpot domestic AI GEO page audit demo
 
-本目录用于完整测试 `yao-geo-page-audit` 在真实公司公开页面、国内 AI 平台问题集、中文简体报告和 Word/PDF 防右溢交付中的表现。
+本目录用于完整测试 `yao-geo-page-audit` 在真实公司公开页面、公开答案素材问题集、权威证据台账、中文简体系统化报告、固定目录 HTML 和 Word/PDF 防右溢交付中的表现。没有用户提供的平台采样时，本示例不输出 AI 平台召回、排名或答案频次分析。
 
 测试对象：
 

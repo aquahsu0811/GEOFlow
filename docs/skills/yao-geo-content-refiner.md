@@ -5,11 +5,17 @@
 ## 核心能力
 
 - 原文 GEO 8 维评分。
-- 原子事实卡与证据账本。
+- 分析完整性总览。
+- 真实数据获取与核验计划：区分公开网页、用户资料、授权连接/API、内部系统和无法访问项。
+- 原子事实卡与证据强度/缺口账本。
 - GEO 改造版文章、差异报告、FAQ 与同义问法。
+- 语义与实体地图、平台适配矩阵。
 - 页面发布版 HTML 建议。
+- 发布与追踪建议。
 - Word、PDF、HTML、Markdown 四格式输出。
 - Word/PDF 防右溢出排版：宽表自动转纵向事实卡，表格固定宽度。
+- HTML 可视化报告带 sticky 菜单栏，页面下拉时固定跟随。
+- 按 Kami 长文档排版原则优化：白底、墨蓝强调、serif 标题、暖灰边框、紧凑行距、无 rgba。
 
 ## HubSpot 国内 AI 平台测试示例
 
@@ -20,3 +26,6 @@
 - [PDF](../../skills/yao-geo-content-refiner/examples/hubspot-cn-demo/hubspot-cn-geo-content-refiner-report.pdf)
 - [质量报告](../../skills/yao-geo-content-refiner/examples/hubspot-cn-demo/quality-report.json)
 - [版式溢出检查](../../skills/yao-geo-content-refiner/reports/layout-overflow-review.md)
+- [参考扫描](../../skills/yao-geo-content-refiner/reports/reference-scan-2026-05-21.md)
+- [Artifact Design Profile](../../skills/yao-geo-content-refiner/reports/artifact-design-profile-2026-05-21.md)
+- [能力迭代记录](../../skills/yao-geo-content-refiner/reports/capability-iteration-2026-05-21.md)

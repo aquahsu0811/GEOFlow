@@ -20,7 +20,9 @@ X: https://x.com/yaojingang
 
 采样频率：P0 品牌事实纠偏每日或隔日复采；P1 推荐与引用质量每周采样；P2 长尾场景双周或月度采样；内容发布、页面修复、外部信源发布后设置 `T-14 ~ T0` 基线窗口和 `T+7 / T+14 / T+30` 观察窗口。
 
-样本字段：`sample_id`、`platform`、`sampled_at`、`device`、`account_state`、`region`、`network_enabled`、`prompt_id`、`answer_text`、`brand_mentioned`、`brand_candidate`、`brand_recommended`、`brand_rank`、`competitor_mentions`、`negative_terms`、`fact_errors`、`citations`、`citation_supports_claim`、`confidence`。
+样本字段：`sample_id`、`sample_mode`、`evidence_level`、`platform`、`sampled_at`、`device`、`account_state`、`region`、`network_enabled`、`prompt_id`、`answer_text`、`answer_screenshot`、`raw_export_path`、`collector`、`permission_basis`、`brand_mentioned`、`brand_candidate`、`brand_recommended`、`brand_rank`、`competitor_mentions`、`negative_terms`、`fact_errors`、`citations`、`citation_supports_claim`、`confidence`。
+
+真实数据门槛：没有 `answer_text`、采样环境、采集时间、Prompt 版本和至少一种可审计证据（截图、导出文件、接口日志或人工复核记录）时，报告只能标为 `synthetic`、`inferred` 或 `pending_review`，不得标为 `live_platform_sample`。
 
 ## 公司测试场景发现
 

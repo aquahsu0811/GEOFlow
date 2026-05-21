@@ -14,6 +14,8 @@ X: https://x.com/yaojingang
 - 对比和榜单必须用 `<table>` 或等价结构；表格前说明比较口径。
 - FAQ 使用明确问题和答案，不把问题藏在折叠组件脚本里。
 - 证据区需要来源名称、URL 或文档名、核验日期、页面用途和对应模块。
+- HTML 可视化报告的目录使用 `<nav class="toc-bar" aria-label="报告目录">`，模块区块使用稳定 `id`，正文区块设置 `scroll-margin-top` 防止 sticky 菜单遮挡标题。
+- 多个 Schema 候选同时存在时，用稳定 `@id` 或页面锚点表达实体关系，避免孤立 JSON-LD 片段互相矛盾。
 
 | Schema | 使用条件 | 禁止事项 |
 | --- | --- | --- |
@@ -23,3 +25,13 @@ X: https://x.com/yaojingang
 | Organization | 页面有品牌/组织事实 | 不写未核验地址、资质、社媒 |
 | BreadcrumbList | 页面存在可见面包屑 | 不伪造不存在的层级 |
 | Review | 页面有真实评价和评价主体 | 不合成或虚构评分、作者、日期 |
+
+## CMS 字段补充
+
+系统、详细、完整的页面蓝图还应补充以下字段组：
+
+- `query_fanout_items`：主问题、子问题、用户阶段、页面模块、答案形态。
+- `entity_relationships`：实体名称、实体类型、关系、来源字段、页面锚点、Schema `@id`。
+- `evidence_items`：来源名称、URL/文档名、核验日期、可信度、对应结论、页面位置。
+- `acceptance_checks`：验收项、检查方法、负责人、频率、通过标准。
+- `accessibility_requirements`：标题层级、键盘焦点、菜单行为、移动端布局、公众号版约束。

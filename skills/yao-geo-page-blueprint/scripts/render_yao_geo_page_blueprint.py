@@ -22,18 +22,32 @@ from weasyprint import HTML
 REQ = ["title", "brand_name", "page_type", "target_question", "analysis_date", "summary_cards", "sections"]
 KEYWORDS = [
     "GEO 页面设计方案",
+    "输入、假设与边界",
+    "真实数据接入与核验计划",
+    "查询意图与 Query Fan-out 覆盖",
     "页面模块与信息架构图",
     "研究依据与页面设计原则",
+    "实体关系与知识图谱字段",
     "证据区与来源台账",
     "AI 可抽取模块设计",
     "用户转化模块设计",
     "HTML 结构样例",
     "Schema 建议",
     "CMS 字段清单",
+    "无障碍与页面体验要求",
+    "实施验收与监测计划",
     "移动端",
     "公众号",
     "FAQPage 正文可见",
 ]
+REPORT_NOTICE_MD = """<!--
+Copyright © 2026 姚金刚. All rights reserved.
+Project: yao-geo-page-blueprint
+Created by: 姚金刚
+Date: 2026-05-16
+X: https://x.com/yaojingang
+-->"""
+REPORT_NOTICE_HTML = "<!-- Copyright © 2026 姚金刚. All rights reserved. Project: yao-geo-page-blueprint. -->"
 
 DOCX_PAGE_WIDTH = 11906
 DOCX_MARGIN = 1020
@@ -75,6 +89,8 @@ def md_table(table: dict[str, Any]) -> str:
 
 def render_md(data: dict[str, Any]) -> str:
     out = [
+        REPORT_NOTICE_MD,
+        "",
         f"# {data['title']}",
         "",
         data.get("subtitle", ""),
@@ -145,12 +161,14 @@ def render_html(data: dict[str, Any]) -> str:
         body.append("\n".join(parts))
 
     css = (
-        '*{box-sizing:border-box}html,body{margin:0;background:#fff;color:#1f2933;font-family:"Source Han Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.72}.page{width:min(1120px,calc(100vw - 40px));margin:0 auto;padding:40px 0 72px;background:#fff}'
-        "header{padding-bottom:26px;border-bottom:2px solid #235f73}h1{margin:0 0 12px;font-size:38px;line-height:1.16;letter-spacing:0}.meta{display:flex;flex-wrap:wrap;gap:8px;padding:0;list-style:none}.meta li{border:1px solid #d7dee8;padding:5px 10px;color:#5d6875}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:24px 0 18px}article{border:1px solid #d7dee8;background:#fff;padding:16px}article p{margin:0 0 8px;color:#235f73;font-weight:700}article h3{margin:0 0 8px;font-size:23px}article span{color:#5d6875;font-size:13px}nav{margin:22px 0 10px;padding:14px 0 18px;border-bottom:1px solid #d7dee8}.nav{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}.nav a{display:flex;gap:8px;border:1px solid #d7dee8;background:#f6f8fa;padding:9px 10px;color:#1f2933;text-decoration:none;overflow-wrap:anywhere}section{padding:28px 0 8px;border-bottom:1px solid #d7dee8;break-inside:avoid}.k{margin:0 0 4px;color:#235f73;font-size:12px;font-weight:700}h2{margin:0 0 12px;font-size:25px;line-height:1.25}p,li{overflow-wrap:anywhere}.table-wrap{width:100%;overflow-x:auto;margin:14px 0 18px;border:1px solid #aab7c4;background:#fff}table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}th,td{border:1px solid #d7dee8;padding:9px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:break-word;line-height:1.55}th{background:#eef3f7;color:#173f4f;font-weight:700}figure{margin:16px 0 20px;border:1px solid #aab7c4;background:#fff}figcaption{border-bottom:1px solid #d7dee8;background:#f6f8fa;padding:8px 10px;color:#173f4f;font-weight:700}pre{margin:0;padding:12px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px;line-height:1.55;background:#fff}@media(max-width:720px){.page{width:min(100vw - 24px,1120px);padding-top:22px}h1{font-size:30px}.cards,.nav{grid-template-columns:1fr}th,td{min-width:140px}}@media print{@page{size:A4;margin:17mm 15mm}html,body,.page{background:#fff}.page{width:100%;padding:0}article,.table-wrap,figure,tr{break-inside:avoid}}"
+        ':root{--paper:#fff;--ivory:#faf9f5;--warm-sand:#e8e6dc;--ink:#1B365D;--near:#141413;--dark:#3d3d3a;--olive:#5e5d59;--stone:#87867f;--border:#e8e5da;--border-strong:#d1cfc5;--tag:#EEF2F7}'
+        '*{box-sizing:border-box}html,body{margin:0;background:#fff;color:var(--near);font-family:"Inter","Source Han Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.52}.page{width:min(1120px,calc(100vw - 40px));margin:0 auto;padding:46px 0 78px;background:#fff}'
+        'header{padding:4px 0 30px;border-bottom:1px solid var(--border-strong)}h1,h2{font-family:"Source Han Serif SC","Noto Serif CJK SC","Songti SC",Georgia,serif;font-weight:500;color:var(--near)}h1{margin:0 0 12px;font-size:42px;line-height:1.14;letter-spacing:0}header>p:not(.k){max-width:860px;margin:0 0 14px;color:var(--olive);font-size:17px;line-height:1.5}.meta{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:18px 0 0;list-style:none}.meta li{border:1px solid var(--border);background:var(--ivory);border-radius:6px;padding:5px 10px;color:var(--dark);font-size:13px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:24px 0 18px}article{border:1px solid var(--border);border-radius:8px;background:var(--ivory);padding:16px 18px}article p{margin:0 0 7px;color:var(--ink);font-size:12px;font-weight:600}article h3{margin:0 0 7px;font-family:"Source Han Serif SC","Noto Serif CJK SC","Songti SC",Georgia,serif;font-size:22px;font-weight:500;line-height:1.22;color:var(--near)}article span{color:var(--olive);font-size:13px;line-height:1.45}.toc-bar{position:sticky;top:0;z-index:20;margin:20px 0 8px;padding:12px 0 14px;border-bottom:1px solid var(--border);background:#fff}.toc-bar h2{margin:0 0 8px;padding:0;border:0;font-family:"Inter","Source Han Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.25;color:var(--dark)}.toc-nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}.toc-nav a{flex:0 0 auto;display:flex;gap:8px;max-width:260px;border:1px solid var(--border);border-radius:6px;background:var(--ivory);padding:7px 10px;color:var(--dark);text-decoration:none;overflow-wrap:anywhere;white-space:normal;line-height:1.35}.toc-nav b{color:var(--ink);font-weight:600}.toc-nav a:focus{outline:2px solid var(--ink);outline-offset:2px}section{scroll-margin-top:82px;padding:30px 0 8px;border-bottom:1px solid var(--border);break-inside:avoid}.k{display:inline-block;margin:0 0 7px;border-radius:4px;background:var(--tag);padding:2px 6px;color:var(--ink);font-size:11px;font-weight:600;letter-spacing:0}h2{margin:0 0 12px;border-left:4px solid var(--ink);border-radius:2px;padding-left:10px;font-size:24px;line-height:1.22}p,li{overflow-wrap:anywhere;color:var(--dark)}p{margin:0 0 10px}ul{margin:8px 0 12px;padding-left:20px}.table-wrap{width:100%;overflow-x:auto;margin:14px 0 18px;border:1px solid var(--border-strong);border-radius:8px;background:#fff}table{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;overflow-wrap:anywhere;word-break:break-word;line-height:1.45;font-size:13px}th{background:#f3f0e8;color:var(--ink);font-weight:600}figure{margin:16px 0 20px;border:1px solid var(--border-strong);border-radius:8px;background:#fff;overflow:hidden}figcaption{border-bottom:1px solid var(--border);background:var(--ivory);padding:8px 10px;color:var(--ink);font-weight:600}pre{margin:0;padding:12px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.45;background:#fff;color:var(--near)}@media(max-width:720px){.page{width:min(100vw - 24px,1120px);padding-top:24px}h1{font-size:30px}.cards{grid-template-columns:1fr}.toc-nav a{max-width:220px}th,td{min-width:140px}}@media print{@page{size:A4;margin:17mm 15mm}html,body,.page{background:#fff}.page{width:100%;padding:0}.toc-bar{position:static}article,.table-wrap,figure,tr{break-inside:avoid}}'
     )
     return (
         '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
-        f'<title>{html.escape(data["title"])}</title><style>{css}</style></head><body><main class="page"><header><p class="k">Yao GEO Page Blueprint</p><h1>{html.escape(data["title"])}</h1><p>{html.escape(data.get("subtitle", ""))}</p><ul class="meta"><li>品牌：{html.escape(data["brand_name"])}</li><li>页面类型：{html.escape(data["page_type"])}</li><li>目标问题：{html.escape(data["target_question"])}</li><li>日期：{html.escape(data["analysis_date"])}</li></ul></header><div class="cards">{cards}</div><nav><h2>报告目录</h2><div class="nav">{"".join(nav)}</div></nav>{"".join(body)}</main></body></html>'
+        f"{REPORT_NOTICE_HTML}"
+        f'<title>{html.escape(data["title"])}</title><style>{css}</style></head><body><main class="page"><header><p class="k">Yao GEO Page Blueprint</p><h1>{html.escape(data["title"])}</h1><p>{html.escape(data.get("subtitle", ""))}</p><ul class="meta"><li>品牌：{html.escape(data["brand_name"])}</li><li>页面类型：{html.escape(data["page_type"])}</li><li>目标问题：{html.escape(data["target_question"])}</li><li>日期：{html.escape(data["analysis_date"])}</li></ul></header><div class="cards">{cards}</div><nav class="toc-bar" aria-label="报告目录"><h2>报告目录</h2><div class="toc-nav">{"".join(nav)}</div></nav>{"".join(body)}</main></body></html>'
     )
 
 
@@ -193,19 +211,21 @@ def compute_col_widths(headers: list[str], rows: list[list[Any]]) -> list[int]:
     return widths
 
 
-def p_xml(text: str, size: float = 10.5, bold: bool = False, after: int = 90) -> str:
+def p_xml(text: str, size: float = 10.5, bold: bool = False, after: int = 90, serif: bool = False) -> str:
     bold_xml = "<w:b/>" if bold else ""
     size_val = int(round(size * 2))
     safe_text = xe(soft_wrap_text(text))
+    east_asia = "Source Han Serif SC" if serif else "Microsoft YaHei"
+    ascii_font = "Georgia" if serif else "Arial"
     return (
         f'<w:p><w:pPr><w:spacing w:after="{after}" w:line="276" w:lineRule="auto"/><w:wordWrap/></w:pPr>'
-        f'<w:r><w:rPr><w:rFonts w:ascii="Arial" w:eastAsia="Microsoft YaHei" w:hAnsi="Arial"/><w:sz w:val="{size_val}"/>{bold_xml}</w:rPr>'
+        f'<w:r><w:rPr><w:rFonts w:ascii="{ascii_font}" w:eastAsia="{east_asia}" w:hAnsi="{ascii_font}"/><w:sz w:val="{size_val}"/>{bold_xml}</w:rPr>'
         f'<w:t xml:space="preserve">{safe_text}</w:t></w:r></w:p>'
     )
 
 
 def table_cell_xml(value: Any, width: int, head: bool = False, align: str = "left") -> str:
-    fill = '<w:shd w:fill="EEF3F7"/>' if head else ""
+    fill = '<w:shd w:fill="F3F0E8"/>' if head else ""
     valign = '<w:vAlign w:val="center"/>'
     p = p_xml(str(value), 8.7 if head else 8.3, head, 55)
     if align == "center":
@@ -229,9 +249,9 @@ def t_xml(headers: list[str], rows: list[list[Any]]) -> str:
         '<w:tblLayout w:type="fixed"/>'
         f'<w:tblCellMar><w:top w:w="{DOCX_CELL_MARGIN}" w:type="dxa"/><w:left w:w="{DOCX_CELL_MARGIN}" w:type="dxa"/>'
         f'<w:bottom w:w="{DOCX_CELL_MARGIN}" w:type="dxa"/><w:right w:w="{DOCX_CELL_MARGIN}" w:type="dxa"/></w:tblCellMar>'
-        '<w:tblBorders><w:top w:val="single" w:sz="6" w:color="D7DEE8"/><w:left w:val="single" w:sz="6" w:color="D7DEE8"/>'
-        '<w:bottom w:val="single" w:sz="6" w:color="D7DEE8"/><w:right w:val="single" w:sz="6" w:color="D7DEE8"/>'
-        '<w:insideH w:val="single" w:sz="6" w:color="D7DEE8"/><w:insideV w:val="single" w:sz="6" w:color="D7DEE8"/></w:tblBorders></w:tblPr>'
+        '<w:tblBorders><w:top w:val="single" w:sz="6" w:color="E8E5DA"/><w:left w:val="single" w:sz="6" w:color="E8E5DA"/>'
+        '<w:bottom w:val="single" w:sz="6" w:color="E8E5DA"/><w:right w:val="single" w:sz="6" w:color="E8E5DA"/>'
+        '<w:insideH w:val="single" w:sz="6" w:color="E8E5DA"/><w:insideV w:val="single" w:sz="6" w:color="E8E5DA"/></w:tblBorders></w:tblPr>'
     )
     grid = "<w:tblGrid>" + "".join(f'<w:gridCol w:w="{width}"/>' for width in widths) + "</w:tblGrid>"
     header_row = "<w:tr>" + "".join(table_cell_xml(header, widths[index], True, align_for(index)) for index, header in enumerate(headers)) + "</w:tr>"
@@ -244,15 +264,15 @@ def t_xml(headers: list[str], rows: list[list[Any]]) -> str:
 
 def render_docx(data: dict[str, Any], path: Path) -> None:
     body = [
-        p_xml(data["title"], 22, True, 160),
+        p_xml(data["title"], 22, False, 160, True),
         p_xml(data.get("subtitle", ""), 11.5, False, 100),
         p_xml(f"品牌：{data['brand_name']}  页面类型：{data['page_type']}", 10.5, False, 70),
         p_xml(f"目标问题：{data['target_question']}", 10.5, False, 120),
-        p_xml("封面摘要", 15.5, True, 90),
+        p_xml("封面摘要", 15.5, False, 90, True),
         t_xml(["指标", "结论", "说明"], [[card["label"], card["value"], card.get("note", "")] for card in data["summary_cards"]]),
     ]
     for section in data["sections"]:
-        body.append(p_xml(section["title"], 15.5, True, 95))
+        body.append(p_xml(section["title"], 15.5, False, 95, True))
         body += [p_xml(paragraph, 10.5, False, 75) for paragraph in section.get("paragraphs", [])]
         body += [p_xml(f"- {bullet}", 10.2, False, 55) for bullet in section.get("bullets", [])]
         if section.get("table"):
@@ -302,7 +322,7 @@ def review(paths: dict[str, Path]) -> dict[str, Any]:
     combined = paths["markdown"].read_text(encoding="utf-8") + html_text
     issues += [f"缺少关键词：{keyword}" for keyword in KEYWORDS if keyword not in combined]
     compact = html_text.replace(" ", "")
-    issues += [f"HTML 缺少规则：{rule}" for rule in ["background:#fff", "border-collapse:collapse", "overflow-wrap"] if rule not in compact]
+    issues += [f"HTML 缺少规则：{rule}" for rule in ["background:#fff", "border-collapse:collapse", "overflow-wrap", "position:sticky", 'aria-label="报告目录"', 'class="toc-bar"', "--ink:#1B365D", "--ivory:#faf9f5"] if rule not in compact]
     if "gradient" in html_text or "file://" in html_text or "/Users/" in html_text:
         issues.append("HTML 包含不允许的背景或本地路径")
     issues += docx_layout_issues(paths["docx"])

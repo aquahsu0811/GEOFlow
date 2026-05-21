@@ -14,10 +14,13 @@ This skill produces Markdown, HTML, Word, and PDF reports. The visual formats mu
 
 - Background: white.
 - PDF and Word: A4 portrait.
-- Page margin: about 18-20 mm.
-- Body text: Chinese serif/sans fallback with stable line height around 1.55-1.65.
-- Headings: ink-blue hierarchy, restrained spacing, no decorative gradient.
+- Page margin: about 20-22 mm for client-facing long reports.
+- Body text: Chinese sans fallback for dense reading; headings use Chinese serif fallback for authority.
+- Body line height: 1.50-1.55. Avoid 1.60+ because Chinese long reports become loose and page counts grow.
+- Headings: kami-style ink-blue `#1B365D` accent with restrained left border; no decorative gradient.
+- Neutral colors should be warm: ivory `#faf9f5`, warm border `#e8e6dc`, warm stone `#87867f`. The report background remains white to match this GEO skill's delivery requirement.
 - Tables: borders aligned, cells top-aligned, no clipped text.
+- HTML report should include a sticky screen-reading menu, but the menu must be hidden in print/PDF output.
 
 ## Table Rules
 
@@ -51,5 +54,7 @@ Run these checks after every render:
 6. PDF preview PNGs are generated.
 7. PDF preview PNGs show no right-edge ink in the page edge scan.
 8. HTML contains no absolute local `/Users/...` paths.
+9. HTML uses the agreed editorial tokens and compact body rhythm.
+10. HTML print mode hides the sticky menu.
 
 If any check fails, repair the renderer or report structure and rerun the full four-format build.

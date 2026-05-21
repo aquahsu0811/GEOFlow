@@ -98,7 +98,11 @@
         "citation-tracking",
         "brand-correction",
         "monthly-report",
-        "china-ai-platforms"
+        "china-ai-platforms",
+        "real-data-acquisition",
+        "report-completeness",
+        "sticky-html-nav",
+        "four-format-report"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -108,15 +112,19 @@
         "citation-source-ledger",
         "brand-fact-correction-task-table",
         "monthly-report-alert-rules",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "data-acquisition-plan",
+        "report-completeness-model",
+        "database-api-draft",
+        "sticky-html-monitoring-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-effect-monitor",
-      "summary": "设计 GEO Signal Monitor，面向 DeepSeek、豆包、千问、Kimi、元宝建立 AI 答案监测、引用追踪、品牌事实纠偏、月报告警和谨慎归因闭环。",
+      "summary": "设计 GEO Signal Monitor，面向 DeepSeek、豆包、千问、Kimi、元宝建立 AI 答案监测、引用追踪、品牌事实纠偏、月报告警和谨慎归因闭环，并补充真实数据获取、报告完整性模型、数据库/API 草案和四格式交付。",
       "public_repo_path": "skills/yao-geo-effect-monitor",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-panorama-audit",
@@ -131,7 +139,11 @@
         "opportunity-map",
         "china-ai-platforms",
         "zh-hans-report",
-        "four-format-report"
+        "four-format-report",
+        "official-site-evidence",
+        "evidence-ledger",
+        "analysis-completeness",
+        "sticky-html-nav"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -139,15 +151,18 @@
         "ai-answer-visibility-competitor-table",
         "geo-opportunity-map-priority-matrix",
         "page-content-asset-repair-list",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "official-site-evidence-ledger",
+        "analysis-completeness-review",
+        "sticky-html-panorama-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-panorama-audit",
-      "summary": "建立品牌 GEO 基线，面向 DeepSeek、豆包、千问、Kimi、元宝诊断 AI 答案可见性、竞品差距、内容页面缺口和外部信源，输出机会地图与 P0/P1 优先级，并交付中文简体白底四格式报告。",
+      "summary": "建立品牌 GEO 基线，面向 DeepSeek、豆包、千问、Kimi、元宝诊断 AI 答案可见性、竞品差距、页面内容缺口和外部信源，补充官网证据、来源分级、机会地图和白底四格式报告。",
       "public_repo_path": "skills/yao-geo-panorama-audit",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-page-audit",
@@ -162,7 +177,11 @@
         "docx-report",
         "pdf-report",
         "markdown-report",
-        "china-ai-platforms"
+        "china-ai-platforms",
+        "authoritative-evidence",
+        "report-module-taxonomy",
+        "sticky-html-nav",
+        "kami-layout"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -170,15 +189,18 @@
         "code-layer-fix-list",
         "content-structure-remodeling-plan",
         "schema-html-module-recommendations",
-        "four-format-deliverables"
+        "four-format-deliverables",
+        "authoritative-evidence-ledger",
+        "report-module-taxonomy",
+        "sticky-menu-html-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-page-audit",
-      "summary": "输入网址后诊断首页、代表性一级页和二级页的可抓取性、结构规范性、内容信号和 AI 可抽取性，输出代码层与内容层修复清单，并生成 Word/PDF/HTML/Markdown 四件套。",
+      "summary": "输入网址后诊断首页、代表性一级页和二级页的可抓取性、结构规范性、内容信号和 AI 可抽取性，输出权威证据台账、代码层/内容层修复清单、Schema/HTML 建议和 Word/PDF/固定目录 HTML/Markdown 四件套。",
       "public_repo_path": "skills/yao-geo-page-audit",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-page-blueprint",
@@ -197,6 +219,8 @@
       "requires_web": false,
       "primary_outputs": [
         "geo-page-blueprint-report",
+        "evidence-source-ledger",
+        "real-data-intake-validation-plan",
         "module-information-architecture",
         "ai-extractable-module-plan",
         "html-structure-sample",
@@ -209,9 +233,9 @@
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-page-blueprint",
-      "summary": "生成 GEO 友好页面的信息架构、AI 可抽取模块、用户转化模块、HTML 语义结构、Schema 建议、CMS 字段清单，以及桌面端、移动端和公众号版排版方案。",
+      "summary": "生成 GEO 友好页面的信息架构、真实数据核验计划、AI 可抽取模块、用户转化模块、HTML 语义结构、Schema 建议、CMS 字段清单，以及 Word/PDF/HTML/Markdown 四格式报告。",
       "public_repo_path": "skills/yao-geo-page-blueprint",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-title-optimizer",
@@ -225,7 +249,11 @@
         "title-scorecard",
         "compliance-check",
         "china-ai-platforms",
-        "four-format-report"
+        "four-format-report",
+        "public-evidence-snapshot",
+        "analysis-dimensions",
+        "sticky-html-nav",
+        "kami-layout"
       ],
       "requires_web": false,
       "primary_outputs": [
@@ -233,15 +261,18 @@
         "title-scorecard",
         "title-compliance-check",
         "title-to-article-structure-map",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "public-evidence-snapshot",
+        "analysis-dimension-map",
+        "sticky-html-title-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-title-optimizer",
-      "summary": "为文章、页面、FAQ 和专题生成 GEO 标题候选库，覆盖国内 AI 平台适配、品牌隔离、合规过滤、标题评分和文章结构映射，并默认输出 Word、PDF、HTML、Markdown 四件套。",
+      "summary": "为文章、页面、FAQ 和专题生成 GEO 标题候选库，覆盖国内 AI 平台适配、品牌隔离、合规过滤、标题评分、证据快照、分析维度和文章结构映射，并默认输出 Word、PDF、sticky HTML、Markdown 四件套。",
       "public_repo_path": "skills/yao-geo-title-optimizer",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-explainer-builder",
@@ -255,23 +286,31 @@
         "faq",
         "glossary",
         "brand-insertion",
-        "four-format-report"
+        "four-format-report",
+        "real-data-verification",
+        "kami-layout",
+        "sticky-html-nav"
       ],
-      "requires_web": false,
+      "requires_web": true,
       "primary_outputs": [
         "geo-explainer-article",
+        "publishable-complete-article",
+        "real-data-availability-statement",
+        "source-acquisition-plan",
+        "fact-verification-matrix",
         "how-to-checklist",
         "faq-glossary",
         "brand-insertion-recommendations",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "kami-style-sticky-nav-html-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-explainer-builder",
-      "summary": "生成 GEO 科普文章、How-to 教程、FAQ、术语表和品牌自然植入建议，并默认按白底报告版式交付 Word、PDF、HTML 包、Markdown。",
+      "summary": "生成可发布的完整 GEO 科普文章，并附带 How-to 教程、FAQ、术语表、真实数据接入状态、事实核验矩阵和品牌自然植入建议，默认按 kami 版式交付 Word、PDF、HTML 包、Markdown。",
       "public_repo_path": "skills/yao-geo-explainer-builder",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-knowledge-base-builder",
@@ -284,7 +323,12 @@
         "source-index",
         "prompt-pack",
         "faq",
-        "four-format-report"
+        "four-format-report",
+        "complete-entity-inventory",
+        "real-data-boundary",
+        "analysis-completeness",
+        "sticky-html-nav",
+        "kami-layout"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -293,15 +337,20 @@
         "faq-and-prohibited-expression-list",
         "content-generation-prompt-pack",
         "source-index",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "systematic-structured-knowledge-base",
+        "complete-brand-entity-inventory",
+        "real-data-access-and-freshness-boundary",
+        "analysis-completeness-review",
+        "sticky-html-knowledge-base-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-knowledge-base-builder",
-      "summary": "基于官网、产品页、帮助中心、白皮书、销售材料、媒体稿和资质文件生成 GEO 品牌知识库、事实卡、FAQ、禁用表达、Prompt 输入包、来源索引和 Word/PDF/HTML/Markdown 四格式交付件。",
+      "summary": "基于官网、产品页、帮助中心、白皮书、销售材料、媒体稿和资质文件生成系统化 GEO 品牌知识库、完整实体清单、真实数据获取边界、事实卡、FAQ、禁用表达、Prompt 输入包、来源索引和四格式交付件。",
       "public_repo_path": "skills/yao-geo-knowledge-base-builder",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-intent-miner",
@@ -317,7 +366,12 @@
         "faq-library",
         "monitoring-prompts",
         "china-ai-platforms",
-        "four-format-deliverables"
+        "four-format-deliverables",
+        "real-data-ingestion",
+        "report-module-contract",
+        "content-asset-map",
+        "sticky-html-nav",
+        "four-format-report"
       ],
       "requires_web": false,
       "primary_outputs": [
@@ -329,15 +383,21 @@
         "content-topic-library",
         "faq-library",
         "monitoring-prompt-library",
-        "four-format-deliverables"
+        "four-format-deliverables",
+        "data-source-status",
+        "ai-sampling-plan-or-results",
+        "calibration-action-list",
+        "knowledge-base-entry-plan",
+        "evidence-gap-list",
+        "sticky-html-intent-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "incubating",
       "path": "skills/yao-geo-intent-miner",
-      "summary": "把种子词、品牌、产品、竞品、区域、人群和业务材料扩展成 AI 搜索问题集、意图簇、追问链路、查询重写、内容选题、FAQ 和监测 Prompt，并支持研究依据增强和白底四格式交付。",
+      "summary": "把种子词、品牌、产品、竞品、区域、人群和业务材料扩展成 AI 搜索问题集、意图簇、追问链路、查询重写、内容选题、FAQ、知识库条目计划和监测 Prompt，并补充真实数据接入状态、证据缺口和白底四格式交付。",
       "public_repo_path": "skills/yao-geo-intent-miner",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-execution-roadmap",
@@ -348,6 +408,14 @@
         "execution-roadmap",
         "strategy-plan",
         "90-day-roadmap",
+        "real-data-plan",
+        "source-freshness",
+        "analysis-completeness",
+        "evidence-maturity",
+        "resource-budget",
+        "governance-cadence",
+        "html-sticky-nav",
+        "kami-layout",
         "project-packages",
         "role-acceptance-metrics",
         "china-ai-platforms",
@@ -356,20 +424,28 @@
       "requires_web": false,
       "primary_outputs": [
         "geo-execution-roadmap-report",
+        "real-data-collection-plan",
+        "source-freshness-register",
+        "analysis-completeness-matrix",
+        "evidence-maturity-map",
         "90-day-roadmap",
         "role-acceptance-metrics-table",
+        "resource-budget-priority-plan",
+        "governance-decision-cadence",
         "six-project-package-plan",
         "cn-platform-action-map",
         "risk-compliance-plan",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "html-sticky-nav-report",
+        "kami-editorial-report-layout"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-execution-roadmap",
-      "summary": "把 GEO 全景诊断、机会地图和平台采样结论转成 30/60/90 天执行路线图，覆盖页面技术、内容矩阵、标题体系、知识库、外部证据、监测闭环和四格式交付。",
+      "summary": "把 GEO 全景诊断、机会地图和平台采样结论转成系统、详细、完整的 30/60/90 天执行路线图，覆盖真实数据采集计划、来源新鲜度、分析完整性矩阵、证据成熟度、资源预算、治理节奏、六个项目包、国内平台适配和 kami 风格四格式交付。",
       "public_repo_path": "skills/yao-geo-execution-roadmap",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-brand-graph",
@@ -383,7 +459,12 @@
         "json-ld",
         "rdf-triples",
         "mermaid",
-        "four-format-report"
+        "four-format-report",
+        "real-data-acquisition",
+        "source-validation",
+        "entity-coverage",
+        "schema-consistency",
+        "sticky-html-nav"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -395,15 +476,19 @@
         "json-ld-suggestions",
         "rdf-style-triples",
         "graph-strengthening-recommendations",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "source-validation-register",
+        "entity-coverage-matrix",
+        "relationship-audit",
+        "schema-consistency-matrix"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-brand-graph",
-      "summary": "把企业信息转成品牌、产品、人物、地点、案例、证据和场景之间的可审计实体关系图，输出 Mermaid、JSON-LD、RDF 三元组、消歧表、可信等级和 Word/PDF/HTML/Markdown 四格式报告。",
+      "summary": "把企业信息转成品牌、产品、人物、地点、案例、证据和场景之间的可审计实体关系图，输出来源核验、实体覆盖、关系审计、Mermaid、JSON-LD、RDF 三元组、消歧表、可信等级和四格式报告。",
       "public_repo_path": "skills/yao-geo-brand-graph",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-comparison-builder",
@@ -417,7 +502,12 @@
         "alternative-page",
         "faq",
         "china-ai-platforms",
-        "four-format-report"
+        "four-format-report",
+        "real-data-acquisition",
+        "source-verification",
+        "systematic-report-framework",
+        "sticky-html-nav",
+        "kami-layout"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -426,15 +516,19 @@
         "evidence-anchor-table",
         "faq",
         "scenario-selection-guide",
-        "four-format-report-delivery"
+        "four-format-report-delivery",
+        "source-access-verification",
+        "source-quality-grading",
+        "risk-governance-map",
+        "sticky-html-comparison-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-comparison-builder",
-      "summary": "生成目标品牌与竞品、同类方案、传统方案或自建方案的 GEO 对比内容，覆盖同口径维度、证据锚点、场景选择、FAQ 和 Word/PDF/HTML/Markdown 四格式交付。",
+      "summary": "生成目标品牌与竞品、同类方案、传统方案或自建方案的 GEO 对比内容，覆盖真实数据获取、来源访问验证、同口径维度、证据锚点、场景选择、FAQ、风险治理和 Kami 风格四格式交付。",
       "public_repo_path": "skills/yao-geo-comparison-builder",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-content-refiner",
@@ -450,6 +544,11 @@
         "cms-html",
         "research-backed",
         "evidence-ledger",
+        "analysis-completeness",
+        "real-data-verification",
+        "semantic-entity-map",
+        "sticky-html-nav",
+        "kami-editorial-layout",
         "china-ai-platforms",
         "four-format-report"
       ],
@@ -460,18 +559,23 @@
         "original-geo-scorecard",
         "atomic-fact-cards",
         "faq-and-query-rewrites",
+        "analysis-completeness-map",
+        "real-data-access-and-verification-plan",
+        "semantic-entity-map",
+        "platform-adaptation-matrix",
         "research-alignment",
-        "evidence-ledger",
+        "evidence-strength-and-gap-ledger",
         "cms-html-publishing-advice",
+        "publishing-and-measurement-plan",
         "four-format-report-delivery"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-content-refiner",
-      "summary": "把已有 SEO 文章、公众号文章、官网文章、白皮书和产品页文案改造成结构化、可信、可引用、可抽取的 GEO 内容，输出原文评分、事实卡、FAQ、差异报告、CMS HTML 建议和 Word/PDF/HTML/Markdown 四格式交付。",
+      "summary": "把已有 SEO 文章、公众号文章、官网文章、白皮书和产品页文案改造成结构化、可信、可引用、可抽取的 GEO 内容，输出分析完整性总览、真实数据获取与核验计划、原文评分、事实卡、FAQ、语义地图、平台矩阵、证据强度、CMS HTML 建议、发布追踪建议和带 sticky 菜单/Kami 编辑排版的四格式交付。",
       "public_repo_path": "skills/yao-geo-content-refiner",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geo-ranking-article-builder",
@@ -484,7 +588,12 @@
         "competitor-comparison",
         "evidence-led-writing",
         "china-ai-platforms",
-        "four-format-delivery"
+        "four-format-delivery",
+        "real-data-boundary",
+        "source-audit",
+        "analysis-completeness",
+        "sticky-html-nav",
+        "kami-layout"
       ],
       "requires_web": true,
       "primary_outputs": [
@@ -493,15 +602,19 @@
         "competitor-evidence-table",
         "source-ledger",
         "html-index-or-article-pack",
-        "four-format-delivery"
+        "four-format-delivery",
+        "source-availability-audit",
+        "real-data-boundary-map",
+        "analysis-completeness-map",
+        "sticky-html-ranking-report"
       ],
       "status": "active",
       "owner": "Yao Team",
       "stage": "published",
       "path": "skills/yao-geo-ranking-article-builder",
-      "summary": "基于品牌 Brief、选题 JSON、竞品库和可信来源生成 GEO 榜单评测文章，覆盖评选方法、核心对比表、榜单正文、适合人群、FAQ、来源表和 Word/PDF/HTML/Markdown 四格式交付。",
+      "summary": "基于品牌 Brief、选题 JSON、竞品库和可信来源生成 GEO 榜单评测文章，覆盖真实数据边界、来源可达审计、分析完整性、评选方法、对比表、FAQ、来源表和 Kami 风格四格式交付。",
       "public_repo_path": "skills/yao-geo-ranking-article-builder",
-      "last_updated": "2026-05-19"
+      "last_updated": "2026-05-21"
     },
     {
       "id": "yao-geoflow-template",

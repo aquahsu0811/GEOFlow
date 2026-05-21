@@ -31,6 +31,17 @@ NEUTRAL_TYPES = {"榜单型", "比较型", "决策型", "推荐型", "指南型"
 PROJECT_FIELDS = ["name", "module", "priority", "project_date", "region", "audience", "target_platforms", "article_types"]
 TITLE_FIELDS = ["id", "title", "type", "intent", "scenario", "platform_fit", "why_it_works", "rewrite_advice", "scores"]
 SCORE_FIELDS = ["intent_match", "entity_clarity", "differentiation", "citation_potential", "compliance", "freshness"]
+DEPTH_REQUIRED_SECTIONS = ["data_source_audit", "platform_sampling_plan", "reference_frameworks", "analysis_dimensions", "entity_intent_matrix", "coverage_gaps", "publication_checklist"]
+SECTION_SPECS = [
+    ("data_source_audit", "真实数据状态与采集边界", ["数据对象", "采集方式", "状态", "使用边界"], [1700, 2500, 1700, 3100]),
+    ("platform_sampling_plan", "国内 AI 平台真实采样计划", ["平台", "真实采样问题", "采样输出", "判定方法"], [1400, 3300, 2200, 2100]),
+    ("reference_frameworks", "权威参考与理论依据", ["来源", "权威性", "可借鉴原则", "如何用于标题实验"], [1700, 2300, 2600, 2400]),
+    ("analysis_dimensions", "系统分析维度", ["维度", "核心问题", "标题信号", "补充要求"], [1500, 2900, 2300, 2300]),
+    ("entity_intent_matrix", "实体与意图矩阵", ["主体/实体", "用户意图", "场景限定", "标题表达要求"], [1700, 2300, 2300, 2700]),
+    ("title_pattern_library", "标题结构模式库", ["结构", "适用场景", "标题公式", "风险边界"], [1500, 2400, 3100, 2000]),
+    ("coverage_gaps", "覆盖缺口与补全建议", ["缺口", "影响", "补全动作", "优先级"], [1700, 2700, 3400, 1200]),
+    ("publication_checklist", "发布前检查清单", ["检查项", "标准", "状态", "说明"], [1700, 2900, 1400, 3000]),
+]
 
 
 def parse_args() -> argparse.Namespace:
@@ -107,9 +118,46 @@ def score_rows(data: dict[str, Any]) -> list[list[Any]]:
     return rows
 
 
+def section_spec(key: str) -> tuple[str, list[str], list[int]] | None:
+    for item_key, title, headers, widths in SECTION_SPECS:
+        if item_key == key:
+            return title, headers, widths
+    return None
+
+
+def optional_md_sections(data: dict[str, Any], keys: list[str] | None = None) -> list[str]:
+    selected = keys or [key for key, _, _, _ in SECTION_SPECS]
+    parts: list[str] = []
+    for key in selected:
+        spec = section_spec(key)
+        rows = data.get(key)
+        if not spec or not rows:
+            continue
+        title, headers, _ = spec
+        parts.extend(["", f"## {title}", "", md_table(headers, rows)])
+    return parts
+
+
+def markdown_notice(data: dict[str, Any]) -> str:
+    project = data.get("prepared_by", "yao-geo-title-optimizer")
+    return "\n".join(
+        [
+            "<!--",
+            "Copyright © 2026 姚金刚. All rights reserved.",
+            f"Project: {project}",
+            "Created by: 姚金刚",
+            "Date: 2026-05-16",
+            "X: https://x.com/yaojingang",
+            "-->",
+            "",
+        ]
+    )
+
+
 def render_markdown(data: dict[str, Any]) -> str:
     project = data["project"]
     lines = [
+        markdown_notice(data),
         f"# {data['report_title']}",
         "",
         data.get("subtitle", ""),
@@ -141,6 +189,7 @@ def render_markdown(data: dict[str, Any]) -> str:
         lines.extend(["", "## 测试场景选择", "", md_table(["字段", "内容"], [["测试对象", sc.get("test_object", "")], ["测试场景", sc.get("scenario", "")], ["用户问题", sc.get("user_questions", "")], ["内容目标", sc.get("content_goal", "")], ["国内平台假设", sc.get("china_platform_assumption", "")]])])
     if data.get("evidence_sources"):
         lines.extend(["", "## 公开证据表", "", md_table(["来源", "链接", "关键事实", "如何用于标题测试"], [[x["source"], x["url"], x["fact"], x["how_used"]] for x in data["evidence_sources"]])])
+    lines.extend(optional_md_sections(data, ["data_source_audit", "platform_sampling_plan", "reference_frameworks", "analysis_dimensions", "entity_intent_matrix"]))
     lines.extend(
         [
             "",
@@ -155,6 +204,7 @@ def render_markdown(data: dict[str, Any]) -> str:
             "## 标题评分",
             "",
             md_table(["ID", "意图匹配", "实体清晰", "差异化", "可引用性", "合规性", "新鲜度", "总分"], score_rows(data)),
+            *optional_md_sections(data, ["title_pattern_library", "coverage_gaps", "publication_checklist"]),
             "",
             "## 标题禁用词与合规检查",
             "",
@@ -183,6 +233,46 @@ def html_table(headers: list[str], rows: list[list[Any]], class_name: str = "") 
     return f'<div class="table-wrap"><table{cls}><thead><tr>{head}</tr></thead><tbody>{"".join(body)}</tbody></table></div>'
 
 
+def html_section(section_id: str, title: str, content: str) -> str:
+    return f'<section class="section" id="{section_id}"><h2>{html.escape(title)}</h2>{content}</section>'
+
+
+def optional_html_sections(data: dict[str, Any], keys: list[str]) -> str:
+    parts = []
+    for key in keys:
+        spec = section_spec(key)
+        rows = data.get(key)
+        if not spec or not rows:
+            continue
+        title, headers, _ = spec
+        parts.append(html_section(key.replace("_", "-"), title, html_table(headers, rows)))
+    return "".join(parts)
+
+
+def nav_html(data: dict[str, Any]) -> str:
+    links = [
+        ("overview", "概览"),
+        ("method", "方法"),
+        ("scenario", "场景"),
+        ("evidence", "证据"),
+    ]
+    for key, title, _, _ in SECTION_SPECS:
+        if data.get(key):
+            links.append((key.replace("_", "-"), title.replace("与", "/")))
+    links.extend(
+        [
+            ("platform", "平台适配"),
+            ("title-library", "标题库"),
+            ("scorecard", "评分"),
+            ("structure-map", "结构映射"),
+            ("self-review", "自检"),
+        ]
+    )
+    return '<nav class="report-nav" aria-label="报告目录"><div class="nav-inner">' + "".join(
+        f'<a href="#{section_id}">{html.escape(label)}</a>' for section_id, label in links
+    ) + "</div></nav>"
+
+
 def render_html(data: dict[str, Any]) -> str:
     p = data["project"]
     metrics = "".join(f'<div class="metric"><span>{html.escape(k)}</span><strong>{html.escape(v)}</strong></div>' for k, v in [("所属模块", p["module"]), ("优先级", p["priority"]), ("项目日期", p["project_date"]), ("目标平台", "、".join(p["target_platforms"])), ("文章类型", "、".join(p["article_types"])), ("品牌隔离", "开启" if p.get("brand_isolation_required") else "关闭")])
@@ -190,29 +280,35 @@ def render_html(data: dict[str, Any]) -> str:
     scenario_html = ""
     if data.get("scenario_selection"):
         s = data["scenario_selection"]
-        scenario_html = '<section class="section"><h2>测试场景选择</h2>' + html_table(["字段", "内容"], [["测试对象", s.get("test_object", "")], ["测试场景", s.get("scenario", "")], ["用户问题", s.get("user_questions", "")], ["内容目标", s.get("content_goal", "")], ["国内平台假设", s.get("china_platform_assumption", "")]]) + "</section>"
+        scenario_html = html_section("scenario", "测试场景选择", html_table(["字段", "内容"], [["测试对象", s.get("test_object", "")], ["测试场景", s.get("scenario", "")], ["用户问题", s.get("user_questions", "")], ["内容目标", s.get("content_goal", "")], ["国内平台假设", s.get("china_platform_assumption", "")]]))
     evidence_html = ""
     if data.get("evidence_sources"):
-        evidence_html = '<section class="section"><h2>公开证据表</h2>' + html_table(["来源", "链接", "关键事实", "如何用于标题测试"], [[x["source"], x["url"], x["fact"], x["how_used"]] for x in data["evidence_sources"]]) + "</section>"
+        evidence_html = html_section("evidence", "公开证据表", html_table(["来源", "链接", "关键事实", "如何用于标题测试"], [[x["source"], x["url"], x["fact"], x["how_used"]] for x in data["evidence_sources"]]))
+    nav = nav_html(data)
+    depth_top = optional_html_sections(data, ["data_source_audit", "platform_sampling_plan", "reference_frameworks", "analysis_dimensions", "entity_intent_matrix"])
+    depth_late = optional_html_sections(data, ["title_pattern_library", "coverage_gaps", "publication_checklist"])
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(data['report_title'])}</title>
 <style>
-html,body{{margin:0;background:#ffffff;color:#17202a;font-family:"Inter","Source Han Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.68;letter-spacing:0}}
-.report{{width:min(1120px,calc(100vw - 32px));margin:0 auto;padding:28px 0 64px}}
-.hero{{border-bottom:3px solid #0f5d6d;padding:20px 0 24px;margin-bottom:20px}}.eyebrow{{color:#0f5d6d;font-size:13px;font-weight:700;text-transform:uppercase}}h1{{font-size:34px;line-height:1.18;margin:0 0 12px}}.subtitle{{color:#5c6b78;font-size:16px;max-width:880px}}.meta{{display:flex;flex-wrap:wrap;gap:8px 18px;color:#5c6b78;font-size:13px;margin-top:14px}}
-.metrics{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px 0 24px}}.metric{{border:1px solid #d9e1e8;border-radius:6px;padding:12px 14px;background:#fff;min-width:0}}.metric span{{display:block;color:#5c6b78;font-size:12px}}.metric strong{{display:block;font-size:15px;overflow-wrap:anywhere;word-break:break-word}}
-.section{{margin:26px 0;padding-top:4px}}.section h2{{margin:0 0 12px;padding-bottom:8px;border-bottom:1px solid #d9e1e8;font-size:22px}}.note{{border-left:4px solid #0f5d6d;background:#f6f8fa;padding:12px 14px;margin:12px 0}}li{{margin:5px 0}}
-.table-wrap{{width:100%;overflow-x:auto;margin:12px 0 18px;border:1px solid #d9e1e8;border-radius:6px;background:#fff}}table{{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}}th,td{{border:1px solid #d9e1e8;padding:9px 10px;vertical-align:top;text-align:left;overflow-wrap:anywhere;word-break:break-word;hyphens:auto;font-size:13px}}th{{background:#eef4f6;color:#102a34;font-weight:740}}.title-table th:nth-child(1),.title-table td:nth-child(1){{width:52px}}.title-table th:nth-child(2),.title-table td:nth-child(2){{width:24%}}.score-table th,.score-table td{{text-align:center}}
-@page{{size:A4;margin:16mm 14mm}}@media print{{.report{{width:100%;padding:0}}.table-wrap{{overflow:visible;break-inside:auto}}table{{page-break-inside:auto}}tr{{page-break-inside:auto;page-break-after:auto}}thead{{display:table-header-group}}th,td{{font-size:10.5px;padding:6px 7px}}.title-table th,.title-table td{{font-size:9.2px;padding:5px;line-height:1.48}}h1{{font-size:26px}}.section h2{{font-size:18px}}}}
+:root{{--paper:#ffffff;--surface:#faf9f5;--wash:#f5f4ed;--ink:#141413;--text:#3d3d3a;--muted:#5e5d59;--stone:#87867f;--brand:#1B365D;--border:#e8e5da;--border-strong:#d8d3c6;--tag:#EEF2F7}}
+html{{scroll-behavior:smooth}}html,body{{margin:0;background:#ffffff;color:var(--ink);font-family:"Inter","Source Han Sans SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.52;letter-spacing:0}}
+.skip-link{{position:absolute;left:16px;top:-60px;background:var(--brand);color:#fff;padding:8px 12px;border-radius:4px;z-index:30}}.skip-link:focus{{top:10px}}
+.report{{width:min(1120px,calc(100vw - 36px));margin:0 auto;padding:32px 0 72px}}
+.hero{{border-bottom:1.5px solid var(--brand);padding:22px 0 24px;margin-bottom:0;scroll-margin-top:88px}}.eyebrow{{color:var(--brand);font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}}h1{{font-family:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC",Georgia,serif;font-size:35px;font-weight:500;line-height:1.18;margin:0 0 12px;color:var(--ink)}}.subtitle{{color:var(--muted);font-size:16px;max-width:900px;line-height:1.55}}.meta{{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--stone);font-size:12.5px;margin-top:14px}}
+.report-nav{{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--border);box-shadow:0 1px 0 var(--border)}}.nav-inner{{width:min(1120px,calc(100vw - 36px));margin:0 auto;display:flex;gap:7px;overflow-x:auto;padding:8px 0;white-space:nowrap}}.report-nav a{{color:var(--text);text-decoration:none;border:1px solid var(--border);border-radius:4px;padding:4px 9px;font-size:12px;background:var(--surface)}}.report-nav a:focus,.report-nav a:hover{{border-color:var(--brand);color:var(--brand);outline:none}}
+.metrics{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0 26px}}.metric{{border:1px solid var(--border);border-radius:6px;padding:12px 14px;background:var(--surface);min-width:0}}.metric span{{display:block;color:var(--stone);font-size:12px}}.metric strong{{display:block;font-size:15px;font-weight:600;color:var(--ink);overflow-wrap:anywhere;word-break:break-word}}
+.section{{margin:28px 0;padding-top:4px;scroll-margin-top:88px}}.section h2{{font-family:"TsangerJinKai02","Source Han Serif SC","Noto Serif CJK SC","Songti SC",Georgia,serif;margin:0 0 12px;padding:0 0 8px;border-bottom:1px solid var(--border);font-size:23px;font-weight:500;color:var(--ink)}}.section h2::before{{content:"";display:inline-block;width:4px;height:18px;background:var(--brand);margin-right:8px;vertical-align:-2px}}.note{{border-left:3px solid var(--brand);background:var(--surface);padding:12px 14px;margin:12px 0;color:var(--text)}}li{{margin:4px 0;color:var(--text)}}
+.table-wrap{{width:100%;overflow-x:auto;margin:12px 0 18px;border:1px solid var(--border);border-radius:6px;background:var(--paper)}}table{{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--paper)}}th,td{{border:1px solid var(--border);padding:8px 9px;vertical-align:top;text-align:left;overflow-wrap:anywhere;word-break:break-word;hyphens:auto;font-size:12.5px;line-height:1.48;color:var(--text)}}th{{background:var(--surface);color:var(--brand);font-weight:600}}.title-table th:nth-child(1),.title-table td:nth-child(1){{width:52px}}.title-table th:nth-child(2),.title-table td:nth-child(2){{width:24%}}.score-table th,.score-table td{{text-align:center}}
+@page{{size:A4;margin:20mm 18mm;background:#ffffff;@bottom-center{{content:"GEO Title Lab · yao-geo-title-optimizer · " counter(page);font-size:8.5pt;color:#87867f}}}}@media print{{.skip-link,.report-nav{{display:none}}.report{{width:100%;padding:0}}.table-wrap{{overflow:visible;break-inside:auto}}table{{page-break-inside:auto}}tr{{page-break-inside:auto;page-break-after:auto}}thead{{display:table-header-group}}th,td{{font-size:9.8px;padding:5.5px 6px;line-height:1.42}}.title-table th,.title-table td{{font-size:8.8px;padding:5px;line-height:1.38}}h1{{font-size:25px}}.section h2{{font-size:17px}}}}
 @media(max-width:760px){{.report{{width:min(100% - 24px,1120px)}}h1{{font-size:25px}}.metrics{{grid-template-columns:1fr}}table{{min-width:760px}}}}
-</style></head><body><main class="report"><header class="hero"><p class="eyebrow">GEO Title Lab</p><h1>{html.escape(data['report_title'])}</h1><p class="subtitle">{html.escape(data.get('subtitle',''))}</p><div class="meta"><span>生成日期：{html.escape(data['generated_at'])}</span><span>生成器：{html.escape(data.get('prepared_by','yao-geo-title-optimizer'))}</span><span>项目：{html.escape(p['name'])}</span></div></header>
-<section class="metrics">{metrics}</section><section class="section"><h2>方法摘要</h2><div class="note">本报告把标题优化拆成检索触发、结构理解和引用吸收三层，并把每个标题映射到评分、合规和文章结构。</div><ul>{method}</ul></section>{scenario_html}{evidence_html}
-<section class="section"><h2>国内平台适配</h2>{html_table(["平台","标题侧重点","推荐表达"], data.get("platform_adaptation", []))}</section>
-<section class="section"><h2>标题候选库</h2>{html_table(["ID","标题","类型","意图","场景","平台适配","总分","理由","改写建议"], title_rows(data), "title-table")}</section>
-<section class="section"><h2>标题评分</h2>{html_table(["ID","意图匹配","实体清晰","差异化","可引用性","合规性","新鲜度","总分"], score_rows(data), "score-table")}</section>
-<section class="section"><h2>标题禁用词与合规检查</h2>{html_table(["检查项","对象","结果","说明"], data["compliance_checks"])}</section>
-<section class="section"><h2>标题到文章结构的映射</h2>{html_table(["标题ID","文章结构","段落与证据模块","FAQ映射"], data["structure_map"])}</section>
-<section class="section"><h2>自检与迭代记录</h2>{html_table(["类型","发现的问题","已修复动作"], data["self_review"])}</section></main></body></html>"""
+</style></head><body><a class="skip-link" href="#main-content">跳到正文</a>{nav}<main class="report" id="main-content"><header class="hero" id="overview"><p class="eyebrow">GEO Title Lab</p><h1>{html.escape(data['report_title'])}</h1><p class="subtitle">{html.escape(data.get('subtitle',''))}</p><div class="meta"><span>生成日期：{html.escape(data['generated_at'])}</span><span>生成器：{html.escape(data.get('prepared_by','yao-geo-title-optimizer'))}</span><span>项目：{html.escape(p['name'])}</span></div></header>
+<section class="metrics">{metrics}</section>{html_section("method", "方法摘要", '<div class="note">本报告把标题优化拆成检索触发、结构理解、证据可信度和引用吸收四层，并把每个标题映射到评分、合规和文章结构。</div><ul>' + method + '</ul>')}{scenario_html}{evidence_html}{depth_top}
+{html_section("platform", "国内平台适配", html_table(["平台","标题侧重点","推荐表达"], data.get("platform_adaptation", [])))}
+{html_section("title-library", "标题候选库", html_table(["ID","标题","类型","意图","场景","平台适配","总分","理由","改写建议"], title_rows(data), "title-table"))}
+{html_section("scorecard", "标题评分", html_table(["ID","意图匹配","实体清晰","差异化","可引用性","合规性","新鲜度","总分"], score_rows(data), "score-table"))}{depth_late}
+{html_section("compliance", "标题禁用词与合规检查", html_table(["检查项","对象","结果","说明"], data["compliance_checks"]))}
+{html_section("structure-map", "标题到文章结构的映射", html_table(["标题ID","文章结构","段落与证据模块","FAQ映射"], data["structure_map"]))}
+{html_section("self-review", "自检与迭代记录", html_table(["类型","发现的问题","已修复动作"], data["self_review"]))}</main></body></html>"""
 
 
 def word_safe(value: Any) -> str:
@@ -242,13 +338,13 @@ def wp(text: Any, style: str = "Normal", after: int = 120, bold: bool = False, s
 
 
 def wc(text: Any, width: int, header: bool = False) -> str:
-    fill = '<w:shd w:fill="EEF4F6"/>' if header else ""
+    fill = '<w:shd w:fill="FAF9F5"/>' if header else ""
     return f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/>{fill}</w:tcPr>{wp(text, "TableHeader" if header else "TableCell", after=0, bold=header, align="center" if header or len(str(text)) <= 8 else None)}</w:tc>'
 
 
 def wt(headers: list[str], rows: list[list[Any]], widths: list[int]) -> str:
     grid = "".join(f'<w:gridCol w:w="{w}"/>' for w in widths)
-    border = '<w:top w:val="single" w:sz="4" w:color="D9E1E8"/><w:left w:val="single" w:sz="4" w:color="D9E1E8"/><w:bottom w:val="single" w:sz="4" w:color="D9E1E8"/><w:right w:val="single" w:sz="4" w:color="D9E1E8"/><w:insideH w:val="single" w:sz="4" w:color="D9E1E8"/><w:insideV w:val="single" w:sz="4" w:color="D9E1E8"/>'
+    border = '<w:top w:val="single" w:sz="4" w:color="E8E5DA"/><w:left w:val="single" w:sz="4" w:color="E8E5DA"/><w:bottom w:val="single" w:sz="4" w:color="E8E5DA"/><w:right w:val="single" w:sz="4" w:color="E8E5DA"/><w:insideH w:val="single" w:sz="4" w:color="E8E5DA"/><w:insideV w:val="single" w:sz="4" w:color="E8E5DA"/>'
     parts = [f'<w:tbl><w:tblPr><w:tblW w:w="{sum(widths)}" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblInd w:w="0" w:type="dxa"/><w:tblBorders>{border}</w:tblBorders></w:tblPr><w:tblGrid>{grid}</w:tblGrid>']
     if headers:
         parts.append("<w:tr><w:trPr><w:tblHeader/></w:trPr>" + "".join(wc(h, w, True) for h, w in zip(headers, widths, strict=False)) + "</w:tr>")
@@ -263,6 +359,18 @@ def kv(rows: list[list[Any]]) -> str:
     return wt(["字段", "内容"], rows, [1500, 7500])
 
 
+def optional_docx_sections(data: dict[str, Any], keys: list[str]) -> list[str]:
+    body: list[str] = []
+    for key in keys:
+        spec = section_spec(key)
+        rows = data.get(key)
+        if not spec or not rows:
+            continue
+        title, headers, widths = spec
+        body += [wp(title, "Heading1"), wt(headers, rows, widths)]
+    return body
+
+
 def render_docx_xml(data: dict[str, Any]) -> str:
     p = data["project"]
     body = [wp(data["report_title"], "Title", 180), wp(data.get("subtitle", ""), "Subtitle", 220), wp(f"生成日期：{data['generated_at']}    生成器：{data.get('prepared_by','yao-geo-title-optimizer')}", "Meta", 240)]
@@ -275,12 +383,14 @@ def render_docx_xml(data: dict[str, Any]) -> str:
         body += [wp("测试场景选择", "Heading1"), kv([["测试对象", s.get("test_object", "")], ["测试场景", s.get("scenario", "")], ["用户问题", s.get("user_questions", "")], ["内容目标", s.get("content_goal", "")], ["国内平台假设", s.get("china_platform_assumption", "")]])]
     if data.get("evidence_sources"):
         body += [wp("公开证据表", "Heading1"), wt(["来源", "关键事实", "如何用于标题测试"], [[x["source"], x["fact"], x["how_used"]] for x in data["evidence_sources"]], [1800, 4300, 2900])]
+    body += optional_docx_sections(data, ["data_source_audit", "platform_sampling_plan", "reference_frameworks", "analysis_dimensions", "entity_intent_matrix"])
     body += [wp("国内平台适配", "Heading1"), wt(["平台", "标题侧重点", "推荐表达"], data.get("platform_adaptation", []), [1400, 3500, 4100])]
     body += [wp("标题候选库", "Heading1"), wp("Word 版将候选标题拆为逐条卡片，避免九列表格在页面右侧溢出。", "Callout")]
     for item in data["title_candidates"]:
         body.append(wp(f"{item['id']}  {item['title']}", "Heading2"))
         body.append(kv([["类型", item["type"]], ["意图", item["intent"]], ["场景", item["scenario"]], ["平台适配", item["platform_fit"]], ["总分", score_total(item["scores"])], ["理由", item["why_it_works"]], ["改写建议", item["rewrite_advice"]]]))
     body += [wp("标题评分", "Heading1"), wt(["ID", "意图", "实体", "差异", "引用", "合规", "新鲜", "总分"], score_rows(data), [800, 1050, 1050, 1050, 1050, 1050, 1050, 900])]
+    body += optional_docx_sections(data, ["title_pattern_library", "coverage_gaps", "publication_checklist"])
     body += [wp("标题禁用词与合规检查", "Heading1"), wt(["检查项", "对象", "结果", "说明"], data["compliance_checks"], [1400, 1700, 1200, 4700])]
     body += [wp("标题到文章结构的映射", "Heading1"), wt(["标题ID", "文章结构", "段落与证据模块", "FAQ映射"], data["structure_map"], [900, 1900, 3900, 2300])]
     body += [wp("自检与迭代记录", "Heading1"), wt(["类型", "发现的问题", "已修复动作"], data["self_review"], [1300, 3850, 3850])]
@@ -292,10 +402,10 @@ def styles_xml() -> str:
     return f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="{W_NS}">
 <w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:eastAsia="Microsoft YaHei" w:hAnsi="Arial"/><w:sz w:val="21"/><w:szCs w:val="21"/></w:rPr></w:rPrDefault></w:docDefaults>
 <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:pPr><w:spacing w:after="120" w:line="300" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:eastAsia="Microsoft YaHei"/><w:sz w:val="21"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:b/><w:sz w:val="34"/><w:color w:val="17202A"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:rPr><w:color w:val="5C6B78"/><w:sz w:val="22"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Meta"><w:name w:val="Meta"/><w:rPr><w:color w:val="5C6B78"/><w:sz w:val="18"/></w:rPr></w:style>
-<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:pPr><w:spacing w:before="260" w:after="120"/></w:pPr><w:rPr><w:b/><w:color w:val="0F5D6D"/><w:sz w:val="26"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Title"><w:name w:val="Title"/><w:rPr><w:b/><w:sz w:val="34"/><w:color w:val="141413"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Subtitle"><w:name w:val="Subtitle"/><w:rPr><w:color w:val="5E5D59"/><w:sz w:val="22"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Meta"><w:name w:val="Meta"/><w:rPr><w:color w:val="87867F"/><w:sz w:val="18"/></w:rPr></w:style>
+<w:style w:type="paragraph" w:styleId="Heading1"><w:name w:val="heading 1"/><w:pPr><w:spacing w:before="260" w:after="120"/></w:pPr><w:rPr><w:b/><w:color w:val="1B365D"/><w:sz w:val="26"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="heading 2"/><w:pPr><w:spacing w:before="180" w:after="100"/></w:pPr><w:rPr><w:b/><w:sz w:val="22"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="Callout"><w:name w:val="Callout"/><w:rPr><w:color w:val="5C6B78"/><w:sz w:val="19"/></w:rPr></w:style>
 <w:style w:type="paragraph" w:styleId="TableCell"><w:name w:val="Table Cell"/><w:pPr><w:spacing w:after="0" w:line="270" w:lineRule="auto"/></w:pPr><w:rPr><w:sz w:val="18"/></w:rPr></w:style>
@@ -376,9 +486,22 @@ def review(data: dict[str, Any], paths: dict[str, Path], html_text: str) -> dict
     for key, path in paths.items():
         if not path.exists() or path.stat().st_size < 1000:
             issues.append({"severity": "blocker", "issue": f"{key} missing or too small", "path": str(path)})
-    for token in ["background:#ffffff", "table-layout:fixed", "word-break:break-word", "@page"]:
+    for token in ["background:#ffffff", "table-layout:fixed", "word-break:break-word", "@page", "position:sticky", "report-nav"]:
         if token not in html_text.replace(" ", ""):
             issues.append({"severity": "major", "issue": f"HTML missing layout token: {token}", "path": str(paths["html"])})
+    depth = {
+        "required_sections": DEPTH_REQUIRED_SECTIONS,
+        "missing_sections": [key for key in DEPTH_REQUIRED_SECTIONS if not data.get(key)],
+        "title_count": len(data.get("title_candidates", [])),
+        "structure_map_count": len(data.get("structure_map", [])),
+        "evidence_source_count": len(data.get("evidence_sources", [])),
+    }
+    if depth["missing_sections"]:
+        issues.append({"severity": "major", "issue": "Report missing depth sections: " + ", ".join(depth["missing_sections"]), "path": str(paths["markdown"])})
+    if depth["title_count"] < 6:
+        issues.append({"severity": "major", "issue": "Report has fewer than 6 title candidates", "path": str(paths["markdown"])})
+    if depth["structure_map_count"] < 4:
+        issues.append({"severity": "major", "issue": "Report has fewer than 4 title-to-structure mappings", "path": str(paths["markdown"])})
     docx = inspect_docx(paths["docx"])
     for item in docx.get("issues", []):
         issues.append({"severity": "blocker", "issue": f"DOCX layout issue: {item}", "path": str(paths["docx"])})
@@ -395,7 +518,7 @@ def review(data: dict[str, Any], paths: dict[str, Path], html_text: str) -> dict
             for name in protected:
                 if name and name in title:
                     issues.append({"severity": "major", "issue": f"Neutral title {item['id']} contains brand: {name}", "path": ""})
-    return {"skill_id": "yao-geo-title-optimizer", "checked_at": dt.datetime.now().isoformat(timespec="seconds"), "files": {k: {"path": str(p), "exists": p.exists(), "size": p.stat().st_size if p.exists() else 0} for k, p in paths.items()}, "docx_layout_checks": docx, "pdf_checks": pdf, "issues": issues, "passed": not any(x["severity"] in {"blocker", "major"} for x in issues)}
+    return {"skill_id": "yao-geo-title-optimizer", "checked_at": dt.datetime.now().isoformat(timespec="seconds"), "files": {k: {"path": str(p), "exists": p.exists(), "size": p.stat().st_size if p.exists() else 0} for k, p in paths.items()}, "report_depth_checks": depth, "docx_layout_checks": docx, "pdf_checks": pdf, "issues": issues, "passed": not any(x["severity"] in {"blocker", "major"} for x in issues)}
 
 
 def main() -> None:

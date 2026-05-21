@@ -35,3 +35,16 @@ The renderer must inspect the generated DOCX:
 HTML and PDF can use analytical tables, but every table must be fixed-layout and wrap long text. Print CSS must define A4 page margins, table header behavior, and smaller table typography.
 
 Long URLs, product names, and mixed Chinese-English strings should have break opportunities before PDF rendering.
+
+HTML reports must include a sticky navigation bar with anchors for overview, method, scenario, evidence, depth analysis, title library, scorecard, structure mapping, and self-review. The nav must be hidden in print output and must not obscure anchor targets; section blocks should use `scroll-margin-top`.
+
+Systematic reports should include depth modules before the title library so reviewers can inspect the analysis foundation before reading recommendations:
+
+- real-data source audit
+- domestic AI platform sampling plan
+- authoritative reference framework
+- system analysis dimensions
+- entity and intent matrix
+- title pattern library
+- coverage gaps and completion plan
+- publication checklist

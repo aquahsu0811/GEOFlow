@@ -15,5 +15,8 @@
     "four-format-report-delivery"
   ],
   "entrypoint": "SKILL.md",
-  "script": "scripts/render_yao_geo_title_optimizer.py"
+  "script": "scripts/render_yao_geo_title_optimizer.py",
+  "support_scripts": [
+    "scripts/collect_yao_geo_title_evidence.py"
+  ]
 }

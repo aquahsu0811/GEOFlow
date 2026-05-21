@@ -2,6 +2,15 @@
 
 This document tracks public repository releases for the skill catalog. Update this file together with the Chinese version in `CHANGELOG.md` whenever a new skill or a significant repository-level change is pushed.
 
+## 2026-05-21
+
+### GEO Skill Batch Update
+
+- Synced the latest local updates for 13 GEO skills: `yao-geo-effect-monitor`, `yao-geo-panorama-audit`, `yao-geo-page-audit`, `yao-geo-page-blueprint`, `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-knowledge-base-builder`, `yao-geo-intent-miner`, `yao-geo-execution-roadmap`, `yao-geo-brand-graph`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, and `yao-geo-ranking-article-builder`.
+- Standardized real-data handling across the updated skills: public web evidence, user-supplied files, authorized data, platform sampling, unavailable data, source freshness, evidence grades, and gap lists are now separated explicitly.
+- Standardized four-format delivery: most long-form reports now share one content structure across Markdown, HTML, Word, and PDF, with sticky-navigation HTML reports for long documents.
+- Updated `registry/skills.json`, the repository homepage, the English README, the visual navigation page, and the relevant `docs/skills/*.md` guides so GitHub users can see the latest purpose, outputs, and quality gates.
+
 ## 2026-05-19
 
 ### `yao-geo-explainer-builder` Initial Release

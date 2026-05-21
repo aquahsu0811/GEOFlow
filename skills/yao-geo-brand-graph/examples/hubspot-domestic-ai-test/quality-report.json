@@ -1,6 +1,6 @@
 {
   "skill_id": "yao-geo-brand-graph",
-  "generated_at": "2026-05-19T12:34:00",
+  "generated_at": "2026-05-21T08:52:34",
   "status": "pass",
   "issues": [],
   "warnings": [],
@@ -23,25 +23,43 @@
       "证据"
     ],
     "platform_test_scenario_count": 5,
+    "enriched_section_count": 10,
+    "enriched_sections_required": [
+      "权威参考与适用边界",
+      "系统分析维度矩阵",
+      "来源覆盖矩阵",
+      "真实数据来源核验",
+      "实体覆盖矩阵",
+      "关系审计矩阵",
+      "Schema 与页面正文一致性",
+      "内容资产对齐计划",
+      "国内 AI 平台监测闭环",
+      "分析完整性自检清单"
+    ],
+    "source_validation_count": 11,
+    "source_validation_reachable_count": 11,
     "four_format_outputs_checked": true,
-    "white_background_profile": "kami-white-background",
+    "html_sticky_nav_present": true,
+    "html_overflow_protection_present": true,
+    "kami_palette_present": true,
+    "report_layout_profile": "kami-paper-long-doc",
     "docx_profile": {
-      "table_count": 8,
+      "table_count": 18,
       "auto_table_count": 0,
       "max_grid_width": 14400,
       "content_width": 15398,
       "layout_safety_margin": 998,
-      "manual_break_count": 272
+      "manual_break_count": 479
     },
     "pdf_profile": {
-      "pages": 12,
-      "text_chars": 12614
+      "pages": 22,
+      "text_chars": 24272
     },
     "file_sizes": {
-      "markdown": 19527,
-      "html": 26529,
-      "pdf": 236761,
-      "docx": 12719
+      "markdown": 43018,
+      "html": 58768,
+      "pdf": 370139,
+      "docx": 26168
     }
   }
 }

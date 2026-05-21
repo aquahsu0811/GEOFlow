@@ -2,6 +2,15 @@
 
 该文档记录公开 skill 仓库的发布更新。后续每次向 GitHub 推送新 skill 或调整仓库入口时，同步更新本文件和英文版 `CHANGELOG.en.md`。
 
+## 2026-05-21
+
+### GEO skill 批量能力同步
+
+- 同步本地 13 个 GEO skill 的最新迭代：`yao-geo-effect-monitor`、`yao-geo-panorama-audit`、`yao-geo-page-audit`、`yao-geo-page-blueprint`、`yao-geo-title-optimizer`、`yao-geo-explainer-builder`、`yao-geo-knowledge-base-builder`、`yao-geo-intent-miner`、`yao-geo-execution-roadmap`、`yao-geo-brand-graph`、`yao-geo-comparison-builder`、`yao-geo-content-refiner`、`yao-geo-ranking-article-builder`。
+- 统一补强真实数据能力：区分公开网页、用户提供资料、授权数据、平台采样、无法访问资料，并在报告中保留来源新鲜度、证据等级和待补缺口。
+- 统一补强四格式交付：多数组件报告现在围绕 Markdown、HTML、Word、PDF 同源输出，HTML 长报告默认包含下拉时固定跟随的目录菜单。
+- 更新 `registry/skills.json`、仓库首页、英文 README、可视化导航页和对应 `docs/skills/*.md` 说明，确保 GitHub 用户能看到最新用途、输出和质量门。
+
 ## 2026-05-19
 
 ### `yao-geo-explainer-builder` 首次发布

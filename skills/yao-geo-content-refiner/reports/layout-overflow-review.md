@@ -1,6 +1,6 @@
 # Word/PDF 版式溢出检查记录
 
-日期：2026-05-19
+日期：2026-05-21
 
 ## 检查对象
 
@@ -18,16 +18,17 @@
 - Word 默认改为横向 A4，左右边距 1.35 cm。
 - 超过 4 列的表格在 Word/PDF 中自动转为纵向事实卡。
 - 长 URL 在 Word/PDF 中强制可换行。
-- 质量报告记录 `layout_profile: fixed-width-docx-wide-table-cards`。
+- 质量报告记录 `layout_profile: fixed-width-docx-wide-table-cards-sticky-html-nav`。
 
 ## 复检结果
 
 - Word 页面可用宽度：`15308 dxa`。
-- Word 所有 21 张表格宽度：`15260 dxa`。
+- Word 所有 63 张表格宽度：`15260 dxa`。
 - Word 溢出表格数量：0。
-- PDF 渲染为 7 页 PNG 后，各页右侧留白均为正，最小右侧留白约 65 px。
-- QuickLook 生成的 Word 首页缩略图右侧留白约 91 px，无明显向右溢出。
+- PDF 渲染为 15 页 PNG 后，各页右侧留白均为正，最小右侧留白约 65 px。
+- HTML 报告新增 sticky 菜单栏，质量报告记录菜单锚点 16 个、正文 section 16 个。
+- HTML 报告按 Kami 编辑排版细节检查：墨蓝强调、serif 标题、暖灰边框、无 `rgba()`。
 
 ## 结论
 
-HubSpot 示例的 Word/PDF 右溢出问题已修复。后续所有该 skill 生成的 Word/PDF 报告应沿用固定表宽、宽表转事实卡和 PDF 渲染检查逻辑。
+HubSpot 示例的 Word/PDF 右溢出问题仍保持修复状态。后续所有该 skill 生成的 Word/PDF 报告应沿用固定表宽、宽表转事实卡和 PDF 渲染检查逻辑；HTML 报告应保留 sticky 菜单栏和锚点完整性检查。

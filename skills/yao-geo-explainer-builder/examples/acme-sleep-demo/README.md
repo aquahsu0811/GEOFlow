@@ -8,7 +8,7 @@ X: https://x.com/yaojingang
 
 # Acme Sleep Demo
 
-这是 `yao-geo-explainer-builder` 的合成示例，用于验证 GEO 科普文章、How-to 清单、FAQ、术语表、品牌自然植入建议和 Word/PDF/HTML/Markdown 四格式输出。
+这是 `yao-geo-explainer-builder` 的合成示例，用于验证完整 GEO 科普文章、How-to 清单、FAQ、术语表、真实数据接入状态、事实核验矩阵、品牌自然植入建议和 kami 版式 Word/PDF/HTML/Markdown 四格式输出。
 
 生成命令：
 

@@ -29,12 +29,23 @@ inputs:
     type: array
     items: string
     required: false
+  real_data_sources:
+    type: array
+    items: object
+    required: false
 outputs:
   - question_bank
   - intent_map
   - follow_up_chains
   - query_rewrites
+  - scoring_matrix
+  - data_source_status
+  - ai_sampling_plan_or_results
+  - calibration_actions
   - content_assets
   - faq_bank
+  - knowledge_base_entries
+  - evidence_gap_list
+  - compliance_boundaries
   - monitoring_prompts
   - four_format_report
