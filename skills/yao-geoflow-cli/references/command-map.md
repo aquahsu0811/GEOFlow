@@ -14,6 +14,8 @@ Prefer `bin/geoflow` only when it exists and `--help` confirms the requested act
 
 Do not invent CLI subcommands for actions that only exist in API v1. When the CLI is absent, use `curl` with explicit bearer auth and `X-Idempotency-Key` for writes.
 
+For GEOFlow 2.0.4 admin-only capabilities, use authenticated admin web routes. Do not claim they are API v1 endpoints unless `php artisan route:list --path=api/v1` proves it in the target workspace.
+
 ## Preflight
 
 ```bash
@@ -25,6 +27,7 @@ scripts/geoflow_preflight.sh "<workspace>" [config] [checks]
 ```bash
 scripts/geoflow_preflight.sh "/path/to/GEOFlow"
 scripts/geoflow_preflight.sh "/path/to/GEOFlow" "" catalog,materials
+scripts/geoflow_preflight.sh "/path/to/GEOFlow" "" admin
 GEOFLOW_PREFLIGHT_CHECKS=catalog,materials scripts/geoflow_preflight.sh "/path/to/GEOFlow"
 ```
 
@@ -32,6 +35,7 @@ The preflight supports two modes:
 
 - CLI mode when `<workspace>/bin/geoflow` exists.
 - API fallback mode when the CLI is absent and `GEOFLOW_BASE_URL` plus `GEOFLOW_API_TOKEN` are available.
+- Admin login-page check when `checks` includes `admin`; set `GEOFLOW_ADMIN_PATH` if the admin prefix is not `/admin`.
 
 For the Laravel rewrite without a CLI wrapper, `GEOFLOW_BASE_URL` must point to the public web root, for example `http://127.0.0.1:18080`, not `/geo_admin`, not `/api/v1`, and not a proxy error page.
 
@@ -235,13 +239,27 @@ Useful task JSON fields:
   "ai_model_id": 3,
   "status": "paused",
   "category_mode": "smart",
+  "model_selection_mode": "fixed",
   "publish_scope": "local_and_distribution",
+  "distribution_strategy": "broadcast",
+  "knowledge_base_ids": [4, 5],
+  "image_library_id": 6,
+  "image_count": 2,
+  "author_id": 7,
+  "fixed_category_id": 8,
+  "need_review": 1,
+  "is_loop": 0,
+  "auto_keywords": 1,
+  "auto_description": 1,
   "draft_limit": 5,
-  "article_limit": 10
+  "article_limit": 10,
+  "publish_interval": 3600
 }
 ```
 
-`author_id`, `image_library_id`, `knowledge_base_id`, and `fixed_category_id` are optional. `publish_scope` is one of `local_and_distribution`, `distribution_only`, or `local_only`.
+`author_id`, `image_library_id`, `knowledge_base_id`, `knowledge_base_ids`, and `fixed_category_id` are optional. `knowledge_base_ids` may contain up to five IDs and takes precedence over legacy `knowledge_base_id`. `publish_scope` is one of `local_and_distribution`, `distribution_only`, or `local_only`. `distribution_strategy` is one of `broadcast`, `round_robin`, or `random_balanced`. API v1 accepts `publish_interval` in seconds.
+
+API v1 does not bind `distribution_channel_ids`. Use admin web task create/update routes when the task must select concrete distribution channels.
 
 API fallback:
 
@@ -420,7 +438,7 @@ Trash article:
 
 ## Distribution Boundary
 
-GEOFlow 2.0.1 includes Distribution Management, target-site packages, static target sites, and distribution queues, but those admin operations are not exposed through the current `/api/v1` surface.
+GEOFlow 2.0.4 includes Distribution Management, target-site packages, static target sites, WordPress REST channels, generic HTTP API channels, settings sync, and distribution queues. These admin operations are not exposed through the current `/api/v1` surface.
 
 API task fields can set `publish_scope`, which affects worker-driven task publishing:
 
@@ -428,4 +446,165 @@ API task fields can set `publish_scope`, which affects worker-driven task publis
 - `distribution_only`: worker publishing may mark local articles `private` while still eligible for distribution.
 - `local_only`: skip distribution.
 
-Do not claim the API can create distribution channels, rotate secrets, download target-site packages, or inspect Analytics unless the target workspace exposes separate routes for those actions.
+Do not claim the API can create distribution channels, rotate secrets, download target-site packages, inspect Analytics, run URL imports, manage system updates, replicate themes, or manage API tokens unless the target workspace exposes separate API routes for those actions.
+
+## Admin Web Route Map
+
+Use this map when a capability is absent from `/api/v1`. The default admin prefix is `/admin` in the local Docker instance and may be configured by `geoflow.admin_base_path`.
+
+### Login And Session
+
+- `GET /admin/login`
+- `POST /admin/login`
+- `POST /admin/logout`
+- `GET /admin/locale/{locale}`
+
+Admin writes require the current CSRF token from the form page and the admin session cookies.
+
+### Dashboard And Analytics
+
+- `GET /admin/dashboard`
+- `GET /admin/analytics`
+
+Use query parameters for filters. Read visible metric labels and tables from the rendered page; do not infer numbers from memory.
+
+### Tasks
+
+- `GET /admin/tasks`
+- `GET /admin/tasks/create`
+- `POST /admin/tasks/create`
+- `GET /admin/tasks/{taskId}/edit`
+- `PUT /admin/tasks/{taskId}`
+- `POST /admin/tasks/{taskId}/toggle-status`
+- `POST /admin/tasks/{taskId}/delete`
+- `GET /admin/tasks/health-check`
+- `POST /admin/tasks/batch/start`
+
+Use admin web for channel selection through `distribution_channel_ids[]`, task monitoring health-check, and batch start/stop.
+
+### Distribution
+
+- `GET /admin/distribution`
+- `GET /admin/distribution/create`
+- `POST /admin/distribution/create`
+- `GET /admin/distribution/{channelId}`
+- `GET /admin/distribution/{channelId}/edit`
+- `PUT /admin/distribution/{channelId}`
+- `POST /admin/distribution/{channelId}/pause`
+- `POST /admin/distribution/{channelId}/activate`
+- `POST /admin/distribution/{channelId}/health`
+- `POST /admin/distribution/{channelId}/rotate-secret`
+- `POST /admin/distribution/{channelId}/reveal-secret`
+- `POST /admin/distribution/{channelId}/download-package`
+- `POST /admin/distribution/{channelId}/sync-settings`
+- `GET /admin/distribution/jobs`
+- `GET /admin/distribution/jobs/{distributionId}/edit`
+- `PUT /admin/distribution/jobs/{distributionId}`
+- `POST /admin/distribution/jobs/{distributionId}/delete`
+- `POST /admin/distribution/jobs/{distributionId}/retry`
+
+Channel types are `geoflow_agent`, `wordpress_rest`, and `generic_http_api`. Secret reveal and package download may require super-admin password confirmation.
+
+### URL Import
+
+- `GET /admin/url-import`
+- `POST /admin/url-import`
+- `GET /admin/url-import/history`
+- `GET /admin/url-import/{jobId}`
+- `POST /admin/url-import/{jobId}/run`
+- `GET /admin/url-import/{jobId}/status`
+- `POST /admin/url-import/{jobId}/commit`
+
+Verify an analysis model is ready before running jobs. Poll `status` until terminal state before commit.
+
+### System Updates
+
+- `GET /admin/system-updates`
+- `POST /admin/system-updates/check`
+- `POST /admin/system-updates/plan`
+- `POST /admin/system-updates/backup`
+- `POST /admin/system-updates/apply`
+- `GET /admin/system-updates/runs/status`
+- `GET /admin/system-updates/runs/{runUuid}`
+- `POST /admin/system-updates/runs/{runUuid}/retry`
+- `POST /admin/system-updates/runs/{runUuid}/mark-failed`
+- `POST /admin/system-updates/plans/{runUuid}/commands/{commandIndex}/executed`
+- `GET /admin/system-updates/backups/{backupUuid}`
+- `POST /admin/system-updates/backups/{backupUuid}/rollback`
+- `POST /admin/system-updates/backups/{backupUuid}/files/rollback`
+
+Treat apply, retry, mark-failed, rollback, and rollback-file as high-risk super-admin operations. Verify active run state, backup/plan UUID, password requirement, and preflight messages.
+
+### Articles
+
+- `GET /admin/articles`
+- `GET /admin/articles/create`
+- `POST /admin/articles/create`
+- `GET /admin/articles/{articleId}/edit`
+- `PUT /admin/articles/{articleId}`
+- `POST /admin/articles/{articleId}/editor/images/upload`
+- `POST /admin/articles/{articleId}/restore`
+- `POST /admin/articles/{articleId}/force-delete`
+- `POST /admin/articles/batch/update-status`
+- `POST /admin/articles/batch/update-review`
+- `POST /admin/articles/batch/delete`
+- `POST /admin/articles/batch/restore`
+- `POST /admin/articles/batch/force-delete`
+- `POST /admin/articles/trash/empty`
+- `POST /admin/articles/editor/wechat-html`
+
+Prefer API v1 for simple article CRUD/review/publish/trash. Use admin web for batch operations, restore, force-delete, editor uploads, trash emptying, and WeChat export.
+
+### Materials
+
+- `GET /admin/materials`
+- Categories: `/admin/categories`
+- Authors: `/admin/authors`
+- Keyword libraries: `/admin/keyword-libraries`
+- Title libraries: `/admin/title-libraries`
+- Image libraries: `/admin/image-libraries`
+- Knowledge bases: `/admin/knowledge-bases`
+
+Use admin web for imports, uploads, AI title generation, knowledge-base file upload, and chunk refresh.
+
+### AI Configuration
+
+- `GET /admin/ai-configurator`
+- `GET /admin/ai-models`
+- `POST /admin/ai-models/create`
+- `PUT /admin/ai-models/{modelId}`
+- `POST /admin/ai-models/{modelId}/test`
+- `POST /admin/ai-models/{modelId}/delete`
+- `POST /admin/ai-models/default-embedding`
+- `POST /admin/ai-models/chunking-config`
+- `GET /admin/ai-prompts`
+- `POST /admin/ai-prompts/create`
+- `PUT /admin/ai-prompts/{promptId}`
+- `POST /admin/ai-prompts/{promptId}/delete`
+- `GET /admin/ai-special-prompts`
+- `POST /admin/ai-special-prompts/keyword`
+- `POST /admin/ai-special-prompts/description`
+
+Redact provider API keys and encrypted secret fields.
+
+### Site Settings And Theme Replication
+
+- `GET /admin/site-settings`
+- `POST /admin/site-settings`
+- `POST /admin/site-settings/theme`
+- `POST /admin/site-settings/article-detail-ads`
+- `POST /admin/site-settings/article-detail-text-ads`
+- `GET|POST /admin/site-settings/sensitive-words`
+- `POST /admin/site-settings/sensitive-words/{wordId}/delete`
+- Theme replication routes under `/admin/site-settings/theme-replications`
+
+For theme replication, verify status and previews before publish. Package download does not imply publish.
+
+### Super-Admin Management
+
+- Admin users: `/admin/admin-users`
+- Activity logs: `GET /admin/admin-activity-logs`
+- API tokens: `/admin/api-tokens`
+- Security password and sensitive-word aliases: `/admin/security-settings`
+
+API token creation returns the token once. Do not print it unless explicitly requested.

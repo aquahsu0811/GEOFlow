@@ -25,6 +25,7 @@ cli_path="$workspace/bin/geoflow"
 
 api_base_url="${GEOFLOW_BASE_URL:-}"
 api_token="${GEOFLOW_API_TOKEN:-}"
+admin_path="${GEOFLOW_ADMIN_PATH:-/admin}"
 
 docker_hint() {
   if [[ -f "$workspace/docker-compose.yml" || -f "$workspace/compose.yml" ]]; then
@@ -51,18 +52,52 @@ PY
 print_body_excerpt() {
   python3 - "$1" <<'PY'
 import pathlib
+import re
 import sys
 
 text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+text = re.sub(r'(name=["\']_token["\'][^>]*value=["\'])[^"\']+', r'\1[redacted]', text, flags=re.I)
+text = re.sub(r'(value=["\'])[A-Za-z0-9]{20,}(["\'])', r'\1[redacted]\2', text)
 print(text[:800])
+PY
+}
+
+print_admin_summary() {
+  python3 - "$1" <<'PY'
+import pathlib
+import re
+import sys
+
+text = pathlib.Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace")
+title_match = re.search(r"<title[^>]*>(.*?)</title>", text, re.I | re.S)
+title = re.sub(r"\s+", " ", title_match.group(1)).strip() if title_match else "(missing title)"
+has_form = bool(re.search(r"<form\b", text, re.I))
+has_csrf = bool(re.search(r'name=["\']_token["\']', text, re.I))
+
+print(f"Admin page title: {title}")
+print(f"Admin login form: {'present' if has_form else 'missing'}")
+print(f"CSRF field: {'present' if has_csrf else 'missing'}")
 PY
 }
 
 if [[ ! -f "$cli_path" ]]; then
   if [[ -f "$workspace/artisan" && -f "$workspace/routes/api.php" ]]; then
-    if [[ -z "$api_base_url" || -z "$api_token" ]]; then
+    needs_api_token=0
+    IFS=',' read -r -a initial_check_names <<< "$preflight_checks"
+    for raw_check in "${initial_check_names[@]}"; do
+      check="$(printf '%s' "$raw_check" | tr -d '[:space:]')"
+      case "$check" in
+        ""|admin|admin-login)
+          ;;
+        *)
+          needs_api_token=1
+          ;;
+      esac
+    done
+
+    if [[ -z "$api_base_url" || ( "$needs_api_token" -eq 1 && -z "$api_token" ) ]]; then
       echo "Missing CLI: $cli_path" >&2
-      echo "Laravel GEOFlow detected. Set GEOFLOW_BASE_URL and GEOFLOW_API_TOKEN to use API v1 fallback." >&2
+      echo "Laravel GEOFlow detected. Set GEOFLOW_BASE_URL for admin checks and also GEOFLOW_API_TOKEN for API v1 fallback checks." >&2
       docker_hint
       exit 1
     fi
@@ -80,19 +115,32 @@ if [[ ! -f "$cli_path" ]]; then
       case "$check" in
         catalog)
           endpoint_path="/api/v1/catalog"
+          expected_json=1
+          use_auth=1
           ;;
         materials|material)
           endpoint_path="/api/v1/materials"
+          expected_json=1
+          use_auth=1
           ;;
         tasks|task)
           endpoint_path="/api/v1/tasks?per_page=1"
+          expected_json=1
+          use_auth=1
           ;;
         articles|article)
           endpoint_path="/api/v1/articles?per_page=1"
+          expected_json=1
+          use_auth=1
+          ;;
+        admin|admin-login)
+          endpoint_path="${admin_path%/}/login"
+          expected_json=0
+          use_auth=0
           ;;
         *)
           echo "Unsupported preflight check: $check" >&2
-          echo "Supported checks: catalog, materials, tasks, articles" >&2
+          echo "Supported checks: catalog, materials, tasks, articles, admin" >&2
           exit 1
           ;;
       esac
@@ -100,28 +148,42 @@ if [[ ! -f "$cli_path" ]]; then
       check_url="${api_base_url%/}${endpoint_path}"
       check_tmp="$(mktemp)"
       tmp_files+=("$check_tmp")
-      if ! curl -sS --max-time 20 -H "Authorization: Bearer $api_token" -H "Accept: application/json" "$check_url" -o "$check_tmp"; then
+      curl_args=(-sS --max-time 20 -H "Accept: application/json")
+      if [[ "$use_auth" -eq 1 ]]; then
+        curl_args+=(-H "Authorization: Bearer $api_token")
+      fi
+      if ! curl "${curl_args[@]}" "$check_url" -o "$check_tmp"; then
         cat "$check_tmp" >&2 || true
-        echo "Preflight failed. Could not reach API fallback endpoint: $check_url" >&2
+        echo "Preflight failed. Could not reach endpoint: $check_url" >&2
         exit 3
       fi
       check_output="$(cat "$check_tmp")"
 
-      if ! is_jsonish "$check_tmp"; then
+      if [[ "$expected_json" -eq 1 ]] && ! is_jsonish "$check_tmp"; then
         print_body_excerpt "$check_tmp" >&2
         echo "Preflight failed. API fallback returned non-JSON. Check that GEOFLOW_BASE_URL points to the GEOFlow public web root and that /api/v1 routes are routed to Laravel API, not a proxy/login/HTML page." >&2
         docker_hint
         exit 3
       fi
 
-      if printf '%s' "$check_output" | grep -Eqi '"success"[[:space:]]*:[[:space:]]*false|token-invalid|invalid token|401|403|unauthorized|forbidden|未授权|无效或已过期'; then
+      if [[ "$expected_json" -eq 1 ]] && printf '%s' "$check_output" | grep -Eqi '"success"[[:space:]]*:[[:space:]]*false|token-invalid|invalid token|401|403|unauthorized|forbidden|未授权|无效或已过期'; then
         printf '%s\n' "$check_output" >&2
         echo "Preflight failed. API fallback token authentication or scope check failed for: $check_url" >&2
         exit 3
       fi
 
-      echo "API fallback preflight OK: $check_url"
-      printf '%s\n' "$check_output"
+      if [[ "$expected_json" -eq 0 ]] && ! printf '%s' "$check_output" | grep -Eqi '<form|login|csrf|password|admin'; then
+        print_body_excerpt "$check_tmp" >&2
+        echo "Preflight failed. Admin web check did not look like a login/admin page: $check_url" >&2
+        exit 3
+      fi
+
+      echo "Preflight OK: $check_url"
+      if [[ "$expected_json" -eq 0 ]]; then
+        print_admin_summary "$check_tmp"
+      else
+        printf '%s\n' "$check_output"
+      fi
     done
 
     if [[ "$ran_check" -eq 0 ]]; then

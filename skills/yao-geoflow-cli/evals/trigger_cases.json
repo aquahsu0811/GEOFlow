@@ -67,6 +67,50 @@
     {
       "text": "先检查 catalog 和 materials 两个 API 读接口，再批量写入素材。",
       "family": "material_preflight"
+    },
+    {
+      "text": "帮我在后台创建 GEOFlow 分发渠道并下载目标站点包。",
+      "family": "admin_distribution_web_flow"
+    },
+    {
+      "text": "打开 GEOFlow 数据分析页看一下访问趋势和分发失败统计。",
+      "family": "admin_analytics_web_flow"
+    },
+    {
+      "text": "用 GeoFlow 2.0.4 的后台给任务选择两个渠道站点，策略用 round_robin。",
+      "family": "admin_task_distribution_channels"
+    },
+    {
+      "text": "创建一个 WordPress REST 分发渠道，做健康检查，然后不要泄露 Application Password。",
+      "family": "wordpress_distribution_channel"
+    },
+    {
+      "text": "创建一个通用 HTTP API 分发渠道，配置 HMAC 鉴权和响应字段映射。",
+      "family": "generic_http_distribution_channel"
+    },
+    {
+      "text": "帮我跑 URL Import，从网页生成知识库、关键词和标题，完成后提交结果。",
+      "family": "url_import_flow"
+    },
+    {
+      "text": "进入系统更新中心检查更新，生成计划和备份，但先不要执行 apply。",
+      "family": "system_update_plan_backup"
+    },
+    {
+      "text": "用后台主题复刻功能导入参考站，预览 home/category/article 后再发布。",
+      "family": "theme_replication_flow"
+    },
+    {
+      "text": "帮我创建一个 GEOFlow API Token，只返回脱敏后的结果。",
+      "family": "api_token_admin"
+    },
+    {
+      "text": "在后台批量把这些文章审核通过并发布状态改为 published。",
+      "family": "admin_article_batch_ops"
+    },
+    {
+      "text": "给 GEOFlow 配置默认 embedding 模型并更新知识库分块参数。",
+      "family": "admin_ai_config"
     }
   ],
   "should_not_trigger": [
@@ -87,12 +131,12 @@
       "family": "read_only_unrelated"
     },
     {
-      "text": "帮我在后台创建 GEOFlow 分发渠道并下载目标站点包。",
-      "family": "admin_distribution_web_flow"
+      "text": "帮我重新设计 GEOFlow 后台分发管理页面。",
+      "family": "frontend_design"
     },
     {
-      "text": "打开 GEOFlow 数据分析页看一下访问趋势。",
-      "family": "admin_analytics_web_flow"
+      "text": "帮我实现新的 distribution API v2 控制器。",
+      "family": "backend_implementation"
     }
   ],
   "near_neighbor": [
@@ -110,7 +154,15 @@
     },
     {
       "text": "通过 API v1 配置分发渠道和轮换密钥。",
-      "family": "distribution_api_not_exposed"
+      "family": "distribution_api_vs_admin_web"
+    },
+    {
+      "text": "直接把 distribution_channels 表插一条记录。",
+      "family": "db_shortcut_vs_admin_web"
+    },
+    {
+      "text": "不用登录后台，直接绕过 CSRF 下载目标站点包。",
+      "family": "csrf_bypass_vs_admin_web"
     }
   ]
 }

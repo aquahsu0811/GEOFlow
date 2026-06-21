@@ -1,6 +1,6 @@
 ---
 name: yao-geoflow-cli
-description: Use when operating an existing GEOFlow system from local commands or Laravel API v1 to inspect catalog/materials, manage tasks/jobs/articles, publish content, or run API/Docker preflight. Use for scriptable GEOFlow operations instead of the web admin. Do not use for backend implementation, schema changes, direct database edits, or admin-only distribution setup.
+description: Use when operating an existing GEOFlow 2.0.x system from local CLI, Laravel API v1, or authenticated admin web flows to inspect catalog/materials, manage tasks/jobs/articles, configure distribution channels, run analytics/URL import/system update workflows, manage settings/tokens/users, or run API/Docker/admin preflight. Do not use for backend implementation, schema changes, or direct database edits.
 ---
 
 <!--
@@ -11,9 +11,9 @@ Date: 2026-05-16
 X: https://x.com/yaojingang
 -->
 
-# Yao GEOFlow CLI
+# Yao GEOFlow Operations
 
-Use this skill when the system already has the GEOFlow API available and the job is to operate that system from local commands. The current Laravel 2.0.x public repository commonly exposes `/api/v1` without a `bin/geoflow` wrapper, so use API v1 directly in that case. Prefer `bin/geoflow` only when it exists and supports the requested action.
+Use this skill when the system already has a running GEOFlow instance and the job is to operate it. Prefer the safest supported surface in this order: `bin/geoflow` when it exists and supports the action, Laravel `/api/v1` for tokenized scriptable operations, then authenticated admin web flows for GEOFlow 2.0.4 capabilities that only exist in the Blade admin.
 
 ## What This Skill Owns
 
@@ -21,17 +21,20 @@ Use this skill when the system already has the GEOFlow API available and the job
 - Catalog lookup for model, prompt, keyword library, title library, image library, author, category, and knowledge-base IDs
 - Material library lookup and CRUD for categories, authors, keyword libraries, title libraries, image libraries, and knowledge bases
 - Material item management for keyword, title, and image library entries
-- Task creation, update, delete, start, stop, enqueue, and status inspection
+- Task creation, update, delete, start, stop, enqueue, health-check, batch start/stop, distribution scope, distribution strategy, image count, multi-knowledge-base, review, loop, and auto metadata settings
 - Job inspection after enqueue or worker execution
-- Article draft upload, article update, review, publish, and trash actions
+- Article draft upload, article update, review, publish, batch status/review/trash/restore/force-delete, editor image upload, and WeChat HTML export
+- GEOFlow 2.0.4 admin operations: dashboard, analytics, URL import, system updates, AI model/prompt settings, site settings, theme replication, security settings, API tokens, admin users, and activity logs
+- Distribution management for GEOFlow Agent, WordPress REST, and generic HTTP API channels, including channel CRUD, health checks, secret rotation/reveal, target package download, settings sync, distribution jobs, remote edit/delete, and retry
 - Safe command construction with idempotency keys for write operations
 
 ## What This Skill Does Not Cover
 
 - Implementing or refactoring GEOFlow backend code
 - Direct database writes or bypassing `/api/v1`
-- Web-admin-only flows that do not exist in `geoflow` or `/api/v1`
-- Distribution channel setup, target-site package download, Analytics, URL import, title async generation, or image upload orchestration outside the current CLI/API surface
+- Inventing API routes for features that only exist in the admin web UI
+- Bypassing CSRF, admin authentication, super-admin checks, or password confirmation in web-admin flows
+- Revealing full API tokens, distribution secrets, WordPress application passwords, or generic API secrets in user-facing summaries
 - Debugging worker internals beyond reporting what the CLI and API return
 
 ## Required Preconditions
@@ -44,25 +47,29 @@ Use this skill when the system already has the GEOFlow API available and the job
 6. Treat preflight as successful only when an authenticated read succeeds. Local config parsing alone is not enough because it does not prove API reachability or token validity.
 7. If preflight fails, stop and report the exact missing prerequisite instead of guessing.
 8. For material operations, verify the token has `materials:read` and `materials:write` before mutating.
+9. For admin web operations, verify the admin login route, authenticate with a real admin session, preserve CSRF tokens/cookies, and re-read the destination page or JSON status after every write.
+10. For super-admin or high-risk operations, verify the logged-in role and require the user to explicitly request the action before proceeding.
 
 Use [references/operation-boundary.md](references/operation-boundary.md) for the enforced boundary and [references/command-map.md](references/command-map.md) for the supported commands.
 Use [references/laravel-api-v1-docker.md](references/laravel-api-v1-docker.md) when the target GEOFlow system is the Laravel rewrite, runs through Docker Compose, or has no `bin/geoflow` wrapper yet.
+Use [references/geoflow-2.0.4-capability-map.md](references/geoflow-2.0.4-capability-map.md) for the full GeoFlow 2.0.4 API/admin capability map.
 
 ## Default Workflow
 
 1. Identify the target GEOFlow workspace. If the user did not specify one, prefer the current workspace when it has `artisan` or `bin/geoflow`.
 2. If `bin/geoflow` exists and config is missing, run `bin/geoflow login --base-url ... --username ...` and let the CLI prompt for the password.
 3. If `bin/geoflow` is missing, use API v1 fallback and first verify `GET /api/v1/catalog` with a bearer token.
-4. Run `scripts/geoflow_preflight.sh "<workspace>" [config]` to verify the CLI entrypoint, authenticated API access, and current token. For material work, also verify `GET /api/v1/materials`.
+4. Run `scripts/geoflow_preflight.sh "<workspace>" [config]` to verify the CLI entrypoint, authenticated API access, and current token. For material work, also verify `GET /api/v1/materials`. For admin-web work, verify the admin login page and current route list.
 5. For lookup work, call `geoflow catalog` or `GET /api/v1/catalog` first so IDs come from the system instead of memory. Use `GET /api/v1/materials/{type}` when the user needs material library records, counts, or item IDs.
 6. For write operations, use an explicit `--idempotency-key` or `X-Idempotency-Key`.
 7. After any write, immediately run the corresponding read command to verify the actual persisted state.
-8. For task create/update, preserve the current API contract: optional `author_id`, `image_library_id`, `knowledge_base_id`, and `fixed_category_id` may be omitted; `publish_scope` is one of `local_and_distribution`, `distribution_only`, or `local_only`.
+8. For task create/update, preserve the GEOFlow 2.0.4 contract: optional material fields may be omitted; `knowledge_base_ids` takes precedence over legacy `knowledge_base_id`; `publish_scope` is `local_and_distribution`, `distribution_only`, or `local_only`; `distribution_strategy` is `broadcast`, `round_robin`, or `random_balanced`.
 9. After `article publish`, verify the final local frontend URL using the system's slug route, not an `article.php?id=...` compatibility link. Treat `/article/{slug}` as the local publish URL only when the final article status is `published`.
 10. For this system, generated article slugs should be 8-character short ASCII tokens such as `/article/bc7af3fb`. A user-supplied slug may differ; report what is persisted instead of inventing a URL rule.
 11. If a generation job fails, separate CLI/API success from business-data failure. Example: missing titles is a task-data issue, not a CLI issue.
 12. If the user asked for a publish smoke test and task generation is blocked by business data such as missing titles, stop the affected task first when it is still active or queued, then fall back to `article create` + `article review` + `article publish` so the publish chain can still be validated without leaving noisy retries behind.
-13. Report commands run, resource IDs touched, and the resulting state in concise operational terms.
+13. For admin web operations, use the admin route that owns the action instead of direct database edits. Parse and submit the page's CSRF token, use the correct HTTP verb override when needed, and verify through the destination page, JSON status endpoint, downloaded artifact metadata, or route-specific readback.
+14. Report commands/routes used, resource IDs touched, and the resulting state in concise operational terms. Redact secrets.
 
 ## Command Discipline
 
@@ -80,8 +87,9 @@ php "/path/to/workspace/bin/geoflow" --config /path/to/config ...
 
 - Never synthesize API requests directly when the CLI exists and already supports the action.
 - When the CLI is absent, use `/api/v1` with explicit bearer auth and `X-Idempotency-Key` for mutating requests.
+- When a capability exists only in `/admin/*`, operate through an authenticated admin session or browser automation, not `/api/v1`.
 - Never store or print a full token in the final user-facing summary unless the user explicitly asked for it.
-- Do not claim admin-only Distribution Management actions are available through API v1 unless the target workspace exposes matching routes.
+- Do not claim admin-only Distribution Management, Analytics, URL Import, System Updates, Theme Replication, API Token, or admin-user actions are available through API v1 unless the target workspace exposes matching API routes.
 
 ## Typical Flows
 
@@ -164,7 +172,8 @@ If `task jobs` or `job get` shows a business-data failure such as `没有可用�
 - If authenticated reads fail for another reason, do not default to `login --force`; report the actual API or connectivity failure first.
 - If the request implies batch operations, still keep each write idempotent and verify a sample of the outputs.
 - Do not invent a frontend article URL rule from memory. Read the system's current routing or canonical behavior first, then return the final local `/article/{slug}` URL only when the article is locally published, not a temporary `article.php?id=...` entrypoint.
-- If the user asks to configure distribution channels, download target-site packages, view Analytics, or perform other admin-only flows, state that the current API v1 surface does not expose that operation and use the web admin or a separate backend/admin skill instead.
+- If the user asks to configure distribution channels, download target-site packages, view Analytics, run URL import, manage system updates, replicate themes, manage API tokens, or perform other admin-only flows, use the admin web route when credentials/session and permissions are available.
+- Before destructive, credential-revealing, or update-center actions, restate the target resource and proceed only when the user's request is explicit enough to identify that exact action.
 - If the user asks for automation or a reusable flow, finish the operation first, then suggest whether an additional skill or automation is warranted.
 
 ## Reference Map

@@ -6,9 +6,9 @@ Date: 2026-05-16
 X: https://x.com/yaojingang
 -->
 
-# Laravel API v1 and Docker Fallback
+# Laravel API v1, Docker, And Admin Fallback
 
-Use this reference when the target GEOFlow workspace is the Laravel rewrite and no `bin/geoflow` wrapper is available. In the current Laravel 2.0.x public repository, this is the normal scriptable operations path.
+Use this reference when the target GEOFlow workspace is the Laravel rewrite and no `bin/geoflow` wrapper is available. In the current Laravel 2.0.x public repository, `/api/v1` is the normal scriptable content-operations path. GEOFlow 2.0.4 also has many admin-only workflows under `/admin/*`; use authenticated admin web for those.
 
 ## Detection
 
@@ -94,7 +94,7 @@ For queue behavior:
 
 - generation jobs use the `geoflow` queue
 - distribution jobs use the `distribution` queue
-- current API v1 does not manage distribution channels, target packages, or Analytics
+- current API v1 does not manage distribution channels, target packages, Analytics, URL Import, System Updates, Theme Replication, API Tokens, admin users, AI configuration, site settings, or security settings
 
 ## Preflight
 
@@ -108,6 +108,12 @@ For material work:
 
 ```bash
 skills/yao-geoflow-cli/scripts/geoflow_preflight.sh "/path/to/GEOFlow" "" catalog,materials
+```
+
+For admin-web work:
+
+```bash
+skills/yao-geoflow-cli/scripts/geoflow_preflight.sh "/path/to/GEOFlow" "" admin
 ```
 
 Preflight is successful only when authenticated API reads return JSON. A public homepage check is not sufficient.
@@ -197,18 +203,24 @@ Common optional fields:
 
 - `author_id`
 - `image_library_id`
+- `image_count`
 - `knowledge_base_id`
+- `knowledge_base_ids`: up to five IDs; takes precedence over `knowledge_base_id`
 - `fixed_category_id`
 - `category_mode`: `smart` or `fixed`
 - `model_selection_mode`: `fixed` or `smart_failover`
 - `status`: `active` or `paused`
 - `publish_scope`: `local_and_distribution`, `distribution_only`, or `local_only`
+- `distribution_strategy`: `broadcast`, `round_robin`, or `random_balanced`
 - `draft_limit`, `article_limit`, `publish_interval`
+- `need_review`, `is_loop`, `auto_keywords`, `auto_description`
 
 Optional material fields may be omitted and will be persisted as `null` on create.
 
-## Distribution Boundary
+API v1 task responses may include `task_progress`, `queue_overview`, `schedule_enabled`, `knowledge_base_ids`, `knowledge_bases`, distribution counters, and latest job status fields. Read back `GET /api/v1/tasks/{id}` after writes.
 
-GEOFlow 2.0.1 has Distribution Management in the admin UI, including channels, target-site packages, target settings sync, logs, queue retry, and static target-site generation. These are not part of the current `/api/v1` operations surface.
+## Admin Fallback Boundary
 
-Use API v1 only for the exposed task/article/material operations. When an operation requires distribution channel setup, secret rotation, target-site package download, Analytics, or remote article management, report that it is a web-admin operation unless the specific target workspace exposes a newer API route.
+GEOFlow 2.0.4 has admin UI capabilities including Distribution Management, target-site packages, WordPress REST channels, generic HTTP API channels, target settings sync, logs, queue retry, remote article management, Analytics, URL Import, System Updates, Theme Replication, site settings, AI configuration, API tokens, and admin users. These are not part of the current `/api/v1` operations surface.
+
+Use API v1 only for the exposed task/article/material operations. When an operation requires an admin-only capability, switch to authenticated admin web routes if the user has provided or already has a valid admin session. Otherwise report the missing admin session/prerequisite.
