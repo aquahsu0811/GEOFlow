@@ -27,6 +27,16 @@ Detailed setup guide:
 
 - [references/user-setup-and-usage.md](references/user-setup-and-usage.md)
 
+## Connect Browser Bridge
+
+If `opencli profile list` shows no connected profile, run this command from the skill directory:
+
+```bash
+node scripts/setup_deepseek_bridge.mjs
+```
+
+This helper opens `https://chat.deepseek.com/` only. Do not use Browser Bridge setup scripts from other projects such as `opencli-boss-ai`, because they may open their own target sites.
+
 ## Standard Inputs
 
 ```text
@@ -191,6 +201,7 @@ python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json 
 - `references/deepseek-crawl-workflow.md`: local crawler setup and crawl rules
 - `references/report-contract.md`: JSON contract and metric definitions
 - `scripts/preflight.mjs`: dependency and login-state checker
+- `scripts/setup_deepseek_bridge.mjs`: DeepSeek-specific OpenCLI Browser Bridge setup helper
 - `scripts/deepseek_batch_crawl.mjs`: repeated crawl orchestrator
 - `scripts/analyze_deepseek_results.py`: aggregation and HTML rendering
 - `fixtures/sample-deepseek-crawl.json`: offline test fixture

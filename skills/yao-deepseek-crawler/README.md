@@ -27,6 +27,16 @@
 
 - [references/user-setup-and-usage.md](references/user-setup-and-usage.md)
 
+## 连接 Browser Bridge
+
+如果 `opencli profile list` 显示没有已连接 profile，先在 Skill 目录执行：
+
+```bash
+node scripts/setup_deepseek_bridge.mjs
+```
+
+这个脚本只会打开 `https://chat.deepseek.com/`，不会打开其他业务网站。不要使用其他项目里的 Browser Bridge setup 脚本，例如 `opencli-boss-ai`，因为它们可能会打开自己的目标站点。
+
 ## 标准输入
 
 ```text
@@ -191,6 +201,7 @@ python3 scripts/analyze_deepseek_results.py fixtures/sample-deepseek-crawl.json 
 - `references/deepseek-crawl-workflow.md`：本地 crawler 配置和抓取规则
 - `references/report-contract.md`：JSON 合约和指标定义
 - `scripts/preflight.mjs`：依赖和登录状态检查
+- `scripts/setup_deepseek_bridge.mjs`：DeepSeek 专用 OpenCLI Browser Bridge 连接助手
 - `scripts/deepseek_batch_crawl.mjs`：重复采样编排
 - `scripts/analyze_deepseek_results.py`：聚合分析与 HTML 渲染
 - `fixtures/sample-deepseek-crawl.json`：离线测试样例

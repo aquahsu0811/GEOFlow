@@ -37,14 +37,13 @@ opencli profile list
 opencli deepseek whoami -f json
 ```
 
-If Browser Bridge is disconnected, set it up from the existing project:
+If Browser Bridge is disconnected, use this skill's DeepSeek-specific setup script:
 
 ```bash
-cd ../../SourceCode/opencli-boss-ai
-npm run setup:bridge
+node scripts/setup_deepseek_bridge.mjs
 ```
 
-DeepSeek web must already be logged in. The skill does not handle login, CAPTCHA, Cloudflare checks, or account recovery.
+This script opens `https://chat.deepseek.com/` in a dedicated OpenCLI browser profile. Do not use the `opencli-boss-ai` bridge setup script for this skill, because that project intentionally opens BOSS Zhipin. DeepSeek web must already be logged in. The skill does not handle login, CAPTCHA, Cloudflare checks, or account recovery.
 
 ## Stage 1: Batch Crawl
 

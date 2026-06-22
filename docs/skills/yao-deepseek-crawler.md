@@ -76,6 +76,7 @@ X: https://x.com/yaojingang
 ## 运行边界
 
 - 需要本地 OpenCLI CLI、Browser Bridge、已登录 DeepSeek 网页会话和本地 DeepSeek browser crawler 脚本。
+- Browser Bridge 未连接时，请在 Skill 目录运行 `node scripts/setup_deepseek_bridge.mjs`，它只会打开 `https://chat.deepseek.com/`；不要使用其他项目的 setup 脚本。
 - 不处理 DeepSeek 登录、验证码、Cloudflare、人机校验、账号风控或平台限制绕过。
 - 概率指标是重复采样估计，不是真实市场份额或平台官方排名。
 - 竞品实体识别优先使用用户提供的别名表；自动识别候选需要人工复核。

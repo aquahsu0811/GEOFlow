@@ -21,6 +21,16 @@ Required for analysis-only usage:
 - Python 3.10+.
 - An existing `deepseek-crawl.json` or compatible DeepSeek raw JSON.
 
+## 0. Connect Browser Bridge
+
+If `opencli profile list` says no Browser Bridge profiles are connected, start a DeepSeek-specific browser profile from the skill directory:
+
+```bash
+node scripts/setup_deepseek_bridge.mjs
+```
+
+This setup opens `https://chat.deepseek.com/` only. Do not use setup scripts from other OpenCLI projects, such as `opencli-boss-ai`, because those scripts may open their own target sites.
+
 ## 1. Run Preflight
 
 From the skill directory:
@@ -238,7 +248,7 @@ Accepted standard entity types are `person/人`, `company/公司`, and `product/
 | Symptom | Likely Cause | Fix |
 |---|---|---|
 | `opencli: command not found` | OpenCLI is not installed or not on `PATH`. | Install OpenCLI and verify `opencli --version`. |
-| `No Browser Bridge profiles connected` | Browser extension is not connected. | Open the Chrome or Edge profile with OpenCLI Browser Bridge enabled, then run `opencli profile list`. |
+| `No Browser Bridge profiles connected` | Browser extension is not connected. | Run `node scripts/setup_deepseek_bridge.mjs`, then run `opencli profile list`. |
 | `Browser profile ... is not connected` | The selected profile is offline. | Use `opencli profile list`, then pass a connected profile with `--profile`. |
 | `logged_in: false` | DeepSeek is not logged in. | Log in to DeepSeek in the connected browser, then run `opencli deepseek whoami -f json`. |
 | `Crawler script not found` | The default local crawler path does not exist. | Pass `--crawler-script <file>` or set `DEEPSEEK_CRAWLER_SCRIPT`. |

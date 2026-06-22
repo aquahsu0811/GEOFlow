@@ -213,7 +213,7 @@ async function main() {
         'Browser Bridge',
         doctorConnected ? 'pass' : 'fail',
         doctorConnected ? `connected${options.profile ? ` via ${options.profile}` : ''}` : compactOutput(doctorText),
-        'Open a Chrome/Edge profile with the OpenCLI Browser Bridge extension enabled, then rerun `opencli doctor`.',
+        'Run `node scripts/setup_deepseek_bridge.mjs` or open a Chrome/Edge profile with the OpenCLI Browser Bridge extension enabled, then rerun `opencli doctor`.',
       );
 
       const profiles = await run('opencli', ['profile', 'list'], options.timeout);
