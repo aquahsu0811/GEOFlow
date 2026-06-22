@@ -3410,7 +3410,7 @@ p { margin:0 0 12px; color:var(--olive); }
 .sentiment-donut-main { fill:var(--dark-warm); font-size:16px; font-weight:500; }
 .sentiment-donut-value { fill:var(--brand); font-family:var(--mono); font-size:18px; font-weight:600; font-variant-numeric:tabular-nums; }
 .sentiment-donut-legend { width:100%; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
-.sentiment-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:9px 8px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:12px; font-family:var(--mono); background:rgba(255,255,255,.42); }
+.sentiment-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:9px 8px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:12px; font-family:var(--mono); background:var(--ivory); }
 .sentiment-donut-row span { min-width:0; max-width:100%; display:flex; align-items:center; justify-content:center; gap:6px; color:var(--dark-warm); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sentiment-donut-row i { width:11px; height:11px; border-radius:50%; flex:0 0 auto; }
 .sentiment-donut-row strong { max-width:100%; color:var(--brand); text-align:center; font-size:14px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -3424,7 +3424,7 @@ p { margin:0 0 12px; color:var(--olive); }
 .share-donut-main { fill:var(--dark-warm); font-size:15px; font-weight:500; }
 .share-donut-value { fill:var(--brand); font-family:var(--mono); font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; }
 .share-donut-legend { width:100%; display:grid; grid-template-columns:repeat(auto-fit, minmax(68px, 1fr)); gap:7px; }
-.share-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:8px 6px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:11px; font-family:var(--mono); background:rgba(255,255,255,.42); }
+.share-donut-row { min-width:0; display:grid; grid-template-rows:auto auto auto; align-items:center; justify-items:center; gap:4px; padding:8px 6px; border:1px solid var(--border); border-radius:8px; color:var(--stone); font-size:11px; font-family:var(--mono); background:var(--ivory); }
 .share-donut-row span { min-width:0; max-width:100%; display:flex; align-items:center; justify-content:center; gap:5px; color:var(--dark-warm); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .share-donut-row i { width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
 .share-donut-row strong { max-width:100%; color:var(--brand); text-align:center; font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }

@@ -49,10 +49,10 @@ function parseArgs(argv) {
   };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
-    if (arg === '--browser') args.browser = argv[++i] || '';
-    else if (arg === '--url') args.url = argv[++i] || '';
-    else if (arg === '--profile-dir') args.profileDir = path.resolve(argv[++i] || '');
-    else if (arg === '--debug-port') args.debugPort = Number(argv[++i]);
+    if (arg === '--browser') args.browser = takeArgValue(argv, ++i, arg);
+    else if (arg === '--url') args.url = takeArgValue(argv, ++i, arg);
+    else if (arg === '--profile-dir') args.profileDir = path.resolve(takeArgValue(argv, ++i, arg));
+    else if (arg === '--debug-port') args.debugPort = Number(takeArgValue(argv, ++i, arg));
     else if (arg === '--no-daemon-restart') args.restartDaemon = false;
     else if (arg === '--dry-run') args.dryRun = true;
     else if (arg === '-h' || arg === '--help') args.help = true;
@@ -61,10 +61,27 @@ function parseArgs(argv) {
   if (!Number.isInteger(args.debugPort) || args.debugPort < 1024 || args.debugPort > 65535) {
     throw new Error('--debug-port must be an integer between 1024 and 65535');
   }
-  if (!/^https:\/\/chat\.deepseek\.com\/?/i.test(args.url)) {
+  if (!isAllowedDeepSeekUrl(args.url)) {
     throw new Error('--url must point to https://chat.deepseek.com/ for this skill setup');
   }
   return args;
+}
+
+function takeArgValue(argv, index, flag) {
+  const value = argv[index];
+  if (!value || value.startsWith('--')) {
+    throw new Error(`${flag} requires a value`);
+  }
+  return value;
+}
+
+function isAllowedDeepSeekUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && url.hostname === 'chat.deepseek.com';
+  } catch {
+    return false;
+  }
 }
 
 function run(cmd, args, options = {}) {
