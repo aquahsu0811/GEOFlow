@@ -31,6 +31,10 @@ resources/views/theme/
       header.blade.php
       footer.blade.php
       article-card.blade.php
+
+public/themes/template-YYYYMMDD-XXX/
+  theme.css
+  theme.js
 ```
 
 ## Mode B: Preview Theme Edit Session
@@ -57,7 +61,64 @@ resources/views/theme/
       header.blade.php
       footer.blade.php
       article-card.blade.php
+
+public/themes/target-theme-edit-YYYYMMDD-XXX/
+  theme.css
+  theme.js
 ```
+
+## Mode C: Homepage Builder Design JSON
+
+Use this mode when the current GEOFlow workspace exposes `HomepageModuleBuilder`, `homepage_modules`, `homepage_style`, and the admin import route.
+
+```text
+homepage-composition-plan.md
+homepage-design.json
+preview-notes.md
+```
+
+Preferred JSON shape:
+
+```json
+{
+  "style": {
+    "accent_color": "#2563eb",
+    "background_color": "#ffffff",
+    "surface_color": "#ffffff",
+    "text_color": "#111827",
+    "muted_color": "#6b7280",
+    "container_width": "wide",
+    "section_spacing": "relaxed",
+    "radius": "soft"
+  },
+  "modules": [
+    {
+      "type": "hero",
+      "layout": "split",
+      "data_source": "latest",
+      "enabled": true,
+      "sort_order": 10,
+      "title": "Enterprise GEO Hub",
+      "subtitle": "Knowledge workflow",
+      "body": "Organize homepage content with custom modules.",
+      "image_url": "",
+      "link_text": "View resources",
+      "link_url": "/archive",
+      "limit": 4,
+      "custom_html": "",
+      "alignment": "left"
+    }
+  ]
+}
+```
+
+For this mode, include:
+
+- import mode: `replace` or `append`
+- module type, layout, source, and fallback notes
+- route safety for every `link_url` and `image_url`
+- `custom_html` safety note when used
+- warning that import can affect the live default homepage unless applied in staging
 
 ## Minimum Manifest Fields
 
@@ -89,6 +150,7 @@ Recommended Laravel fields:
 
 - `base_theme_id`
 - `preview_theme_id`
+- `public_assets_dir` when runtime CSS/JS has been forked
 - `created_at`
 - `change_request`
 - `preview_routes`
@@ -99,7 +161,25 @@ Recommended Laravel fields:
 - `header`
 - `footer`
 - `home.hero`
+- `home.hero_carousel`
+- `home.hero_media`
+- `home.builder.hero`
+- `home.builder.rich_text`
+- `home.builder.image_band`
+- `home.builder.metric_band`
+- `home.builder.chart_band`
+- `home.builder.feature_grid`
+- `home.builder.article_collection`
+- `home.builder.cta_band`
+- `home.builder.custom_html`
+- `home.metric_band`
+- `home.chart_lite`
+- `home.text_value_block`
+- `home.service_or_topic_grid`
+- `home.case_or_resource_grid`
+- `home.hot_articles`
 - `home.featured_list`
+- `home.cta_band`
 - `home.article_card`
 - `category.article_card`
 - `article.hero`
@@ -119,6 +199,7 @@ Recommended Laravel fields:
 - `publish_as_new_theme`: keep or rename the preview fork so admin theme discovery can list it as a new template
 - `replace_base_theme`: back up the original target theme and then replace it from the confirmed preview fork
 - `activate_after_confirmation`: activate only after the operator confirms the reviewed preview session
+- `import_homepage_design_after_confirmation`: import the reviewed homepage builder payload only after the operator confirms the exact JSON and mode
 
 ## Preview Contract
 
@@ -132,6 +213,17 @@ The package should be previewed on at least:
 Current Laravel GEOFlow may not provide isolated `/preview/{theme}` URLs. Preview theme edit sessions should clearly say whether review uses static preview artifacts, temporary admin activation, or a real preview route discovered in `routes/web.php`.
 
 Optimization runs should also include a short before/after rationale for each touched module.
+
+Homepage enrichment runs should also include:
+
+- `homepage-composition-plan.md` or an equivalent section in `change-plan.md`
+- `homepage-design.json` when the current system supports homepage builder import
+- each added homepage module's data source
+- default, empty, search, category, and mobile behavior
+- whether CSS/JS is edited in `resources/views/theme/{theme_id}/assets` or `public/themes/{theme_id}`
+- whether module/style work is delivered through theme files or homepage builder import JSON
+- the `replace` or `append` import mode when builder JSON is used
+- any desired module that requires backend work instead of theme-only work
 
 Preview must be isolated from the active public template until the operator confirms replacement, publish-as-new, or activation.
 

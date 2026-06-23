@@ -654,13 +654,20 @@
         "template-optimization",
         "design-system",
         "preview",
-        "theme-edit"
+        "theme-edit",
+        "homepage-enrichment",
+        "corporate-homepage",
+        "homepage-builder",
+        "custom-homepage-style"
       ],
       "requires_web": true,
       "primary_outputs": [
         "theme-discovery",
         "preview-theme-session",
         "design-audit",
+        "homepage-composition-plan",
+        "homepage-design-json",
+        "homepage-style-tokens",
         "theme-package-plan",
         "optimization-plan",
         "mapping-json",
@@ -671,9 +678,9 @@
       "owner": "yaojingang",
       "stage": "published",
       "path": "skills/yao-geoflow-design",
-      "summary": "Discover current GEOFlow Laravel Blade themes, preview-edit a selected template safely, and then clone, optimize, publish as new, or replace the base theme after review without breaking rendering contracts.",
+      "summary": "Discover current GEOFlow Laravel Blade themes, preview-edit a selected template safely, enrich the homepage with corporate or portal-style modules from existing GEOFlow data, generate reviewed homepage module/style JSON when the builder exists, and then clone, optimize, publish as new, replace the base theme, or import homepage design after review without breaking rendering contracts.",
       "public_repo_path": "skills/yao-geoflow-design",
-      "last_updated": "2026-04-26"
+      "last_updated": "2026-06-23"
     }
   ],
   "planned_families": [

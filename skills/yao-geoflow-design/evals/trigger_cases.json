@@ -21,6 +21,30 @@
       "family": "preview_module_addition"
     },
     {
+      "text": "把指定 GEOFlow 模板首页优化得更像企业官网，增加大图、指标图表、文本介绍、服务模块和 CTA，但不要改后端数据。",
+      "family": "homepage_enrichment_corporate"
+    },
+    {
+      "text": "让 GEOFlow 首页不要只是文章列表，基于现有轮播图、热门文章和精选文章做一个更丰满的门户首页。",
+      "family": "homepage_enrichment_portal"
+    },
+    {
+      "text": "检查当前 GEOFlow 升级后首页变量，看看模板 skill 是否需要支持 hotArticles 和 homepageCarouselSlides。",
+      "family": "geoflow_upgrade_contract_check"
+    },
+    {
+      "text": "GEOFlow 新增了首页多模块和自定义首页样式，检查 skill 是否要支持 homepage_modules、homepage_style 和导入 JSON。",
+      "family": "homepage_builder_upgrade_check"
+    },
+    {
+      "text": "按企业官网风格给 GEOFlow 生成一个可导入后台的 homepage-design.json，包含 style 和 modules，先不要直接应用。",
+      "family": "homepage_builder_design_json"
+    },
+    {
+      "text": "用 GEOFlow 首页模块 builder 做 hero、图表、指标、feature_grid、article_collection 和 CTA，自定义颜色和宽度，但要保留预览确认。",
+      "family": "homepage_builder_style_modules"
+    },
+    {
       "text": "给你一个网址，按 GEOFlow 现有前台模块复刻成一个可预览的模板包。",
       "family": "reference_url_clone"
     },
@@ -79,6 +103,10 @@
       "family": "generic_frontend_design"
     },
     {
+      "text": "给企业官网加真实客户 logo、线索表单和销售漏斗数据，后端没有也先写出来。",
+      "family": "unsupported_corporate_data"
+    },
+    {
       "text": "直接上线新模板，不用预览和确认。",
       "family": "direct_activation"
     },
@@ -107,6 +135,14 @@
     {
       "text": "直接在活跃模板里写死一个新模块，数据字段后面再说。",
       "family": "unsupported_module_data_vs_safe_theme_edit"
+    },
+    {
+      "text": "把 GEOFlow 首页做丰满，但需要新增数据库表管理客户案例、Logo 和表单提交。",
+      "family": "backend_homepage_builder_vs_theme_only_enrichment"
+    },
+    {
+      "text": "直接把 homepage_modules import 到线上，不用给我看 JSON，也不用确认 replace 还是 append。",
+      "family": "unreviewed_homepage_builder_import"
     }
   ]
 }

@@ -1,8 +1,8 @@
 # yao-geoflow-design
 
-`yao-geoflow-design` discovers the themes that already exist in a GEOFlow system, lets the operator pick a target theme, and then runs a **preview-first theme edit session** for frontend adjustments, module changes, or reference-guided restyling. It does not replace the live frontend directly. Instead, it creates an in-system preview theme first, then supports either publish-as-new or replace-base decisions after review.
+`yao-geoflow-design` discovers the themes that already exist in a GEOFlow system, lets the operator pick a target theme, and then runs a **preview-first theme edit session** for frontend adjustments, module changes, richer homepage composition, or reference-guided restyling. It does not replace the live frontend directly. Instead, it creates an in-system preview theme first, then supports either publish-as-new or replace-base decisions after review.
 
-This version is aligned with the GEOFlow Laravel Blade theme system: theme packages live under `resources/views/theme/{theme_id}`, missing templates fall back to `resources/views/site`, and the admin base path is configurable. The skill must not hard-code `/geo_admin` or alter backend business logic during a design-only run.
+This version is aligned with the GEOFlow Laravel Blade theme system and the current homepage builder contract: theme packages live under `resources/views/theme/{theme_id}`, runtime assets commonly live under `public/themes/{theme_id}`, missing templates fall back to `resources/views/site`, and the admin base path is configurable. When `HomepageModuleBuilder`, `homepage_modules`, `homepage_style`, and the admin import route are available, the skill can produce reviewed `homepage-design.json` for multi-module homepages and custom homepage styles. The skill must not hard-code `/geo_admin` or alter backend business logic during a design-only run.
 
 ## What It Is For
 
@@ -13,6 +13,9 @@ This version is aligned with the GEOFlow Laravel Blade theme system: theme packa
 - translating that direction into GEOFlow homepage, category, article, archive, and ad-slot modules
 - auditing the current template for hierarchy, spacing, and consistency issues
 - adjusting width, weight, spacing, and safe display modules inside a selected preview theme
+- enriching the default homepage into a corporate, portal, or knowledge-hub front page with hero media, metrics, CSS-only charts, text/value blocks, service/topic blocks, case/resource modules, and CTAs
+- using existing homepage data such as `homepageCarouselSlides`, `hotArticles`, `featuredArticles`, `articles`, `cardSummaries`, and site copy instead of inventing backend content
+- generating importable homepage builder JSON with `style` and `modules`, including supported types such as `hero`, `rich_text`, `image_band`, `metric_band`, `chart_band`, `feature_grid`, `article_collection`, `cta_band`, and sanitized `custom_html`
 - checking article images, markdown-rendered HTML, SEO/schema slots, footer behavior, and public language behavior against the current contract
 - preparing safe preview-first theme packages or optimization patch packages for later publication or replacement
 
@@ -20,6 +23,8 @@ This version is aligned with the GEOFlow Laravel Blade theme system: theme packa
 
 - copying raw HTML page-by-page
 - bypassing GEOFlow's current data and function contract
+- inventing customer logos, lead forms, sales-funnel metrics, corporate proof, or chart data when the current view does not provide them
+- applying `homepage_modules` imports or homepage presets to the live homepage without review
 - pushing a reference design live without preview
 - changing backend logic, routing, SEO rules, or content-query behavior
 - hard-coding admin URLs, database queries, or independent language-switch logic inside a theme
@@ -31,6 +36,7 @@ This version is aligned with the GEOFlow Laravel Blade theme system: theme packa
 - Frontend map: [geoflow-frontend-map.md](../../skills/yao-geoflow-design/references/geoflow-frontend-map.md)
 - Theme contract: [theme-package-contract.md](../../skills/yao-geoflow-design/references/theme-package-contract.md)
 - Laravel Blade contract: [laravel-theme-contract.md](../../skills/yao-geoflow-design/references/laravel-theme-contract.md)
+- Homepage composition guide: [homepage-composition-guide.md](../../skills/yao-geoflow-design/references/homepage-composition-guide.md)
 - Optimization playbook: [design-optimization-playbook.md](../../skills/yao-geoflow-design/references/design-optimization-playbook.md)
 - Theme edit workflow: [theme-edit-workflow.md](../../skills/yao-geoflow-design/references/theme-edit-workflow.md)
 - Example mapping report: [qiaomu-blog-mapping-2026-04-18.md](../../skills/yao-geoflow-design/reports/qiaomu-blog-mapping-2026-04-18.md)

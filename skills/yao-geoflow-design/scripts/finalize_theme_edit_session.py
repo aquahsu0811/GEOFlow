@@ -11,6 +11,7 @@ import re
 import shutil
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 
 def load_json(path: Path) -> dict:
@@ -43,7 +44,23 @@ def recursive_replace(value, old: str, new: str):
     return value
 
 
-def publish_as_new(themes_root: Path, preview_theme_id: str, new_theme_id: str | None, new_name: str | None) -> dict:
+def replace_text_in_files(root: Path, old: str, new: str) -> None:
+    if old == new:
+        return
+
+    text_suffixes = {".php", ".css", ".js", ".json", ".md", ".txt"}
+    for path in root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in text_suffixes:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        if old in text:
+            path.write_text(text.replace(old, new), encoding="utf-8")
+
+
+def publish_as_new(workspace: Path, themes_root: Path, preview_theme_id: str, new_theme_id: Optional[str], new_name: Optional[str]) -> dict:
     preview_dir = themes_root / preview_theme_id
     target_theme_id = sanitize_theme_id(new_theme_id or preview_theme_id)
     target_dir = themes_root / target_theme_id
@@ -54,6 +71,19 @@ def publish_as_new(themes_root: Path, preview_theme_id: str, new_theme_id: str |
         shutil.move(str(preview_dir), str(target_dir))
     else:
         target_dir = preview_dir
+
+    replace_text_in_files(target_dir, preview_theme_id, target_theme_id)
+
+    preview_public_dir = workspace / "public" / "themes" / preview_theme_id
+    target_public_dir = workspace / "public" / "themes" / target_theme_id
+    public_assets_path = ""
+    if preview_public_dir.is_dir():
+        if target_theme_id != preview_theme_id:
+            if target_public_dir.exists():
+                raise SystemExit(f"Target public assets already exist: {target_public_dir}")
+            shutil.move(str(preview_public_dir), str(target_public_dir))
+        public_assets_path = str(target_public_dir)
+        replace_text_in_files(target_public_dir, preview_theme_id, target_theme_id)
 
     manifest_path = target_dir / "manifest.json"
     manifest = recursive_replace(load_json(manifest_path), preview_theme_id, target_theme_id)
@@ -73,11 +103,12 @@ def publish_as_new(themes_root: Path, preview_theme_id: str, new_theme_id: str |
         "mode": "publish_as_new_theme",
         "theme_id": target_theme_id,
         "theme_path": str(target_dir),
+        "public_assets_path": public_assets_path,
         "next_step": "Review the new theme in admin/site-settings and activate it only after approval.",
     }
 
 
-def replace_base(themes_root: Path, workspace: Path, preview_theme_id: str, base_theme_id: str | None, new_name: str | None, confirm_live_risk: bool) -> dict:
+def replace_base(themes_root: Path, workspace: Path, preview_theme_id: str, base_theme_id: Optional[str], new_name: Optional[str], confirm_live_risk: bool) -> dict:
     if not confirm_live_risk:
         raise SystemExit("replace_base_theme requires --confirm-live-risk")
 
@@ -97,6 +128,12 @@ def replace_base(themes_root: Path, workspace: Path, preview_theme_id: str, base
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     backup_dir = backups_root / f"{resolved_base}-{timestamp}"
     shutil.copytree(base_dir, backup_dir)
+
+    base_public_dir = workspace / "public" / "themes" / resolved_base
+    preview_public_dir = workspace / "public" / "themes" / preview_theme_id
+    public_backup_dir = backups_root / f"{resolved_base}-public-{timestamp}"
+    if base_public_dir.is_dir():
+        shutil.copytree(base_public_dir, public_backup_dir)
 
     temp_dir = themes_root / f"{resolved_base}__replace__tmp"
     if temp_dir.exists():
@@ -122,10 +159,24 @@ def replace_base(themes_root: Path, workspace: Path, preview_theme_id: str, base
     shutil.rmtree(base_dir)
     temp_dir.rename(base_dir)
 
+    public_assets_path = ""
+    if preview_public_dir.is_dir():
+        public_temp_dir = workspace / "public" / "themes" / f"{resolved_base}__replace__tmp"
+        if public_temp_dir.exists():
+            shutil.rmtree(public_temp_dir)
+        shutil.copytree(preview_public_dir, public_temp_dir)
+        replace_text_in_files(public_temp_dir, preview_theme_id, resolved_base)
+        if base_public_dir.exists():
+            shutil.rmtree(base_public_dir)
+        public_temp_dir.rename(base_public_dir)
+        public_assets_path = str(base_public_dir)
+
     return {
         "mode": "replace_base_theme",
         "replaced_theme_id": resolved_base,
         "backup_path": str(backup_dir),
+        "public_backup_path": str(public_backup_dir) if public_backup_dir.exists() else "",
+        "public_assets_path": public_assets_path,
         "warning": "If the replaced theme is active, the live site may reflect the change immediately.",
     }
 
@@ -149,7 +200,7 @@ def main() -> None:
         raise SystemExit(f"Preview theme not found: {preview_dir}")
 
     if args.mode == "publish_as_new_theme":
-        result = publish_as_new(themes_root, args.preview_theme, args.new_theme_id, args.new_name)
+        result = publish_as_new(workspace, themes_root, args.preview_theme, args.new_theme_id, args.new_name)
     else:
         result = replace_base(
             themes_root,

@@ -6,8 +6,8 @@
 
 interface:
   display_name: "Yao GEOFlow Design"
-  short_description: "Discover, preview, and edit GEOFlow Laravel Blade themes safely"
-  default_prompt: "Use $yao-geoflow-design to discover GEOFlow Laravel Blade themes, create a preview edit session for a selected theme, or clone a reference style into a GEOFlow-compatible theme without breaking SEO/schema, markdown rendering, image, footer, or route contracts."
+  short_description: "Discover, preview, edit, and enrich GEOFlow themes and homepage builder designs safely"
+  default_prompt: "Use $yao-geoflow-design to discover GEOFlow Laravel Blade themes, create a preview edit session for a selected theme, enrich homepage composition for corporate/portal/content-hub front pages, generate reviewed homepage module/style JSON when HomepageModuleBuilder is available, or clone a reference style into a GEOFlow-compatible theme without breaking SEO/schema, markdown rendering, image, footer, route, or data contracts."
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:

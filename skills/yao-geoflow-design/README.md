@@ -10,6 +10,8 @@ X: https://x.com/yaojingang
 
 `yao-geoflow-design` is a local skill for discovering GEOFlow Laravel Blade themes, selecting a target theme, creating preview-first edit sessions, and then optimizing or refining the chosen frontend through safe theme packages.
 
+It also understands the current GEOFlow homepage builder contract. When `HomepageModuleBuilder`, `homepage_modules`, `homepage_style`, and the admin import route are available, the skill can produce reviewed `homepage-design.json` payloads for multi-module homepages and custom homepage styles instead of forcing Blade-only edits.
+
 ## Primary Use
 
 - inventory GEOFlow frontend modules, variables, and rendering boundaries
@@ -18,6 +20,8 @@ X: https://x.com/yaojingang
 - inspect a reference URL and extract reusable visual direction
 - map reference style tokens onto GEOFlow's existing frontend modules
 - audit the target theme for hierarchy, spacing, responsive, and module-consistency issues
+- enrich the default homepage with hero/media, chart-lite, metric, text, service/category, resource/case, large visual, and CTA modules using existing GEOFlow data
+- generate importable homepage builder JSON with `style` and `modules` for supported multi-module homepage and custom style changes
 - generate either a full theme package, a preview edit session, or an incremental optimization patch plan
 - prepare the system-facing integration plan for preview, confirmation, replacement, or publish-as-new flows
 - preserve SEO/schema slots, markdown-rendered HTML, image-caption behavior, footer rules, and configurable admin base paths while editing themes
@@ -36,9 +40,12 @@ It also does not hard-code `/geo_admin`, add independent public language switchi
 - `references/geoflow-frontend-map.md`: current frontend module, variable, and function contract
 - `references/laravel-theme-contract.md`: current Laravel Blade theme package and preview contract
 - `references/template-boundary.md`: system boundary for safe template cloning and current-template optimization
+- `references/homepage-composition-guide.md`: safe homepage enrichment patterns for enterprise, portal, and content-hub front pages
+- `homepage-design.json`: expected artifact when the current system supports homepage module builder import
 - `references/theme-package-contract.md`: expected output format for generated theme packages, preview edit sessions, and optimization passes
 - `references/design-optimization-playbook.md`: optimization-mode workflow and heuristics
 - `references/theme-edit-workflow.md`: target-theme discovery, preview-fork editing, and finalize workflow
+- `templates/homepage-design-template.json`: canonical builder payload example for homepage modules and style tokens
 - `evals/trigger_cases.json`: trigger boundary checks
 - `reports/intent-dialogue.md`: captured job framing
 - `reports/reference-scan.md`: local-fit reference notes

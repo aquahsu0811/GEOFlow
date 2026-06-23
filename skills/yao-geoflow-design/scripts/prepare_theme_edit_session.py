@@ -43,6 +43,22 @@ def recursive_replace(value, old: str, new: str):
     return value
 
 
+def replace_text_in_files(root: Path, old: str, new: str) -> None:
+    if old == new:
+        return
+
+    text_suffixes = {".php", ".css", ".js", ".json", ".md", ".txt"}
+    for path in root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in text_suffixes:
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError:
+            continue
+        if old in text:
+            path.write_text(text.replace(old, new), encoding="utf-8")
+
+
 def build_preview_routes(theme_id: str) -> list[str]:
     return [
         "/",
@@ -77,6 +93,20 @@ def main() -> None:
         raise SystemExit(f"Preview theme already exists: {preview_dir}")
 
     shutil.copytree(base_dir, preview_dir)
+    replace_text_in_files(preview_dir, base_theme_id, preview_theme_id)
+
+    public_assets_copied = False
+    public_assets_dir = ""
+    if framework == "laravel":
+        base_public_assets = workspace / "public" / "themes" / base_theme_id
+        preview_public_assets = workspace / "public" / "themes" / preview_theme_id
+        if base_public_assets.is_dir():
+            if preview_public_assets.exists():
+                raise SystemExit(f"Preview public assets already exist: {preview_public_assets}")
+            shutil.copytree(base_public_assets, preview_public_assets)
+            replace_text_in_files(preview_public_assets, base_theme_id, preview_theme_id)
+            public_assets_copied = True
+            public_assets_dir = str(preview_public_assets)
 
     manifest_path = preview_dir / "manifest.json"
     manifest = load_json(manifest_path)
@@ -112,6 +142,11 @@ def main() -> None:
     for relative in ("assets/theme.css", "manifest.json", "tokens.json", "mapping.json"):
         if (preview_dir / relative).is_file():
             editable_files.append(relative)
+    if public_assets_copied:
+        for relative in ("theme.css", "theme.js"):
+            public_relative = f"public/themes/{preview_theme_id}/{relative}"
+            if (workspace / public_relative).is_file():
+                editable_files.append(public_relative)
 
     session_payload = {
         "base_theme_id": base_theme_id,
@@ -122,6 +157,8 @@ def main() -> None:
         "change_request": args.change_request.strip(),
         "preview_routes": build_preview_routes(preview_theme_id),
         "preview_note": "Laravel GEOFlow does not expose isolated /preview/{theme} routes by default; use static previews or activate the preview theme only after operator confirmation.",
+        "public_assets_dir": public_assets_dir,
+        "public_assets_copied": public_assets_copied,
         "editable_files": editable_files,
         "finalize_options": [
             "publish_as_new_theme",
@@ -166,6 +203,7 @@ def main() -> None:
         "preview_theme_id": preview_theme_id,
         "framework": framework,
         "preview_theme_path": str(preview_dir),
+        "public_assets_path": public_assets_dir,
         "preview_routes": build_preview_routes(preview_theme_id),
         "preview_support": "admin_activation_or_static_preview" if framework == "laravel" else "legacy_preview_routes",
         "editable_files": editable_files,

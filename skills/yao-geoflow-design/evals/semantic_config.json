@@ -1,11 +1,18 @@
 {
   "optimizer_hints": {
-    "capability": "Discover, preview, clone, and edit GEOFlow themes safely",
+    "capability": "Discover, preview, clone, edit, and enrich GEOFlow themes safely",
     "inputs": [
       "reference URL",
       "existing themes",
       "target theme",
       "GEOFlow frontend modules",
+      "homepage carousel slides",
+      "hot articles",
+      "homepage modules",
+      "homepage style",
+      "homepage builder",
+      "homepage design json",
+      "homepage composition goals",
       "design tokens",
       "optimization goals"
     ],
@@ -13,10 +20,14 @@
       "discover themes in a GEOFlow workspace",
       "select a target theme and create a preview edit session",
       "clone a GEOFlow frontend template",
+      "enrich the GEOFlow homepage with safe enterprise, portal, and content-hub modules",
+      "generate GEOFlow homepage module builder design JSON",
+      "configure custom homepage style tokens safely",
       "optimize the current GEOFlow theme",
       "adjust GEOFlow modules without changing backend logic",
       "map a reference site onto GEOFlow modules",
-      "finalize a reviewed preview theme as publish-as-new or replace-base"
+      "finalize a reviewed preview theme as publish-as-new or replace-base",
+      "import reviewed homepage design JSON only after confirmation"
     ],
     "exclusions": [
       "generic frontend redesign detached from GEOFlow",
@@ -27,6 +38,8 @@
     "artifacts": [
       "theme-discovery.json",
       "edit-session.json",
+      "homepage-composition-plan.md",
+      "homepage-design.json",
       "tokens.json",
       "mapping.json",
       "design-audit.md",
@@ -91,8 +104,41 @@
         "wider layout",
         "bolder headings",
         "display module",
+        "homepage enrichment",
+        "homepage builder",
+        "homepage module builder",
+        "custom homepage style",
+        "custom homepage styles",
+        "homepage-design.json",
+        "homepage_modules",
+        "homepage_style",
+        "HomepageModuleBuilder",
+        "showHomepageModules",
+        "homepageModules",
+        "homepageStyle",
+        "rich homepage",
+        "corporate homepage",
+        "enterprise homepage",
+        "portal homepage",
+        "chart module",
+        "metric module",
+        "hero carousel",
+        "hot articles",
+        "homepageCarouselSlides",
+        "hotArticles",
         "变宽",
         "加粗",
+        "首页丰满",
+        "企业官网",
+        "门户首页",
+        "图表模块",
+        "指标模块",
+        "首页多模块",
+        "自定义首页样式",
+        "首页模块 builder",
+        "首页设计 JSON",
+        "可导入首页 JSON",
+        "大图模块",
         "样式调整",
         "增加显示模块",
         "current theme edit",
@@ -144,13 +190,47 @@
         "token refinement"
       ]
     },
+    "homepage_enrichment": {
+      "weight": 0.2,
+      "phrases": [
+        "homepage enrichment",
+        "fuller homepage",
+        "corporate website homepage",
+        "portal-style homepage",
+        "service blocks",
+        "case study blocks",
+        "text modules",
+        "large image hero",
+        "charts and metrics",
+        "homepage module builder",
+        "homepage modules import",
+        "custom homepage styles",
+        "homepage_modules",
+        "homepage_style",
+        "homepage-design.json",
+        "importable homepage json",
+        "首页优化",
+        "首页丰满",
+        "企业官网首页",
+        "服务模块",
+        "案例模块",
+        "文本模块",
+        "大图",
+        "图表",
+        "指标",
+        "不只是文章列表"
+      ]
+    },
     "finalize_safely": {
       "weight": 0.02,
       "phrases": [
         "publish as new theme",
         "replace base theme",
+        "import homepage design after confirmation",
+        "reviewed homepage json",
         "新增模板",
         "替换当前模板",
+        "确认后导入首页设计",
         "confirm before activation"
       ]
     }
@@ -188,7 +268,13 @@
         "database fields",
         "route rewrite",
         "seo contract change",
-        "templates can be switched"
+        "templates can be switched",
+        "lead form backend",
+        "customer logo database",
+        "sales funnel data",
+        "新增数据库表",
+        "线索表单",
+        "客户 logo 数据库"
       ]
     },
     "cli_ops": {
@@ -234,7 +320,9 @@
         "geoflow settings",
         "admin can switch templates",
         "backend discovery logic",
-        "admin theme list"
+        "admin theme list",
+        "customer cases database",
+        "lead-form submissions"
       ]
     }
   }
