@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `17` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `18` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -22,7 +22,7 @@
 | `geo-page-technical` | 2 | 页面 GEO 诊断、GEO 友好页面蓝图 |
 | `geo-content-production` | 5 | 标题、科普、对比、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
-| `geo-measurement` | 2 | GEO 归因追踪、AI 答案监测月报 |
+| `geo-measurement` | 3 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样 |
 | `geo-research` | 1 | AI 搜索问题集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
@@ -135,6 +135,7 @@ git checkout main
 直接打开对应 skill 目录，在 GitHub 页面按需下载文件：
 
 - [skills/yao-geo-tracking](skills/yao-geo-tracking)
+- [skills/yao-deepseek-crawler](skills/yao-deepseek-crawler)
 - [skills/yao-geo-effect-monitor](skills/yao-geo-effect-monitor)
 - [skills/yao-geo-panorama-audit](skills/yao-geo-panorama-audit)
 - [skills/yao-geo-page-audit](skills/yao-geo-page-audit)
@@ -417,6 +418,21 @@ git checkout main
       相关入口：<br>
       <a href="docs/skills/yao-geo-effect-monitor.md">说明页</a> ·
       <a href="skills/yao-geo-effect-monitor">Skill 包</a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>yao-deepseek-crawler</code></strong><br>
+      作用：通过 OpenCLI Browser Bridge 调用 DeepSeek 网页端，按关键词和轮询次数做独立重复采样，输出原始 JSON、结构化 Markdown、Excel 和 Kami 风格可视化报告。<br><br>
+      适合：评估目标实体在 DeepSeek AI 搜索里的提及率、平均提及次数、Top 1 / Top 3 / Top 5 概率、平均排名、同类型竞品对比、信源结构和 GEO 优化建议。<br><br>
+      蔚来真实采样示例：<br>
+      <a href="skills/yao-deepseek-crawler/examples/nio-nev-deepseek-20260620/deepseek-crawl.json">原始 JSON</a> ·
+      <a href="skills/yao-deepseek-crawler/examples/nio-nev-deepseek-20260620/report-brand-company/structured-data.md">Markdown</a> ·
+      <a href="skills/yao-deepseek-crawler/examples/nio-nev-deepseek-20260620/report-brand-company/structured-data.xlsx">Excel</a> ·
+      <a href="skills/yao-deepseek-crawler/examples/nio-nev-deepseek-20260620/report-brand-company/report.html">HTML 报告</a><br><br>
+      相关入口：<br>
+      <a href="docs/skills/yao-deepseek-crawler.md">说明页</a> ·
+      <a href="skills/yao-deepseek-crawler">Skill 包</a>
     </td>
   </tr>
 </table>

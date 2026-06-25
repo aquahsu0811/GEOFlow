@@ -127,6 +127,41 @@
       "last_updated": "2026-05-21"
     },
     {
+      "id": "yao-deepseek-crawler",
+      "family": "geo-measurement",
+      "maturity": "beta",
+      "tags": [
+        "geo",
+        "deepseek",
+        "ai-search",
+        "repeated-sampling",
+        "crawler",
+        "opencli",
+        "entity-probability",
+        "competitor-analysis",
+        "citation-analysis",
+        "html-report",
+        "structured-excel",
+        "raw-evidence"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "deepseek-crawl-json",
+        "raw-json-and-log-evidence",
+        "summary-json",
+        "structured-markdown",
+        "structured-excel",
+        "kami-html-report"
+      ],
+      "status": "active",
+      "owner": "Yao Team",
+      "stage": "published",
+      "path": "skills/yao-deepseek-crawler",
+      "summary": "Use local OpenCLI Browser Bridge and a logged-in DeepSeek web session to run repeated fresh-window AI-search sampling, then generate raw JSON evidence, structured Markdown/Excel exports, and a Kami-styled target entity probability report with same-type competitor, citation, title, sentiment, and GEO recommendation analysis.",
+      "public_repo_path": "skills/yao-deepseek-crawler",
+      "last_updated": "2026-06-20"
+    },
+    {
       "id": "yao-geo-panorama-audit",
       "family": "geo-strategy",
       "maturity": "beta",
