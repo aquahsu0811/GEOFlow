@@ -162,6 +162,40 @@
       "last_updated": "2026-06-20"
     },
     {
+      "id": "yao-chatgpt-crawler",
+      "family": "geo-measurement",
+      "maturity": "beta",
+      "tags": [
+        "geo",
+        "chatgpt",
+        "ai-search",
+        "browser-bridge",
+        "crawler",
+        "citation-tracking",
+        "entity-probability",
+        "semantic-entity-review",
+        "competitor-analysis",
+        "html-report",
+        "real-data-acquisition"
+      ],
+      "requires_web": true,
+      "primary_outputs": [
+        "chatgpt-crawl-json",
+        "summary-json",
+        "structured-markdown",
+        "structured-excel",
+        "html-report",
+        "raw-sample-evidence"
+      ],
+      "status": "active",
+      "owner": "Yao Team",
+      "stage": "published",
+      "path": "skills/yao-chatgpt-crawler",
+      "summary": "通过 OpenCLI Browser Bridge 连接已登录的 ChatGPT web profile，对 AI Search 问题做多次采样，采集答案和可见来源，输出目标实体与同类型竞品的提及率、Top 1/3/5、平均排名、语义实体审计、引用来源和 HTML 概率报告。",
+      "public_repo_path": "skills/yao-chatgpt-crawler",
+      "last_updated": "2026-06-25"
+    },
+    {
       "id": "yao-geo-panorama-audit",
       "family": "geo-strategy",
       "maturity": "beta",

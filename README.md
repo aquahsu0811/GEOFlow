@@ -13,7 +13,7 @@
 
 ## 当前状态
 
-当前仓库包含 `18` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `19` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
@@ -22,7 +22,7 @@
 | `geo-page-technical` | 2 | 页面 GEO 诊断、GEO 友好页面蓝图 |
 | `geo-content-production` | 5 | 标题、科普、对比、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
-| `geo-measurement` | 3 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样 |
+| `geo-measurement` | 4 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、ChatGPT AI Search 采样概率报告 |
 | `geo-research` | 1 | AI 搜索问题集、意图簇和监测 Prompt |
 
 每个正式 skill 至少包含：
@@ -136,6 +136,7 @@ git checkout main
 
 - [skills/yao-geo-tracking](skills/yao-geo-tracking)
 - [skills/yao-deepseek-crawler](skills/yao-deepseek-crawler)
+- [skills/yao-chatgpt-crawler](skills/yao-chatgpt-crawler)
 - [skills/yao-geo-effect-monitor](skills/yao-geo-effect-monitor)
 - [skills/yao-geo-panorama-audit](skills/yao-geo-panorama-audit)
 - [skills/yao-geo-page-audit](skills/yao-geo-page-audit)
@@ -435,6 +436,19 @@ git checkout main
       <a href="skills/yao-deepseek-crawler">Skill 包</a>
     </td>
   </tr>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>yao-chatgpt-crawler</code></strong><br>
+      作用：通过 OpenCLI Browser Bridge 连接已登录的 ChatGPT web profile，对 AI Search 问题做多次采样，抓取答案、可见来源和来源入口，生成目标实体与同类型竞品的概率分析报告。<br><br>
+      适合：ChatGPT Web Search 真实采样、实体/竞品语义审计、Top 1/Top 3/Top 5 概率、引用来源分析、标题意图分析和 HTML 报告交付。<br><br>
+      真实测试：<a href="skills/yao-chatgpt-crawler/examples/doubao-model-products-real/questions.txt">豆包问题列表</a> ·
+      <a href="skills/yao-chatgpt-crawler/examples/doubao-model-products-real/report/summary.json">summary.json</a> ·
+      <a href="skills/yao-chatgpt-crawler/examples/doubao-model-products-real/report/report.html">HTML 报告</a><br><br>
+      相关入口：<br>
+      <a href="docs/skills/yao-chatgpt-crawler.md">说明页</a> ·
+      <a href="skills/yao-chatgpt-crawler">Skill 包</a>
+    </td>
+  </tr>
 </table>
 
 ### `research`
@@ -464,6 +478,8 @@ git checkout main
 仓库内已包含多组公开或合成示例，重点用于展示输入结构、方法链路、四格式交付和质量门：
 
 - `yao-geo-tracking`：海外公开公司示例 HubSpot、国内公开合成示例岭序商机云
+- `yao-deepseek-crawler`：蔚来新能源汽车 DeepSeek 网页端真实采样示例
+- `yao-chatgpt-crawler`：豆包模型产品 ChatGPT Web Search 真实采样脱敏示例
 - `yao-geo-panorama-audit`：岭序商机云 GEO 全景诊断合成示例、HubSpot 国内 AI 平台测试示例
 - `yao-geo-page-audit`：示例云服页面 GEO 诊断合成示例、HubSpot 页面诊断示例
 - `yao-geo-page-blueprint`：页面蓝图示例和 HubSpot 中文页面蓝图示例
