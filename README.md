@@ -13,14 +13,14 @@
 
 ## 当前状态
 
-当前仓库包含 `19` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
+当前仓库包含 `20` 个 GEO 相关 skill，覆盖战略诊断、页面技术、内容生产、知识资产、监测归因、研究拓词和 GEOFlow 运营。
 
 | 分类 | 数量 | 代表场景 |
 |---|---:|---|
 | `geo-operations` | 3 | GEOFlow CLI 操作、模板映射、Laravel Blade 主题编辑 |
 | `geo-strategy` | 2 | GEO 全景诊断、30/60/90 天执行路线图 |
 | `geo-page-technical` | 2 | 页面 GEO 诊断、GEO 友好页面蓝图 |
-| `geo-content-production` | 5 | 标题、科普、对比、旧文改造、榜单评测 |
+| `geo-content-production` | 6 | 标题、科普、对比、文章 AI 友好化、旧文改造、榜单评测 |
 | `geo-knowledge-assets` | 2 | 品牌知识图谱、品牌知识库和事实卡 |
 | `geo-measurement` | 4 | GEO 归因追踪、AI 答案监测月报、DeepSeek 重复采样、ChatGPT AI Search 采样概率报告 |
 | `geo-research` | 1 | AI 搜索问题集、意图簇和监测 Prompt |
@@ -141,6 +141,7 @@ git checkout main
 - [skills/yao-geo-panorama-audit](skills/yao-geo-panorama-audit)
 - [skills/yao-geo-page-audit](skills/yao-geo-page-audit)
 - [skills/yao-geo-ranking-article-builder](skills/yao-geo-ranking-article-builder)
+- [skills/yao-geo-article-friendly](skills/yao-geo-article-friendly)
 - [skills/yao-geo-explainer-builder](skills/yao-geo-explainer-builder)
 - [skills/yao-geo-content-refiner](skills/yao-geo-content-refiner)
 - [skills/yao-geo-title-optimizer](skills/yao-geo-title-optimizer)
@@ -346,6 +347,16 @@ git checkout main
       <a href="skills/yao-geo-content-refiner">Skill 包</a>
     </td>
   </tr>
+  <tr>
+    <td valign="top" width="100%">
+      <strong><code>yao-geo-article-friendly</code></strong><br>
+      作用：把已有文章改造成 GEO/AI 搜索友好的发布草稿，保留原文核心观点，强化结构、证据边界、可引用性和语义密度。<br><br>
+      适合：已有文章轻量改造、AI 可引用性修复、FAQ 和摘要结构补强，以及需要明确区分原文支持、外部已核验和建议补充的内容生产。<br><br>
+      相关入口：<br>
+      <a href="docs/skills/yao-geo-article-friendly.md">说明页</a> ·
+      <a href="skills/yao-geo-article-friendly">Skill 包</a>
+    </td>
+  </tr>
 </table>
 
 ### `knowledge-assets`
@@ -486,6 +497,7 @@ git checkout main
 - `yao-geo-ranking-article-builder`：榜单评测文章合成示例和 HubSpot 示例
 - `yao-geo-comparison-builder`：HubSpot 中文对比报告示例
 - `yao-geo-content-refiner`：HubSpot 旧文 GEO 改造示例
+- `yao-geo-article-friendly`：轻量文章 AI 友好化改造方法、评分与证据边界示例契约
 - `yao-geo-explainer-builder`：Acme Sleep 科普文章、真实数据核验和 kami 四格式报告示例
 - `yao-geo-brand-graph`：HubSpot 国内 AI 平台品牌图谱示例
 - `yao-geo-knowledge-base-builder`：HubSpot 品牌知识库示例

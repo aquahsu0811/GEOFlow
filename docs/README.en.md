@@ -9,7 +9,7 @@ Visual catalog:
 
 ## Current Inventory
 
-The repository currently contains `19` GEO-related skills.
+The repository currently contains `20` GEO-related skills.
 
 2026-05-21 update focus: most GEO content, page, strategy, and knowledge-asset skills now make real-data availability explicit, separate verified evidence from user-supplied or unavailable data, and standardize four-format delivery around Word, PDF, Markdown, and sticky-navigation HTML reports.
 
@@ -18,7 +18,7 @@ The repository currently contains `19` GEO-related skills.
 | `geo-operations` | 3 | `yao-geoflow-cli`, `yao-geoflow-template`, `yao-geoflow-design` |
 | `geo-strategy` | 2 | `yao-geo-panorama-audit`, `yao-geo-execution-roadmap` |
 | `geo-page-technical` | 2 | `yao-geo-page-audit`, `yao-geo-page-blueprint` |
-| `geo-content-production` | 5 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-ranking-article-builder` |
+| `geo-content-production` | 6 | `yao-geo-title-optimizer`, `yao-geo-explainer-builder`, `yao-geo-comparison-builder`, `yao-geo-content-refiner`, `yao-geo-article-friendly`, `yao-geo-ranking-article-builder` |
 | `geo-knowledge-assets` | 2 | `yao-geo-brand-graph`, `yao-geo-knowledge-base-builder` |
 | `geo-measurement` | 4 | `yao-geo-tracking`, `yao-geo-effect-monitor`, `yao-deepseek-crawler`, `yao-chatgpt-crawler` |
 | `geo-research` | 1 | `yao-geo-intent-miner` |
@@ -38,6 +38,7 @@ The repository currently contains `19` GEO-related skills.
 | `yao-geo-explainer-builder` | Content production | Builds GEO explainers, how-to guides, FAQs, glossaries, real-data status, fact-verification matrices, and Kami-style four-format reports. | [Package](../skills/yao-geo-explainer-builder) / [Guide](skills/yao-geo-explainer-builder.md) |
 | `yao-geo-comparison-builder` | Content production | Creates fair brand comparisons with real-data acquisition, source verification, shared dimensions, evidence anchors, risk governance, and comparison FAQs. | [Package](../skills/yao-geo-comparison-builder) / [Guide](skills/yao-geo-comparison-builder.md) |
 | `yao-geo-content-refiner` | Content production | Refines existing SEO or brand content into structured, verifiable, AI-citable GEO content with analysis completeness, real-data verification, semantic maps, platform matrices, and sticky HTML reports. | [Package](../skills/yao-geo-content-refiner) / [Guide](skills/yao-geo-content-refiner.md) |
+| `yao-geo-article-friendly` | Content production | Rewrites an existing article into a GEO and AI-search-friendly draft with source-bound evidence labels, weighted GEO scoring, change notes, supplement requests, and risk notes. | [Package](../skills/yao-geo-article-friendly) / [Guide](skills/yao-geo-article-friendly.md) |
 | `yao-geo-ranking-article-builder` | Content production | Generates ranking and review articles with source availability audits, real-data boundaries, analysis completeness, evidence tables, and Kami-style four-format deliverables. | [Package](../skills/yao-geo-ranking-article-builder) / [Guide](skills/yao-geo-ranking-article-builder.md) |
 | `yao-geo-brand-graph` | Knowledge assets | Turns company materials into auditable brand entity graphs with source validation, entity coverage, relationship audits, JSON-LD, RDF-style triples, and evidence ledgers. | [Package](../skills/yao-geo-brand-graph) / [Guide](skills/yao-geo-brand-graph.md) |
 | `yao-geo-knowledge-base-builder` | Knowledge assets | Builds systematic GEO brand knowledge bases with complete entity inventories, real-data boundaries, fact cards, FAQ, prohibited expressions, source indexes, and prompt input packs. | [Package](../skills/yao-geo-knowledge-base-builder) / [Guide](skills/yao-geo-knowledge-base-builder.md) |

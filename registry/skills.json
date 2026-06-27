@@ -647,6 +647,37 @@
       "last_updated": "2026-05-21"
     },
     {
+      "id": "yao-geo-article-friendly",
+      "family": "geo-content-production",
+      "maturity": "scaffold",
+      "tags": [
+        "geo",
+        "content-production",
+        "article-rewrite",
+        "ai-search-friendly",
+        "citation-readiness",
+        "source-bound-evidence",
+        "score-report",
+        "change-notes",
+        "supplement-list"
+      ],
+      "requires_web": false,
+      "primary_outputs": [
+        "geo-optimized-article",
+        "geo-score-report",
+        "change-notes",
+        "supplement-request-list",
+        "risk-notes"
+      ],
+      "status": "active",
+      "owner": "Yao Team",
+      "stage": "published",
+      "path": "skills/yao-geo-article-friendly",
+      "summary": "把已有文章改造成 GEO/AI 搜索友好的发布草稿，保留原文核心观点，按加权 GEO 维度评分，并区分原文支持、外部已核验和建议补充，避免编造引用、数据、来源和案例。",
+      "public_repo_path": "skills/yao-geo-article-friendly",
+      "last_updated": "2026-06-27"
+    },
+    {
       "id": "yao-geo-ranking-article-builder",
       "family": "geo-content-production",
       "maturity": "beta",
