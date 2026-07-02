@@ -108,9 +108,9 @@ class AdminDashboardQuickStartTest extends TestCase
             ->assertSee(route('admin.distribution.index'), false)
             ->assertSee(route('admin.distribution.create'), false)
             ->assertSee(route('admin.distribution.jobs'), false)
-            ->assertSee('https://github.com/yaojingang/yao-geo-skills/tree/main/skills/yao-geoflow-template', false)
-            ->assertSee('https://github.com/yaojingang/yao-geo-skills/tree/main/skills/yao-geoflow-design', false)
-            ->assertSee('https://github.com/yaojingang/yao-geo-skills/tree/main/skills/yao-geoflow-cli', false);
+            ->assertSee('https://github.com/aquahsu0811/GEOFlow/tree/main/skills/yao-geoflow-template', false)
+            ->assertSee('https://github.com/aquahsu0811/GEOFlow/tree/main/skills/yao-geoflow-design', false)
+            ->assertSee('https://github.com/aquahsu0811/GEOFlow/tree/main/skills/yao-geoflow-cli', false);
 
         $html = $response->getContent();
         $this->assertGreaterThanOrEqual(1, substr_count($html, route('admin.knowledge-bases.index')));
