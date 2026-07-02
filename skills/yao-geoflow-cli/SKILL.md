@@ -1,6 +1,6 @@
 ---
 name: yao-geoflow-cli
-description: Use when operating an existing GEOFlow 2.0.x system from local CLI, Laravel API v1, or authenticated admin web flows to inspect catalog/materials, manage tasks/jobs/articles, configure distribution channels, run analytics/URL import/system update workflows, manage settings/tokens/users, or run API/Docker/admin preflight. Do not use for backend implementation, schema changes, or direct database edits.
+description: Use when operating an existing GEOFlow 2.0.x system from CLI or authenticated admin flows to inspect content, manage jobs, and run preflight checks.
 ---
 
 <!--

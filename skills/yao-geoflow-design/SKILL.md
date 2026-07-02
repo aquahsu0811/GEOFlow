@@ -1,6 +1,6 @@
 ---
 name: yao-geoflow-design
-description: Discover, preview, clone, and edit GEOFlow Laravel Blade themes, including rich homepage composition and GEOFlow homepage module/style JSON for corporate, portal, and content-site front pages, by selecting an existing template or mapping a reference site, then applying safe frontend changes without changing business logic or data contracts. Use for theme discovery, target-theme editing, homepage enrichment, homepage module builder design, cloning, optimization, and theme iteration. Not for raw HTML copying, backend refactors, or direct live activation.
+description: Use when discovering, previewing, cloning, and editing GEOFlow Laravel Blade themes and homepage module/style JSON without changing business logic.
 ---
 
 <!--
